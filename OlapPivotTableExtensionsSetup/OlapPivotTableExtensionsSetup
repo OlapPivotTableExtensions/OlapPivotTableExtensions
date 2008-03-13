@@ -117,6 +117,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8C6535F457524F7F8CD240BC5DDD1779"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
         "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
         "MsmSig" = "8:_UNDEFINED"
@@ -214,12 +220,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_805327BF8EE34F0AA113184682C96EB8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -293,6 +293,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_805327BF8EE34F0AA113184682C96EB8"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -689,6 +695,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8C6535F457524F7F8CD240BC5DDD1779"
+            {
+            "SourcePath" = "8:NoImpersonate.js"
+            "TargetName" = "8:NoImpersonate.js"
+            "Tag" = "8:"
+            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:FALSE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_913F7E080FC2815996B7F0F5B59BCBFF"
             {
             "AssemblyRegister" = "3:1"
@@ -934,14 +960,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{717FB5AE-E006-4C58-A310-CD175F1387A7}"
-        "PackageCode" = "8:{CD806715-6A5B-47D8-94C3-8371CA008F1F}"
+        "ProductCode" = "8:{99AEC6D2-AA78-4A82-944E-0EDC41F257A8}"
+        "PackageCode" = "8:{ACCDCEE0-B4EA-4234-90B3-89823508BE67}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.5.0"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:0.5.1"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -957,7 +983,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:"
+        "PostBuildEvent" = "8:cscript.exe \"$(ProjectDir)NoImpersonate.js\" \"$(BuiltOuputPath)\" "
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -975,27 +1001,7 @@
                     "Transitive" = "11:FALSE"
                         "Keys"
                         {
-                        }
-                        "Values"
-                        {
-                        }
-                    }
-                }
-            }
-            "HKCU"
-            {
-                "Keys"
-                {
-                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2361A28DCA414AEE96CABF5268F614EC"
-                    {
-                    "Name" = "8:Software"
-                    "Condition" = "8:"
-                    "AlwaysCreate" = "11:FALSE"
-                    "DeleteAtUninstall" = "11:FALSE"
-                    "Transitive" = "11:FALSE"
-                        "Keys"
-                        {
-                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_1151B91919224674BD6802D6E01CA001"
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_9C2B96B30E304CA3A7C68D50765252CB"
                             {
                             "Name" = "8:Classes"
                             "Condition" = "8:"
@@ -1007,19 +1013,19 @@
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_26F38E76AD294EFF927D113D33CBD53D"
                                     {
                                     "Name" = "8:OlapPivotTableExtensions"
-                                    "Condition" = "8:"
+                                    "Condition" = "8:ALLUSERS"
                                     "AlwaysCreate" = "11:TRUE"
                                     "DeleteAtUninstall" = "11:TRUE"
-                                    "Transitive" = "11:FALSE"
+                                    "Transitive" = "11:TRUE"
                                         "Keys"
                                         {
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_7F0BD9B0109340B6B85631B7D054A20B"
                                             {
                                             "Name" = "8:CLSID"
-                                            "Condition" = "8:"
+                                            "Condition" = "8:ALLUSERS"
                                             "AlwaysCreate" = "11:TRUE"
                                             "DeleteAtUninstall" = "11:TRUE"
-                                            "Transitive" = "11:FALSE"
+                                            "Transitive" = "11:TRUE"
                                                 "Keys"
                                                 {
                                                 }
@@ -1028,8 +1034,8 @@
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_06523D52141D4AA2AD5B6FAED059080D"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Condition" = "8:ALLUSERS"
+                                                    "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
                                                     "Value" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
                                                     }
@@ -1041,8 +1047,8 @@
                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4EF3FF334F36460A8A9E24A0FDBE7ABD"
                                             {
                                             "Name" = "8:"
-                                            "Condition" = "8:"
-                                            "Transitive" = "11:FALSE"
+                                            "Condition" = "8:ALLUSERS"
+                                            "Transitive" = "11:TRUE"
                                             "ValueTypes" = "3:1"
                                             "Value" = "8:"
                                             }
@@ -1060,19 +1066,19 @@
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0B9D6CFBED774FD7B811BAEF0A51D17F"
                                             {
                                             "Name" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
-                                            "Condition" = "8:"
+                                            "Condition" = "8:ALLUSERS"
                                             "AlwaysCreate" = "11:TRUE"
                                             "DeleteAtUninstall" = "11:TRUE"
-                                            "Transitive" = "11:FALSE"
+                                            "Transitive" = "11:TRUE"
                                                 "Keys"
                                                 {
                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_76668212476A4C6DB83CA7F5F89CDA94"
                                                     {
                                                     "Name" = "8:VersionIndependentProgID"
-                                                    "Condition" = "8:"
+                                                    "Condition" = "8:ALLUSERS"
                                                     "AlwaysCreate" = "11:TRUE"
                                                     "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Transitive" = "11:TRUE"
                                                         "Keys"
                                                         {
                                                         }
@@ -1081,8 +1087,8 @@
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4FCDB60C68EC40D1B55D4B7A3E61763A"
                                                             {
                                                             "Name" = "8:"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
                                                             "Value" = "8:OlapPivotTableExtensions"
                                                             }
@@ -1091,10 +1097,10 @@
                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_8C69C839FA6D4D418BDAF1856C801CE4"
                                                     {
                                                     "Name" = "8:ProgID"
-                                                    "Condition" = "8:"
+                                                    "Condition" = "8:ALLUSERS"
                                                     "AlwaysCreate" = "11:TRUE"
                                                     "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Transitive" = "11:TRUE"
                                                         "Keys"
                                                         {
                                                         }
@@ -1103,8 +1109,8 @@
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_0156FCAED78F4BC8B0B700A38A38060E"
                                                             {
                                                             "Name" = "8:"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
                                                             "Value" = "8:OlapPivotTableExtensions"
                                                             }
@@ -1113,10 +1119,10 @@
                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_B368D545F1EF45EFA95F72BFDF49491B"
                                                     {
                                                     "Name" = "8:InprocServer32"
-                                                    "Condition" = "8:"
+                                                    "Condition" = "8:ALLUSERS"
                                                     "AlwaysCreate" = "11:TRUE"
                                                     "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Transitive" = "11:TRUE"
                                                         "Keys"
                                                         {
                                                         }
@@ -1125,32 +1131,32 @@
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4B68711895F8427B9BBEA68A15B17E6F"
                                                             {
                                                             "Name" = "8:ManifestName"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
                                                             "Value" = "8:OlapPivotTableExtensions.dll.manifest"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_6C33FB9A092E4AFBBD2813157D9FE8D2"
                                                             {
                                                             "Name" = "8:ThreadingModel"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
                                                             "Value" = "8:Both"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_776F58A4C5F647BFB940D7D8774F7182"
                                                             {
                                                             "Name" = "8:ManifestLocation"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
                                                             "Value" = "8:[TARGETDIR]"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DBF3D6E8467948208D38C84D8F8101DF"
                                                             {
                                                             "Name" = "8:"
-                                                            "Condition" = "8:"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:2"
                                                             "Value" = "8:%CommonProgramFiles%\\Microsoft Shared\\VSTO\\8.0\\AddinLoader.dll"
                                                             }
@@ -1159,10 +1165,10 @@
                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_FAB67C9334AB4F8DB7D8792231364141"
                                                     {
                                                     "Name" = "8:Programmable"
-                                                    "Condition" = "8:"
+                                                    "Condition" = "8:ALLUSERS"
                                                     "AlwaysCreate" = "11:TRUE"
                                                     "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Transitive" = "11:TRUE"
                                                         "Keys"
                                                         {
                                                         }
@@ -1176,8 +1182,8 @@
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1C71AF3E680A40AABF53705387659A07"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:"
-                                                    "Transitive" = "11:FALSE"
+                                                    "Condition" = "8:ALLUSERS"
+                                                    "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
                                                     "Value" = "8:OlapPivotTableExtensions  -- an addin created with VSTO technology"
                                                     }
@@ -1193,7 +1199,7 @@
                                 {
                                 }
                             }
-                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_4BB44462064340E5977E8C01B8DA29D2"
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_BB6BB1D0C1954DA3B23560051BE590A0"
                             {
                             "Name" = "8:Microsoft"
                             "Condition" = "8:"
@@ -1211,7 +1217,433 @@
                                     "Transitive" = "11:FALSE"
                                         "Keys"
                                         {
-                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_8D074266DE5C48278AF74D352DDE9C57"
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_F9F914F5B6C0479BA592A5E9EF9CCE24"
+                                            {
+                                            "Name" = "8:12.0"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:TRUE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2A0E5B713FAE4320A76BEEDE38E7DCE8"
+                                                    {
+                                                    "Name" = "8:User Settings"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_D144729732414EFC8CE38429FC63D6CE"
+                                                            {
+                                                            "Name" = "8:OlapPivotTableExtensions"
+                                                            "Condition" = "8:"
+                                                            "AlwaysCreate" = "11:TRUE"
+                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                            "Transitive" = "11:FALSE"
+                                                                "Keys"
+                                                                {
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_38F91E60A2304BC4A5F0A8DB4CAC2982"
+                                                                    {
+                                                                    "Name" = "8:Create"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "AlwaysCreate" = "11:TRUE"
+                                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                                    "Transitive" = "11:TRUE"
+                                                                        "Keys"
+                                                                        {
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_87AF3ACA6BAD4D21868B0F6D6CBF1A72"
+                                                                            {
+                                                                            "Name" = "8:Software"
+                                                                            "Condition" = "8:ALLUSERS"
+                                                                            "AlwaysCreate" = "11:TRUE"
+                                                                            "DeleteAtUninstall" = "11:TRUE"
+                                                                            "Transitive" = "11:TRUE"
+                                                                                "Keys"
+                                                                                {
+                                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_C7D8A97657F044378613C6E013916C2F"
+                                                                                    {
+                                                                                    "Name" = "8:Microsoft"
+                                                                                    "Condition" = "8:ALLUSERS"
+                                                                                    "AlwaysCreate" = "11:TRUE"
+                                                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                                                    "Transitive" = "11:TRUE"
+                                                                                        "Keys"
+                                                                                        {
+                                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_9A05CE7A06794D169EC007F34123EC16"
+                                                                                            {
+                                                                                            "Name" = "8:Office"
+                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                            "AlwaysCreate" = "11:TRUE"
+                                                                                            "DeleteAtUninstall" = "11:TRUE"
+                                                                                            "Transitive" = "11:TRUE"
+                                                                                                "Keys"
+                                                                                                {
+                                                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_FB5B368A264A4FDBAD5383707ABC0378"
+                                                                                                    {
+                                                                                                    "Name" = "8:Excel"
+                                                                                                    "Condition" = "8:ALLUSERS"
+                                                                                                    "AlwaysCreate" = "11:TRUE"
+                                                                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                                                                    "Transitive" = "11:TRUE"
+                                                                                                        "Keys"
+                                                                                                        {
+                                                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_10C38464469B41299FC492C662125528"
+                                                                                                            {
+                                                                                                            "Name" = "8:Addins"
+                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                            "AlwaysCreate" = "11:TRUE"
+                                                                                                            "DeleteAtUninstall" = "11:TRUE"
+                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                "Keys"
+                                                                                                                {
+                                                                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_85BDE5D1FB1F42AF9F438B8B21C6339D"
+                                                                                                                    {
+                                                                                                                    "Name" = "8:OlapPivotTableExtensions"
+                                                                                                                    "Condition" = "8:ALLUSERS"
+                                                                                                                    "AlwaysCreate" = "11:TRUE"
+                                                                                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                                                                                    "Transitive" = "11:TRUE"
+                                                                                                                        "Keys"
+                                                                                                                        {
+                                                                                                                        }
+                                                                                                                        "Values"
+                                                                                                                        {
+                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1F3F0390B29F489FB5FE7DA96DB921BE"
+                                                                                                                            {
+                                                                                                                            "Name" = "8:Manifest"
+                                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                            "ValueTypes" = "3:1"
+                                                                                                                            "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
+                                                                                                                            }
+                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BD8590ECE6174523A830D81853244186"
+                                                                                                                            {
+                                                                                                                            "Name" = "8:Description"
+                                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                            "ValueTypes" = "3:1"
+                                                                                                                            "Value" = "8:Excel 2007 add-in for Analysis Services PivotTables"
+                                                                                                                            }
+                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D1F6616BBD524927BBF1B63DC2E5BD02"
+                                                                                                                            {
+                                                                                                                            "Name" = "8:FriendlyName"
+                                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                            "ValueTypes" = "3:1"
+                                                                                                                            "Value" = "8:OLAP PivotTable Extensions"
+                                                                                                                            }
+                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DD7A4EC8504649618706621366F6DAEB"
+                                                                                                                            {
+                                                                                                                            "Name" = "8:CommandLineSafe"
+                                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                            "ValueTypes" = "3:3"
+                                                                                                                            "Value" = "3:1"
+                                                                                                                            }
+                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E7F145AADCB84BD7A579EDFAC389107C"
+                                                                                                                            {
+                                                                                                                            "Name" = "8:LoadBehavior"
+                                                                                                                            "Condition" = "8:ALLUSERS"
+                                                                                                                            "Transitive" = "11:TRUE"
+                                                                                                                            "ValueTypes" = "3:3"
+                                                                                                                            "Value" = "3:3"
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                                "Values"
+                                                                                                                {
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        "Values"
+                                                                                                        {
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                "Values"
+                                                                                                {
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        "Values"
+                                                                                        {
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                }
+                                                                "Values"
+                                                                {
+                                                                }
+                                                            }
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
+                                }
+                                "Values"
+                                {
+                                }
+                            }
+                        }
+                        "Values"
+                        {
+                        }
+                    }
+                }
+            }
+            "HKCU"
+            {
+                "Keys"
+                {
+                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2361A28DCA414AEE96CABF5268F614EC"
+                    {
+                    "Name" = "8:Software"
+                    "Condition" = "8:"
+                    "AlwaysCreate" = "11:TRUE"
+                    "DeleteAtUninstall" = "11:FALSE"
+                    "Transitive" = "11:FALSE"
+                        "Keys"
+                        {
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_1A0E2C897333488D8A977B31378EEAE2"
+                            {
+                            "Name" = "8:Classes"
+                            "Condition" = "8:"
+                            "AlwaysCreate" = "11:TRUE"
+                            "DeleteAtUninstall" = "11:FALSE"
+                            "Transitive" = "11:FALSE"
+                                "Keys"
+                                {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_9F54E4B4FA4E485997BEFD7A79AD8742"
+                                    {
+                                    "Name" = "8:CLSID"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2FF57335C35F40A6A934A9AEBBF093B2"
+                                            {
+                                            "Name" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                            "Condition" = "8:NOT ALLUSERS"
+                                            "AlwaysCreate" = "11:TRUE"
+                                            "DeleteAtUninstall" = "11:TRUE"
+                                            "Transitive" = "11:TRUE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0206C5B7D5534399B258C412F216E88B"
+                                                    {
+                                                    "Name" = "8:ProgID"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                    "Transitive" = "11:TRUE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BA2F9DDAEE294BB9ACBC51D6756CA4DF"
+                                                            {
+                                                            "Name" = "8:"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:OlapPivotTableExtensions"
+                                                            }
+                                                        }
+                                                    }
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0DFF8938E53D41FD8D1415CFE3E1529C"
+                                                    {
+                                                    "Name" = "8:Programmable"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                    "Transitive" = "11:TRUE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_57FD7499D0C7493CA0B9AD0CCF98A874"
+                                                    {
+                                                    "Name" = "8:VersionIndependentProgID"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                    "Transitive" = "11:TRUE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4703532CA0F642C887AF93C2BE21F1B7"
+                                                            {
+                                                            "Name" = "8:"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:OlapPivotTableExtensions"
+                                                            }
+                                                        }
+                                                    }
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_B4011E3CAE574BFEB33106529D12B027"
+                                                    {
+                                                    "Name" = "8:InprocServer32"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:TRUE"
+                                                    "Transitive" = "11:TRUE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2DE03E661AFD4AAD933C5DC6CA1B9799"
+                                                            {
+                                                            "Name" = "8:ThreadingModel"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:Both"
+                                                            }
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3866F9338AE0474DA03D3BE46AE55A7A"
+                                                            {
+                                                            "Name" = "8:ManifestLocation"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:[TARGETDIR]"
+                                                            }
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4B55AF316A1B4B598A511F8B26A71407"
+                                                            {
+                                                            "Name" = "8:"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:%CommonProgramFiles%\\Microsoft Shared\\VSTO\\8.0\\AddinLoader.dll"
+                                                            }
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B1C2C4A8BC35495C9A7ECFEBF00D31DC"
+                                                            {
+                                                            "Name" = "8:ManifestName"
+                                                            "Condition" = "8:NOT ALLUSERS"
+                                                            "Transitive" = "11:TRUE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:OlapPivotTableExtensions.dll.manifest"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_04BCD040961745C68E86465A8C356698"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "Transitive" = "11:TRUE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:OlapPivotTableExtensions -- an addin created with VSTO technology"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_DA2F0280384F42F7B11A67D4F7DF3C61"
+                                    {
+                                    "Name" = "8:OlapPivotTableExtensions"
+                                    "Condition" = "8:NOT ALLUSERS"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "DeleteAtUninstall" = "11:TRUE"
+                                    "Transitive" = "11:TRUE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2810721B3CA84FE69C6BEC76790B48FE"
+                                            {
+                                            "Name" = "8:CLSID"
+                                            "Condition" = "8:NOT ALLUSERS"
+                                            "AlwaysCreate" = "11:TRUE"
+                                            "DeleteAtUninstall" = "11:TRUE"
+                                            "Transitive" = "11:TRUE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_381374C0F9CA49A3ADE698502D932BB9"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:NOT ALLUSERS"
+                                                    "Transitive" = "11:TRUE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CE5BEF97E5AC411182767E2AF9881BD5"
+                                            {
+                                            "Name" = "8:"
+                                            "Condition" = "8:NOT ALLUSERS"
+                                            "Transitive" = "11:TRUE"
+                                            "ValueTypes" = "3:1"
+                                            "Value" = "8:OlapPivotTableExtensions -- an addin created with VSTO technology"
+                                            }
+                                        }
+                                    }
+                                }
+                                "Values"
+                                {
+                                }
+                            }
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_6E42DFDFC28D4C3FB2D564DB334DB80A"
+                            {
+                            "Name" = "8:Microsoft"
+                            "Condition" = "8:"
+                            "AlwaysCreate" = "11:TRUE"
+                            "DeleteAtUninstall" = "11:FALSE"
+                            "Transitive" = "11:FALSE"
+                                "Keys"
+                                {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_311513C8715C4CC19E78AE7E3B38A470"
+                                    {
+                                    "Name" = "8:Office"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_7436743B277545D9B9B3F09E0EC49CBC"
                                             {
                                             "Name" = "8:Excel"
                                             "Condition" = "8:"
@@ -1220,7 +1652,7 @@
                                             "Transitive" = "11:FALSE"
                                                 "Keys"
                                                 {
-                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_10C38464469B41299FC492C662125528"
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_683459C28BC244BDB283204B730549D1"
                                                     {
                                                     "Name" = "8:Addins"
                                                     "Condition" = "8:"
@@ -1229,55 +1661,55 @@
                                                     "Transitive" = "11:FALSE"
                                                         "Keys"
                                                         {
-                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_85BDE5D1FB1F42AF9F438B8B21C6339D"
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_90CE82B283FD46609D73AE1B01F987AA"
                                                             {
                                                             "Name" = "8:OlapPivotTableExtensions"
-                                                            "Condition" = "8:"
+                                                            "Condition" = "8:NOT ALLUSERS"
                                                             "AlwaysCreate" = "11:TRUE"
                                                             "DeleteAtUninstall" = "11:TRUE"
-                                                            "Transitive" = "11:FALSE"
+                                                            "Transitive" = "11:TRUE"
                                                                 "Keys"
                                                                 {
                                                                 }
                                                                 "Values"
                                                                 {
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1F3F0390B29F489FB5FE7DA96DB921BE"
-                                                                    {
-                                                                    "Name" = "8:Manifest"
-                                                                    "Condition" = "8:"
-                                                                    "Transitive" = "11:FALSE"
-                                                                    "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
-                                                                    }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BD8590ECE6174523A830D81853244186"
-                                                                    {
-                                                                    "Name" = "8:Description"
-                                                                    "Condition" = "8:"
-                                                                    "Transitive" = "11:FALSE"
-                                                                    "ValueTypes" = "3:1"
-                                                                    "Value" = "8:Excel 2007 add-in for Analysis Services PivotTables"
-                                                                    }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D1F6616BBD524927BBF1B63DC2E5BD02"
-                                                                    {
-                                                                    "Name" = "8:FriendlyName"
-                                                                    "Condition" = "8:"
-                                                                    "Transitive" = "11:FALSE"
-                                                                    "ValueTypes" = "3:1"
-                                                                    "Value" = "8:OLAP PivotTable Extensions"
-                                                                    }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DD7A4EC8504649618706621366F6DAEB"
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3686ABB9509F4FBE816D4612F82986CB"
                                                                     {
                                                                     "Name" = "8:CommandLineSafe"
-                                                                    "Condition" = "8:"
-                                                                    "Transitive" = "11:FALSE"
+                                                                    "Condition" = "8:NOT ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:3"
                                                                     "Value" = "3:1"
                                                                     }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E7F145AADCB84BD7A579EDFAC389107C"
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3BD8B9F2B91643808F9F4F5AA01D419A"
+                                                                    {
+                                                                    "Name" = "8:FriendlyName"
+                                                                    "Condition" = "8:NOT ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:OLAP PivotTable Extensions"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B5F2B21C400246ADB8F4B96A263C2B8E"
+                                                                    {
+                                                                    "Name" = "8:Description"
+                                                                    "Condition" = "8:NOT ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:Excel 2007 add-in for Analysis Services PivotTables"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CAB054F2B7C0460FA1EB5E0BAE28F279"
+                                                                    {
+                                                                    "Name" = "8:Manifest"
+                                                                    "Condition" = "8:NOT ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E1EE83A553094F0A84AE5526DA871A08"
                                                                     {
                                                                     "Name" = "8:LoadBehavior"
-                                                                    "Condition" = "8:"
-                                                                    "Transitive" = "11:FALSE"
+                                                                    "Condition" = "8:NOT ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:3"
                                                                     "Value" = "3:3"
                                                                     }
@@ -1549,7 +1981,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:0"
+                            "Value" = "3:1"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
