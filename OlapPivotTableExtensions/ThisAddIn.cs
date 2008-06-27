@@ -54,7 +54,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -143,13 +143,20 @@ namespace OlapPivotTableExtensions
         
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            #region VSTO generated code
+            try
+            {
+                #region VSTO generated code
 
-            this.Application = (Excel.Application)Microsoft.Office.Tools.Excel.ExcelLocale1033Proxy.Wrap(typeof(Excel.Application), this.Application);
+                this.Application = (Excel.Application)Microsoft.Office.Tools.Excel.ExcelLocale1033Proxy.Wrap(typeof(Excel.Application), this.Application);
 
-            #endregion
+                #endregion
 
-            CreateOlapPivotTableExtensionsMenu();
+                CreateOlapPivotTableExtensionsMenu();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+            }
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
