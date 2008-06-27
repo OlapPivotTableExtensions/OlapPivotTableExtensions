@@ -17,15 +17,15 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <RootNamespace>OlapPivotTableExtensions</RootNamespace>
     <AssemblyName>OlapPivotTableExtensions</AssemblyName>
-    <PublishUrl>http://localhost/OlapPivotTableExtensions/</PublishUrl>
-    <ApplicationVersion>0.5.0.0</ApplicationVersion>
-    <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>OlapPivotTableExtensions.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <PublishUrl>http://localhost/OlapPivotTableExtensions/</PublishUrl>
+    <ApplicationVersion>0.5.2.0</ApplicationVersion>
+    <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
   </PropertyGroup>
   <PropertyGroup>
     <!-- 
