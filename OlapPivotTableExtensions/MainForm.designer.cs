@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabCalcs = new System.Windows.Forms.TabPage();
@@ -53,20 +54,43 @@
             this.tabMDX = new System.Windows.Forms.TabPage();
             this.txtMDX = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.tabSearch = new System.Windows.Forms.TabPage();
+            this.btnCancelSearch = new System.Windows.Forms.Button();
+            this.prgSearch = new System.Windows.Forms.ProgressBar();
+            this.lblNoSearchMatches = new System.Windows.Forms.Label();
+            this.btnSearchAdd = new System.Windows.Forms.Button();
+            this.chkMemberProperties = new System.Windows.Forms.CheckBox();
+            this.chkExactMatch = new System.Windows.Forms.CheckBox();
+            this.cmbLookIn = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnFind = new System.Windows.Forms.Button();
+            this.lblSearchFor = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.lblSearchError = new System.Windows.Forms.Label();
+            this.dataGridSearchResults = new System.Windows.Forms.DataGridView();
+            this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tabDefaults = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btnSaveDefaults = new System.Windows.Forms.Button();
+            this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.linkCodeplex = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
-            this.tabDefaults = new System.Windows.Forms.TabPage();
-            this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
-            this.btnSaveDefaults = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
             this.tabMDX.SuspendLayout();
-            this.tabAbout.SuspendLayout();
+            this.tabSearch.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridSearchResults)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cubeSearchMatchBindingSource)).BeginInit();
             this.tabDefaults.SuspendLayout();
+            this.tabAbout.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -77,6 +101,7 @@
             this.tabControl.Controls.Add(this.tabCalcs);
             this.tabControl.Controls.Add(this.tabLibrary);
             this.tabControl.Controls.Add(this.tabMDX);
+            this.tabControl.Controls.Add(this.tabSearch);
             this.tabControl.Controls.Add(this.tabDefaults);
             this.tabControl.Controls.Add(this.tabAbout);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
@@ -362,6 +387,252 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "MDX Query:";
             // 
+            // tabSearch
+            // 
+            this.tabSearch.Controls.Add(this.btnCancelSearch);
+            this.tabSearch.Controls.Add(this.prgSearch);
+            this.tabSearch.Controls.Add(this.lblNoSearchMatches);
+            this.tabSearch.Controls.Add(this.btnSearchAdd);
+            this.tabSearch.Controls.Add(this.chkMemberProperties);
+            this.tabSearch.Controls.Add(this.chkExactMatch);
+            this.tabSearch.Controls.Add(this.cmbLookIn);
+            this.tabSearch.Controls.Add(this.label7);
+            this.tabSearch.Controls.Add(this.btnFind);
+            this.tabSearch.Controls.Add(this.lblSearchFor);
+            this.tabSearch.Controls.Add(this.txtSearch);
+            this.tabSearch.Controls.Add(this.lblSearchError);
+            this.tabSearch.Controls.Add(this.dataGridSearchResults);
+            this.tabSearch.Location = new System.Drawing.Point(4, 22);
+            this.tabSearch.Name = "tabSearch";
+            this.tabSearch.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSearch.Size = new System.Drawing.Size(439, 305);
+            this.tabSearch.TabIndex = 5;
+            this.tabSearch.Text = "Search";
+            this.tabSearch.UseVisualStyleBackColor = true;
+            // 
+            // btnCancelSearch
+            // 
+            this.btnCancelSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancelSearch.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCancelSearch.Location = new System.Drawing.Point(10, 276);
+            this.btnCancelSearch.Name = "btnCancelSearch";
+            this.btnCancelSearch.Size = new System.Drawing.Size(60, 23);
+            this.btnCancelSearch.TabIndex = 11;
+            this.btnCancelSearch.Text = "Cancel";
+            this.btnCancelSearch.UseVisualStyleBackColor = false;
+            this.btnCancelSearch.Visible = false;
+            this.btnCancelSearch.Click += new System.EventHandler(this.btnCancelSearch_Click);
+            // 
+            // prgSearch
+            // 
+            this.prgSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.prgSearch.Location = new System.Drawing.Point(79, 279);
+            this.prgSearch.Name = "prgSearch";
+            this.prgSearch.Size = new System.Drawing.Size(206, 18);
+            this.prgSearch.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.prgSearch.TabIndex = 10;
+            this.prgSearch.Visible = false;
+            // 
+            // lblNoSearchMatches
+            // 
+            this.lblNoSearchMatches.AutoSize = true;
+            this.lblNoSearchMatches.BackColor = System.Drawing.SystemColors.Window;
+            this.lblNoSearchMatches.ForeColor = System.Drawing.Color.Red;
+            this.lblNoSearchMatches.Location = new System.Drawing.Point(16, 143);
+            this.lblNoSearchMatches.Name = "lblNoSearchMatches";
+            this.lblNoSearchMatches.Size = new System.Drawing.Size(94, 13);
+            this.lblNoSearchMatches.TabIndex = 9;
+            this.lblNoSearchMatches.Text = "No matches found";
+            this.lblNoSearchMatches.Visible = false;
+            // 
+            // btnSearchAdd
+            // 
+            this.btnSearchAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchAdd.Enabled = false;
+            this.btnSearchAdd.Location = new System.Drawing.Point(309, 276);
+            this.btnSearchAdd.Name = "btnSearchAdd";
+            this.btnSearchAdd.Size = new System.Drawing.Size(119, 23);
+            this.btnSearchAdd.TabIndex = 8;
+            this.btnSearchAdd.Text = "Add to PivotTable";
+            this.btnSearchAdd.UseVisualStyleBackColor = true;
+            this.btnSearchAdd.Click += new System.EventHandler(this.btnSearchAdd_Click);
+            // 
+            // chkMemberProperties
+            // 
+            this.chkMemberProperties.AutoSize = true;
+            this.chkMemberProperties.Checked = true;
+            this.chkMemberProperties.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkMemberProperties.Location = new System.Drawing.Point(133, 95);
+            this.chkMemberProperties.Name = "chkMemberProperties";
+            this.chkMemberProperties.Size = new System.Drawing.Size(149, 17);
+            this.chkMemberProperties.TabIndex = 6;
+            this.chkMemberProperties.Text = "Search member properties";
+            this.chkMemberProperties.UseVisualStyleBackColor = true;
+            // 
+            // chkExactMatch
+            // 
+            this.chkExactMatch.AutoSize = true;
+            this.chkExactMatch.Location = new System.Drawing.Point(10, 95);
+            this.chkExactMatch.Name = "chkExactMatch";
+            this.chkExactMatch.Size = new System.Drawing.Size(85, 17);
+            this.chkExactMatch.TabIndex = 5;
+            this.chkExactMatch.Text = "Exact match";
+            this.chkExactMatch.UseVisualStyleBackColor = true;
+            // 
+            // cmbLookIn
+            // 
+            this.cmbLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbLookIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLookIn.FormattingEnabled = true;
+            this.cmbLookIn.Items.AddRange(new object[] {
+            "Field list",
+            "Dimension data"});
+            this.cmbLookIn.Location = new System.Drawing.Point(10, 68);
+            this.cmbLookIn.MaxDropDownItems = 10;
+            this.cmbLookIn.Name = "cmbLookIn";
+            this.cmbLookIn.Size = new System.Drawing.Size(418, 21);
+            this.cmbLookIn.TabIndex = 3;
+            this.cmbLookIn.SelectedIndexChanged += new System.EventHandler(this.cmbLookIn_SelectedIndexChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(7, 52);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(45, 13);
+            this.label7.TabIndex = 4;
+            this.label7.Text = "Look in:";
+            // 
+            // btnFind
+            // 
+            this.btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFind.Location = new System.Drawing.Point(355, 22);
+            this.btnFind.Name = "btnFind";
+            this.btnFind.Size = new System.Drawing.Size(73, 23);
+            this.btnFind.TabIndex = 2;
+            this.btnFind.Text = "Find Next";
+            this.btnFind.UseVisualStyleBackColor = true;
+            this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
+            // 
+            // lblSearchFor
+            // 
+            this.lblSearchFor.AutoSize = true;
+            this.lblSearchFor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSearchFor.Location = new System.Drawing.Point(7, 7);
+            this.lblSearchFor.Name = "lblSearchFor";
+            this.lblSearchFor.Size = new System.Drawing.Size(56, 13);
+            this.lblSearchFor.TabIndex = 1;
+            this.lblSearchFor.Text = "Find what:";
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Location = new System.Drawing.Point(10, 24);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(339, 20);
+            this.txtSearch.TabIndex = 0;
+            this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);
+            this.txtSearch.Enter += new System.EventHandler(this.txtSearch_Enter);
+            // 
+            // lblSearchError
+            // 
+            this.lblSearchError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSearchError.AutoEllipsis = true;
+            this.lblSearchError.BackColor = System.Drawing.Color.Transparent;
+            this.lblSearchError.ForeColor = System.Drawing.Color.Red;
+            this.lblSearchError.Location = new System.Drawing.Point(7, 279);
+            this.lblSearchError.Name = "lblSearchError";
+            this.lblSearchError.Size = new System.Drawing.Size(296, 18);
+            this.lblSearchError.TabIndex = 12;
+            this.lblSearchError.Text = "Error: Text here";
+            this.lblSearchError.Visible = false;
+            // 
+            // dataGridSearchResults
+            // 
+            this.dataGridSearchResults.AllowUserToAddRows = false;
+            this.dataGridSearchResults.AllowUserToDeleteRows = false;
+            this.dataGridSearchResults.AllowUserToResizeRows = false;
+            this.dataGridSearchResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridSearchResults.AutoGenerateColumns = false;
+            this.dataGridSearchResults.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dataGridSearchResults.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dataGridSearchResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridSearchResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colCheck,
+            this.colName,
+            this.colType,
+            this.colFolder,
+            this.colDesc});
+            this.dataGridSearchResults.DataSource = this.cubeSearchMatchBindingSource;
+            this.dataGridSearchResults.Enabled = false;
+            this.dataGridSearchResults.Location = new System.Drawing.Point(10, 118);
+            this.dataGridSearchResults.MultiSelect = false;
+            this.dataGridSearchResults.Name = "dataGridSearchResults";
+            this.dataGridSearchResults.RowHeadersVisible = false;
+            this.dataGridSearchResults.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridSearchResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridSearchResults.Size = new System.Drawing.Size(418, 150);
+            this.dataGridSearchResults.TabIndex = 7;
+            this.dataGridSearchResults.TabStop = false;
+            this.dataGridSearchResults.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseLeave);
+            this.dataGridSearchResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseEnter);
+            this.dataGridSearchResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellClick);
+            // 
+            // cubeSearchMatchBindingSource
+            // 
+            this.cubeSearchMatchBindingSource.DataSource = typeof(OlapPivotTableExtensions.CubeSearcher.CubeSearchMatch);
+            // 
+            // tabDefaults
+            // 
+            this.tabDefaults.Controls.Add(this.label6);
+            this.tabDefaults.Controls.Add(this.btnSaveDefaults);
+            this.tabDefaults.Controls.Add(this.chkShowCalcMembers);
+            this.tabDefaults.Location = new System.Drawing.Point(4, 22);
+            this.tabDefaults.Name = "tabDefaults";
+            this.tabDefaults.Size = new System.Drawing.Size(439, 305);
+            this.tabDefaults.TabIndex = 4;
+            this.tabDefaults.Text = "Defaults";
+            this.tabDefaults.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(10, 15);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(171, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "For new OLAP PivotTables...";
+            // 
+            // btnSaveDefaults
+            // 
+            this.btnSaveDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSaveDefaults.Location = new System.Drawing.Point(351, 270);
+            this.btnSaveDefaults.Name = "btnSaveDefaults";
+            this.btnSaveDefaults.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveDefaults.TabIndex = 1;
+            this.btnSaveDefaults.Text = "Save";
+            this.btnSaveDefaults.UseVisualStyleBackColor = true;
+            this.btnSaveDefaults.Click += new System.EventHandler(this.btnSaveDefaults_Click);
+            // 
+            // chkShowCalcMembers
+            // 
+            this.chkShowCalcMembers.AutoSize = true;
+            this.chkShowCalcMembers.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkShowCalcMembers.Location = new System.Drawing.Point(13, 34);
+            this.chkShowCalcMembers.Name = "chkShowCalcMembers";
+            this.chkShowCalcMembers.Size = new System.Drawing.Size(335, 17);
+            this.chkShowCalcMembers.TabIndex = 0;
+            this.chkShowCalcMembers.Text = "Turn on \"Show calculated members from OLAP server\" by default";
+            this.chkShowCalcMembers.UseVisualStyleBackColor = true;
+            // 
             // tabAbout
             // 
             this.tabAbout.Controls.Add(this.linkCodeplex);
@@ -406,49 +677,47 @@
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "OLAP PivotTable Extensions v0.0.0.0";
             // 
-            // tabDefaults
+            // colCheck
             // 
-            this.tabDefaults.Controls.Add(this.label6);
-            this.tabDefaults.Controls.Add(this.btnSaveDefaults);
-            this.tabDefaults.Controls.Add(this.chkShowCalcMembers);
-            this.tabDefaults.Location = new System.Drawing.Point(4, 22);
-            this.tabDefaults.Name = "tabDefaults";
-            this.tabDefaults.Size = new System.Drawing.Size(439, 305);
-            this.tabDefaults.TabIndex = 4;
-            this.tabDefaults.Text = "Defaults";
-            this.tabDefaults.UseVisualStyleBackColor = true;
+            this.colCheck.DataPropertyName = "Checked";
+            this.colCheck.Frozen = true;
+            this.colCheck.HeaderText = "Add";
+            this.colCheck.MinimumWidth = 30;
+            this.colCheck.Name = "colCheck";
+            this.colCheck.Width = 30;
             // 
-            // chkShowCalcMembers
+            // colName
             // 
-            this.chkShowCalcMembers.AutoSize = true;
-            this.chkShowCalcMembers.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkShowCalcMembers.Location = new System.Drawing.Point(13, 34);
-            this.chkShowCalcMembers.Name = "chkShowCalcMembers";
-            this.chkShowCalcMembers.Size = new System.Drawing.Size(335, 17);
-            this.chkShowCalcMembers.TabIndex = 0;
-            this.chkShowCalcMembers.Text = "Turn on \"Show calculated members from OLAP server\" by default";
-            this.chkShowCalcMembers.UseVisualStyleBackColor = true;
+            this.colName.DataPropertyName = "Name";
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            this.colName.Width = 140;
             // 
-            // btnSaveDefaults
+            // colType
             // 
-            this.btnSaveDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSaveDefaults.Location = new System.Drawing.Point(351, 270);
-            this.btnSaveDefaults.Name = "btnSaveDefaults";
-            this.btnSaveDefaults.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveDefaults.TabIndex = 1;
-            this.btnSaveDefaults.Text = "Save";
-            this.btnSaveDefaults.UseVisualStyleBackColor = true;
-            this.btnSaveDefaults.Click += new System.EventHandler(this.btnSaveDefaults_Click);
+            this.colType.DataPropertyName = "Type";
+            this.colType.HeaderText = "Type";
+            this.colType.MinimumWidth = 30;
+            this.colType.Name = "colType";
+            this.colType.ReadOnly = true;
+            this.colType.Width = 60;
             // 
-            // label6
+            // colFolder
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(10, 15);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(171, 13);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "For new OLAP PivotTables...";
+            this.colFolder.DataPropertyName = "Folder";
+            this.colFolder.HeaderText = "Folder";
+            this.colFolder.Name = "colFolder";
+            this.colFolder.ReadOnly = true;
+            this.colFolder.Width = 120;
+            // 
+            // colDesc
+            // 
+            this.colDesc.DataPropertyName = "Description";
+            this.colDesc.HeaderText = "Description";
+            this.colDesc.Name = "colDesc";
+            this.colDesc.ReadOnly = true;
+            this.colDesc.Width = 300;
             // 
             // MainForm
             // 
@@ -463,6 +732,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OLAP PivotTable Extensions";
+            this.Activated += new System.EventHandler(this.MainForm_Activated);
             this.tabControl.ResumeLayout(false);
             this.tabCalcs.ResumeLayout(false);
             this.tabCalcs.PerformLayout();
@@ -470,18 +740,20 @@
             this.tabLibrary.PerformLayout();
             this.tabMDX.ResumeLayout(false);
             this.tabMDX.PerformLayout();
-            this.tabAbout.ResumeLayout(false);
-            this.tabAbout.PerformLayout();
+            this.tabSearch.ResumeLayout(false);
+            this.tabSearch.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridSearchResults)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cubeSearchMatchBindingSource)).EndInit();
             this.tabDefaults.ResumeLayout(false);
             this.tabDefaults.PerformLayout();
+            this.tabAbout.ResumeLayout(false);
+            this.tabAbout.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabCalcs;
         private System.Windows.Forms.TabPage tabMDX;
         private System.Windows.Forms.ComboBox comboCalcName;
         private System.Windows.Forms.Label label1;
@@ -512,5 +784,27 @@
         private System.Windows.Forms.CheckBox chkShowCalcMembers;
         private System.Windows.Forms.Button btnSaveDefaults;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnFind;
+        private System.Windows.Forms.Label lblSearchFor;
+        private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.ComboBox cmbLookIn;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox chkExactMatch;
+        private System.Windows.Forms.CheckBox chkMemberProperties;
+        private System.Windows.Forms.Button btnSearchAdd;
+        private System.Windows.Forms.Label lblNoSearchMatches;
+        private System.Windows.Forms.ProgressBar prgSearch;
+        private System.Windows.Forms.Button btnCancelSearch;
+        private System.Windows.Forms.Label lblSearchError;
+        private System.Windows.Forms.TabControl tabControl;
+        public System.Windows.Forms.TabPage tabSearch;
+        public System.Windows.Forms.TabPage tabCalcs;
+        private System.Windows.Forms.DataGridView dataGridSearchResults;
+        private System.Windows.Forms.BindingSource cubeSearchMatchBindingSource;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colCheck;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFolder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDesc;
     }
 }

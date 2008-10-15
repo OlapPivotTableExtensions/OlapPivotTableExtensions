@@ -87,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5F5DA125B215D6D1562E3C4A1AEAE712"
+        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7DBE2E6CDCE1062AB1B008A50F983F2D"
         "OwnerKey" = "8:_8B257FB855E29A629952277A4FE55396"
         "MsmSig" = "8:_UNDEFINED"
@@ -106,6 +112,12 @@
         "Entry"
         {
         "MsmKey" = "8:_805327BF8EE34F0AA113184682C96EB8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -220,6 +232,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -245,6 +263,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5F5DA125B215D6D1562E3C4A1AEAE712"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -396,6 +420,34 @@
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_6DDA26A440FA4497A248A3AD2BDC8DD0"
+            {
+            "Name" = "8:AdomdClient Permissions"
+            "Condition" = "8:"
+            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "FileType" = "3:1"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_3BAB53EE_96FE_4429_A27F_A2EB2422D849"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\""
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7CC33A4B0CAB42D9966E3F18426F05D2"
+            {
+            "Name" = "8:AdomdClient Permissions"
+            "Condition" = "8:"
+            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "FileType" = "3:1"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_C7C89E88_5C86_4EE4_B72E_649EC4E10CFB"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7E2D0C84222949759D2CF441B817B7FF"
             {
             "Name" = "8:Primary output from SetSecurity (Active)"
@@ -423,6 +475,34 @@
             "Identifier" = "8:_3D65352C_F475_4146_9770_FEF379661F18"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensions\""
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A1D1AA66909C47A2A45910D226559222"
+            {
+            "Name" = "8:AdomdClient Permissions"
+            "Condition" = "8:"
+            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_14DEEBFD_D049_474E_AB8C_EFFCEB55B8F4"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/assemblyName=\"Microsoft.AnalysisServices.AdomdClient.dll\" /targetDir=\"[TARGETDIR]\\\" /solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\" /solutionCodeGroupDescription=\"Code group for AdomdClient\" /assemblyCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\" /assemblyCodeGroupDescription=\"Code group for AdomdClient\" /allUsers=[ALLUSERS]"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C825B3EBC9A54BA7AACD37DBFC183872"
+            {
+            "Name" = "8:AdomdClient Permissions"
+            "Condition" = "8:"
+            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "FileType" = "3:1"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_2AA9839D_08CC_460B_B538_BD40925BD2F9"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\""
             }
         }
         "DefaultFeature"
@@ -505,7 +585,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -567,7 +647,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -585,6 +665,37 @@
                     }
                 }
             "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5F5DA125B215D6D1562E3C4A1AEAE712"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_5F5DA125B215D6D1562E3C4A1AEAE712"
+                    {
+                    "Name" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
@@ -662,6 +773,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_895F8CD7BB6F48219CDBCA89B62505FE"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ADODB, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_895F8CD7BB6F48219CDBCA89B62505FE"
+                    {
+                    "Name" = "8:adodb.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:C:\\Program Files\\Microsoft Visual Studio 9.0\\Visual Studio Tools for Office\\PIA\\Office12\\adodb.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8B257FB855E29A629952277A4FE55396"
@@ -793,7 +935,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -960,14 +1102,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{867E8A81-280F-4A66-AB08-87FE5CEB7F0E}"
-        "PackageCode" = "8:{0EC3ED8A-67FC-4001-AB58-086EEFDA79B1}"
+        "ProductCode" = "8:{65D81ABD-74D8-43B1-94E7-CED3BB9DAB64}"
+        "PackageCode" = "8:{8F353CB4-D5C5-4474-9229-935D316F3507}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.5.2"
+        "ProductVersion" = "8:0.6.0"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
