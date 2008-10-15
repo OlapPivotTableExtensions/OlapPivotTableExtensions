@@ -51,3 +51,29 @@ catch(e)
 	WScript.StdErr.WriteLine(e);
 	WScript.Quit(1);
 }
+
+//fix the VersionMin property so that it will properly delete prior versions during install
+try
+{
+	sql = "SELECT `VersionMin`, `VersionMax`, `ActionProperty` FROM `Upgrade`";
+	view = database.OpenView(sql);
+	view.Execute();
+	record = view.Fetch();
+	while (record)
+	{
+	    if (record.StringData(3) == "PREVIOUSVERSIONSINSTALLED")
+	    {
+	        record.StringData(1) = "0.1.0.0"; //this defaults to 1.0.0.0 which is greater than the first version we released
+        	view.Modify(msiViewModifyReplace, record);
+	    }
+        record = view.Fetch();
+	}
+
+	view.Close();
+	database.Commit();
+}
+catch(e)
+{
+	WScript.StdErr.WriteLine(e);
+	WScript.Quit(1);
+}

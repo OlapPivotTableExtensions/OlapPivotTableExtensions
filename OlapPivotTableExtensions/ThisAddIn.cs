@@ -11,8 +11,11 @@ namespace OlapPivotTableExtensions
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
 
-        private const string MENU_CAPTION = "OLAP PivotTable Extensions...";
+        private const string MENU_TAG = "OLAP PivotTable Extensions";
         private Office.CommandBarButton cmdMenuItem = null;
+        private Office.CommandBarButton cmdSearchMenuItem = null;
+
+        private MainForm frm;
 
         private static bool? _ShowCalcMembersByDefaultCached = null;
         public static bool ShowCalcMembersByDefault
@@ -43,10 +46,17 @@ namespace OlapPivotTableExtensions
                 DeleteOlapPivotTableExtensionsMenu();
 
                 Office.CommandBar ptcon = Application.CommandBars["PivotTable Context Menu"];
-                cmdMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
-                cmdMenuItem.Caption = MENU_CAPTION;
-                cmdMenuItem.FaceId = 1122;
 
+                cmdSearchMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                cmdSearchMenuItem.Caption = "Search...";
+                cmdSearchMenuItem.FaceId = 1733;
+                cmdSearchMenuItem.Tag = MENU_TAG;
+                cmdSearchMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdSearchMenuItem_Click);
+
+                cmdMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                cmdMenuItem.Caption = "OLAP PivotTable Extensions...";
+                cmdMenuItem.FaceId = 1122;
+                cmdMenuItem.Tag = MENU_TAG;
                 cmdMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
 
                 Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
@@ -54,7 +64,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
         }
 
@@ -73,14 +83,45 @@ namespace OlapPivotTableExtensions
             }
         }
 
+
+        public static string GetOlapPivotTableHierarchy(Excel.PivotCell cell)
+        {
+            try
+            {
+                if (IsOlapPivotTable(cell.PivotTable))
+                {
+                    if (cell.PivotCellType == Excel.XlPivotCellType.xlPivotCellPageFieldItem || cell.PivotCellType == Excel.XlPivotCellType.xlPivotCellPivotField || cell.PivotCellType == Excel.XlPivotCellType.xlPivotCellPivotItem)
+                    {
+                        Excel.CubeField field = cell.PivotField.CubeField;
+                        if (field.CubeFieldType == Excel.XlCubeFieldType.xlHierarchy) //not named sets since you can't filter them
+                        {
+                            return field.Name;
+                        }
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         void Application_SheetBeforeRightClick(object Sh, Microsoft.Office.Interop.Excel.Range Target, ref bool Cancel)
         {
             try
             {
                 if (IsOlapPivotTable(Application.ActiveCell.PivotTable))
+                {
                     cmdMenuItem.Visible = true;
+                    string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
+                    cmdSearchMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
+                }
                 else
+                {
                     cmdMenuItem.Visible = false;
+                    cmdSearchMenuItem.Visible = false;
+                }
             }
             catch
             {
@@ -92,6 +133,7 @@ namespace OlapPivotTableExtensions
         {
             try
             {
+                if (frm != null && frm.AddInWorking) return; //short circuit if we're in the middle of changing the PivotTable with the add-in
                 if (!IsOlapPivotTable(Target)) return;
 
                 foreach (Excel.CubeField field in Target.CubeFields)
@@ -110,7 +152,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Problem during update of OLAP PivotTable:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
         }
 
@@ -118,10 +160,34 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                MainForm frm = new MainForm(Application);
+                if (Ctrl.InstanceId != cmdMenuItem.InstanceId)
+                    return;
+
+                frm = new MainForm(Application);
                 frm.ShowDialog();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        void cmdSearchMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                if (Ctrl.InstanceId != cmdSearchMenuItem.InstanceId)
+                    return;
+
+                frm = new MainForm(Application);
+                string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
+                frm.SetupSearchTab(sSelectedHierarchy);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
         }
 
         private void DeleteOlapPivotTableExtensionsMenu()
@@ -131,7 +197,7 @@ namespace OlapPivotTableExtensions
                 Office.CommandBar ptcon = Application.CommandBars["PivotTable Context Menu"];
                 foreach (Office.CommandBarControl btn in ptcon.Controls)
                 {
-                    if (btn.Caption == MENU_CAPTION)
+                    if (btn.Tag == MENU_TAG)
                     {
                         btn.Delete(System.Reflection.Missing.Value);
                     }
@@ -155,7 +221,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
         }
 

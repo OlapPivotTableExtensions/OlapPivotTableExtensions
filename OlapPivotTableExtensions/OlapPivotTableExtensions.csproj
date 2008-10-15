@@ -24,7 +24,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <PublishUrl>http://localhost/OlapPivotTableExtensions/</PublishUrl>
-    <ApplicationVersion>0.5.2.0</ApplicationVersion>
+    <ApplicationVersion>0.6.3.0</ApplicationVersion>
     <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
   </PropertyGroup>
   <PropertyGroup>
@@ -92,6 +92,14 @@
      This sections specifies references for the project.
   -->
   <ItemGroup>
+    <Reference Include="adodb, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Visual Studio Tools for Office\PIA\Office12\adodb.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
@@ -143,12 +151,16 @@
   -->
   <ItemGroup>
     <Compile Include="CalculationsLibrary.cs" />
+    <Compile Include="ConnectionStringParser.cs" />
+    <Compile Include="CubeSearcher.cs" />
+    <Compile Include="Impersonater.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PivotTableKpiUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -166,6 +178,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="OlapPivotTableExtensions.snk" />
+    <None Include="Properties\DataSources\CubeSearcher.CubeSearchMatch.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -174,6 +187,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SortableList.cs" />
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
