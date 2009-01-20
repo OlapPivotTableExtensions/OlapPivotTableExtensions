@@ -63,7 +63,7 @@ namespace OlapPivotTableExtensions
                 StringBuilder sCalcs = new StringBuilder();
                 foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
                 {
-                    sCalcs.AppendFormat("MEMBER {0} as {1}\r\n", calc.Name, calc.Formula);
+                    sCalcs.AppendFormat("MEMBER {0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n","\r").Replace("\r","\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
                 }
                 if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -132,7 +132,8 @@ namespace OlapPivotTableExtensions
 
                 try
                 {
-                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula, System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
+                    //replace the line breaks in the formula we save to the PivotTable to workaround a bug in Excel Services: http://www.codeplex.com/OlapPivotTableExtend/Thread/View.aspx?ThreadId=41697
+                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula.Replace("\r\n","\r"), System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
                     if (bMeasure)
                     {
                         pvt.RefreshTable();
@@ -454,7 +455,7 @@ namespace OlapPivotTableExtensions
                 Excel.CalculatedMember oCalcMember = GetCalculatedMember(comboCalcName.Text);
                 if (oCalcMember != null)
                 {
-                    txtCalcFormula.Text = oCalcMember.Formula;
+                    txtCalcFormula.Text = oCalcMember.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n"); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
                     btnDeleteCalc.Enabled = true;
                 }
                 else

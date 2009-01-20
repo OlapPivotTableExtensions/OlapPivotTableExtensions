@@ -232,12 +232,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -245,6 +239,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8B257FB855E29A629952277A4FE55396"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1102,14 +1102,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{65D81ABD-74D8-43B1-94E7-CED3BB9DAB64}"
-        "PackageCode" = "8:{8F353CB4-D5C5-4474-9229-935D316F3507}"
+        "ProductCode" = "8:{1E6B028E-C0DB-4812-A39C-D5CDB0D53074}"
+        "PackageCode" = "8:{1EFBB2E2-ED7E-4A20-92A9-99DFDEC6EECF}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.6.0"
+        "ProductVersion" = "8:0.6.1"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -2309,7 +2309,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_805327BF8EE34F0AA113184682C96EB8"
             {
-            "SourcePath" = "8:..\\SetSecurity\\obj\\Debug\\SetSecurity.dll"
+            "SourcePath" = "8:..\\SetSecurity\\obj\\Release\\SetSecurity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
@@ -2337,7 +2337,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
