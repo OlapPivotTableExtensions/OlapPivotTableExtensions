@@ -10,10 +10,13 @@ namespace OlapPivotTableExtensions
     {
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
+        private const string REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT = "RefreshDataByDefault";
 
         private const string MENU_TAG = "OLAP PivotTable Extensions";
+        private const string PIVOTTABLE_CONTEXT_MENU = "PivotTable Context Menu";
         private Office.CommandBarButton cmdMenuItem = null;
         private Office.CommandBarButton cmdSearchMenuItem = null;
+        private Office.CommandBarButton cmdFilterListMenuItem = null;
 
         private MainForm frm;
 
@@ -39,19 +42,59 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        private static bool? _RefreshDataByDefaultCached = null;
+        public static bool RefreshDataByDefault
+        {
+            get
+            {
+                if (_RefreshDataByDefaultCached == null)
+                {
+                    Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                    _RefreshDataByDefaultCached = ((int)regKey.GetValue(REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT, 0) == 1) ? true : false;
+                    regKey.Close();
+                }
+                return (bool)_RefreshDataByDefaultCached;
+            }
+            set
+            {
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                regKey.SetValue(REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT, value, Microsoft.Win32.RegistryValueKind.DWord);
+                regKey.Close();
+                _RefreshDataByDefaultCached = value;
+            }
+        }
+
         private void CreateOlapPivotTableExtensionsMenu()
         {
             try
             {
                 DeleteOlapPivotTableExtensionsMenu();
 
-                Office.CommandBar ptcon = Application.CommandBars["PivotTable Context Menu"];
+                Office.CommandBar ptcon = Application.CommandBars[PIVOTTABLE_CONTEXT_MENU];
 
                 cmdSearchMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
                 cmdSearchMenuItem.Caption = "Search...";
                 cmdSearchMenuItem.FaceId = 1733;
                 cmdSearchMenuItem.Tag = MENU_TAG;
                 cmdSearchMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdSearchMenuItem_Click);
+
+                Office.CommandBarPopup popupFilter = null;
+                try
+                {
+                    //find the Filter sub-menu under the PivotTable context menu by ID 31404
+                    popupFilter = (Office.CommandBarPopup)Application.CommandBars.FindControl(Office.MsoControlType.msoControlPopup, 31404, missing, missing);
+                }
+                catch { }
+                if (popupFilter != null)
+                    cmdFilterListMenuItem = (Office.CommandBarButton)popupFilter.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                else
+                    cmdFilterListMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                
+                cmdFilterListMenuItem.Caption = "Filter List...";
+                cmdFilterListMenuItem.FaceId = 517;
+                cmdFilterListMenuItem.Tag = MENU_TAG;
+                cmdFilterListMenuItem.BeginGroup = true;
+                cmdFilterListMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
 
                 cmdMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
                 cmdMenuItem.Caption = "OLAP PivotTable Extensions...";
@@ -116,11 +159,13 @@ namespace OlapPivotTableExtensions
                     cmdMenuItem.Visible = true;
                     string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
                     cmdSearchMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
+                    cmdFilterListMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                 }
                 else
                 {
                     cmdMenuItem.Visible = false;
                     cmdSearchMenuItem.Visible = false;
+                    cmdFilterListMenuItem.Visible = false;
                 }
             }
             catch
@@ -148,6 +193,11 @@ namespace OlapPivotTableExtensions
                 if (ShowCalcMembersByDefault && !Target.ViewCalculatedMembers)
                 {
                     Target.ViewCalculatedMembers = true;
+                }
+
+                if (RefreshDataByDefault && !Target.PivotCache().RefreshOnFileOpen)
+                {
+                    Target.PivotCache().RefreshOnFileOpen = true;
                 }
             }
             catch (Exception ex)
@@ -190,16 +240,44 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        void cmdFilterListMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                if (Ctrl.InstanceId != cmdFilterListMenuItem.InstanceId)
+                    return;
+
+                frm = new MainForm(Application);
+                string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
+                frm.SetupFilterListTab(sSelectedHierarchy);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
         private void DeleteOlapPivotTableExtensionsMenu()
         {
             try
             {
-                Office.CommandBar ptcon = Application.CommandBars["PivotTable Context Menu"];
+                Office.CommandBar ptcon = Application.CommandBars[PIVOTTABLE_CONTEXT_MENU];
                 foreach (Office.CommandBarControl btn in ptcon.Controls)
                 {
                     if (btn.Tag == MENU_TAG)
                     {
                         btn.Delete(System.Reflection.Missing.Value);
+                    }
+                    if (btn is Office.CommandBarPopup)
+                    {
+                        foreach (Office.CommandBarControl btn2 in ((Office.CommandBarPopup)btn).Controls)
+                        {
+                            if (btn2.Tag == MENU_TAG)
+                            {
+                                btn2.Delete(System.Reflection.Missing.Value);
+                            }
+                        }
                     }
                 }
             }

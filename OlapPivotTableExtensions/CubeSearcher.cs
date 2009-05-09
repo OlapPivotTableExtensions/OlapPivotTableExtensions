@@ -702,7 +702,7 @@ namespace OlapPivotTableExtensions
                 }
                 else
                     _Folder = "Values";
-                if (!string.IsNullOrEmpty(m.DisplayFolder))
+                if (!string.IsNullOrEmpty(m.DisplayFolder) && m.DisplayFolder != "\\" && m.DisplayFolder != "/")
                     _Folder += "\\" + m.DisplayFolder;
                 _Description = m.Description;
             }
@@ -721,7 +721,7 @@ namespace OlapPivotTableExtensions
                 }
                 _Name = m.Caption;
                 _Folder = m.ParentLevel.ParentHierarchy.ParentDimension.Caption;
-                if (!string.IsNullOrEmpty(m.ParentLevel.ParentHierarchy.DisplayFolder))
+                if (!string.IsNullOrEmpty(m.ParentLevel.ParentHierarchy.DisplayFolder) && m.ParentLevel.ParentHierarchy.DisplayFolder != "\\" && m.ParentLevel.ParentHierarchy.DisplayFolder != "/")
                     _Folder += "\\" + m.ParentLevel.ParentHierarchy.DisplayFolder;
                 _Folder += "\\" + m.ParentLevel.ParentHierarchy.Caption;
             }
@@ -741,7 +741,7 @@ namespace OlapPivotTableExtensions
                 _MemberProperty = mp;
                 _Name = m.Caption;
                 _Folder = m.ParentLevel.ParentHierarchy.ParentDimension.Caption;
-                if (!string.IsNullOrEmpty(m.ParentLevel.ParentHierarchy.DisplayFolder))
+                if (!string.IsNullOrEmpty(m.ParentLevel.ParentHierarchy.DisplayFolder) && m.ParentLevel.ParentHierarchy.DisplayFolder != "\\" && m.ParentLevel.ParentHierarchy.DisplayFolder != "/")
                     _Folder += "\\" + m.ParentLevel.ParentHierarchy.DisplayFolder;
                 _Folder += "\\" + m.ParentLevel.ParentHierarchy.Caption + "\\" + m.ParentLevel.Caption;
                 _Description = "Property [" + mp.Name + "] = " + mp.Value;
@@ -754,7 +754,7 @@ namespace OlapPivotTableExtensions
                 _Name = mp.Name;
                 _Type = "Property";
                 _Folder = l.ParentHierarchy.ParentDimension.Caption;
-                if (!string.IsNullOrEmpty(l.ParentHierarchy.DisplayFolder))
+                if (!string.IsNullOrEmpty(l.ParentHierarchy.DisplayFolder) && l.ParentHierarchy.DisplayFolder != "\\" && l.ParentHierarchy.DisplayFolder != "/")
                     _Folder += "\\" + l.ParentHierarchy.DisplayFolder;
                 _Folder += "\\" + l.ParentHierarchy.Caption + "\\" + l.Caption;
                 _Description = description;
@@ -777,7 +777,7 @@ namespace OlapPivotTableExtensions
                 else
                     _Type = "Hierarchy";
                 _Folder = h.ParentDimension.Caption;
-                if (!string.IsNullOrEmpty(h.DisplayFolder))
+                if (!string.IsNullOrEmpty(h.DisplayFolder) && h.DisplayFolder != "\\" && h.DisplayFolder != "/")
                     _Folder += "\\" + h.DisplayFolder;
                 _Description = h.Description;
             }
@@ -788,7 +788,7 @@ namespace OlapPivotTableExtensions
                 _Name = l.Caption;
                 _Type = "Level";
                 _Folder = l.ParentHierarchy.ParentDimension.Caption;
-                if (!string.IsNullOrEmpty(l.ParentHierarchy.DisplayFolder))
+                if (!string.IsNullOrEmpty(l.ParentHierarchy.DisplayFolder) && l.ParentHierarchy.DisplayFolder != "\\" && l.ParentHierarchy.DisplayFolder != "/")
                     _Folder += "\\" + l.ParentHierarchy.DisplayFolder;
                 _Folder += "\\" + l.ParentHierarchy.Caption;
                 _Description = l.Description;

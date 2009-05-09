@@ -1102,14 +1102,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{1E6B028E-C0DB-4812-A39C-D5CDB0D53074}"
-        "PackageCode" = "8:{1EFBB2E2-ED7E-4A20-92A9-99DFDEC6EECF}"
+        "ProductCode" = "8:{80EEE3C6-2707-4BDF-86F5-C2EDF9CDE905}"
+        "PackageCode" = "8:{66247A26-E2DF-4704-9E17-ACF11FECE5B3}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.6.1"
+        "ProductVersion" = "8:0.6.2"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -2309,7 +2309,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_805327BF8EE34F0AA113184682C96EB8"
             {
-            "SourcePath" = "8:..\\SetSecurity\\obj\\Release\\SetSecurity.dll"
+            "SourcePath" = "8:..\\SetSecurity\\obj\\Debug\\SetSecurity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
@@ -2337,7 +2337,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
