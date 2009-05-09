@@ -20,6 +20,7 @@ namespace OlapPivotTableExtensions
         private CubeDef cube;
         private CubeSearcher searcher;
         public bool AddInWorking = false;
+        private BackgroundWorker workerFilterList;
 
         private int _LibraryComboDividerItemIndex = int.MaxValue;
 
@@ -44,6 +45,7 @@ namespace OlapPivotTableExtensions
                 tabControl.SelectedTab = tabCalcs;
 
                 chkShowCalcMembers.Checked = ThisAddIn.ShowCalcMembersByDefault;
+                chkRefreshDataWhenOpeningTheFile.Checked = ThisAddIn.RefreshDataByDefault;
             }
             catch (Exception ex)
             {
@@ -236,6 +238,63 @@ namespace OlapPivotTableExtensions
                     this.Cursor = Cursors.Default;
                 }
             }
+            else if (tabControl.SelectedTab == tabFilterList)
+            {
+                try
+                {
+                    this.Cursor = Cursors.WaitCursor;
+                    SetupFilterListTab("");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was a problem setting up the Filter List tab.\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                }
+                finally
+                {
+                    this.Cursor = Cursors.Default;
+                }
+            }
+        }
+
+        public void SetupFilterListTab(string SelectedLookIn)
+        {
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+
+                tabControl.SelectedTab = tabFilterList;
+
+                //fill in the "Look in" dropdown with the dimension hierarchies in the PivotTable
+                cmbFilterListLookIn.SuspendLayout();
+                cmbFilterListLookIn.Items.Clear();
+
+                foreach (Excel.CubeField f in pvt.CubeFields)
+                {
+                    if (f.Orientation != Excel.XlPivotFieldOrientation.xlHidden && f.CubeFieldType == Excel.XlCubeFieldType.xlHierarchy) //not named sets since you can't filter them, and not measures
+                    {
+                        cmbFilterListLookIn.Items.Add(f.Name);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(SelectedLookIn))
+                {
+                    cmbFilterListLookIn.SelectedItem = SelectedLookIn;
+                }
+
+                if (!IsExcel2007OrHigherPivotTableVersion())
+                {
+                    lblFilterListError.Text = "Upgrade PivotTable to Excel 2007 to use Filter List";
+                    lblFilterListError.Visible = true;
+                    btnFilterList.Enabled = false;
+                    txtFilterList.Enabled = false;
+                }
+
+                cmbFilterListLookIn.ResumeLayout();
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         public void SetupSearchTab(string SelectedLookIn)
@@ -267,6 +326,11 @@ namespace OlapPivotTableExtensions
 
             Application.DoEvents();
 
+            ConnectAdomdClientCube();
+        }
+
+        private void ConnectAdomdClientCube()
+        {
             Microsoft.Office.Interop.Excel.PivotCache cache = pvt.PivotCache();
             if (!cache.IsConnected)
                 cache.MakeConnection();
@@ -628,6 +692,7 @@ namespace OlapPivotTableExtensions
             try
             {
                 ThisAddIn.ShowCalcMembersByDefault = chkShowCalcMembers.Checked;
+                ThisAddIn.RefreshDataByDefault = this.chkRefreshDataWhenOpeningTheFile.Checked;
                 this.Close();
             }
             catch (Exception ex)
@@ -1099,6 +1164,186 @@ namespace OlapPivotTableExtensions
                 dataGridSearchResults.Cursor = Cursors.Default;
             }
             catch { }
+        }
+
+        //TODO: future: let them filter fields not in the PivotTable
+        private void btnFilterList_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbFilterListLookIn.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Choose a field to filter first.");
+                    return;
+                }
+                if (txtFilterList.Text.Length == 0)
+                {
+                    MessageBox.Show("Paste in a list of items to set the filter to first.");
+                    return;
+                }
+
+                progressFilterList.Visible = true;
+                progressFilterList.Value = 0;
+
+                btnCancelFilterList.Visible = true;
+                btnFilterList.Enabled = false;
+                txtFilterList.ReadOnly = true;
+
+                FilterListWorkerArgs args = new FilterListWorkerArgs();
+                args.Lines = txtFilterList.Lines;
+                args.LookIn = Convert.ToString(cmbFilterListLookIn.SelectedItem);
+
+                workerFilterList = new BackgroundWorker();
+                workerFilterList.DoWork += new DoWorkEventHandler(workerFilterList_DoWork);
+                workerFilterList.WorkerSupportsCancellation = true;
+                workerFilterList.RunWorkerAsync(args);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
+
+        private class FilterListWorkerArgs
+        {
+            public string[] Lines;
+            public string LookIn;
+        }
+
+        void workerFilterList_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> listMembersNotFound = new List<string>();
+
+            try
+            {
+                AddInWorking = true;
+                ConnectAdomdClientCube();
+
+                if (e.Cancel) return;
+
+                FilterListWorkerArgs args = (FilterListWorkerArgs)e.Argument;
+
+                ////////////////////////////////////////////////////////////////////
+                // SEARCH FOR MEMBERS
+                ////////////////////////////////////////////////////////////////////
+                AdomdCommand cmd = new AdomdCommand();
+                cmd.Connection = cube.ParentConnection;
+
+                StringBuilder sFoundMemberUniqueNames = new StringBuilder();
+
+                Dictionary<string, List<object>> dictLevelsOfFoundMembers = new Dictionary<string, List<object>>();
+
+                int iNumLinesFinished = 0;
+                foreach (string sLine in args.Lines)
+                {
+                    if (e.Cancel) return;
+                    if (!string.IsNullOrEmpty(sLine.Trim()))
+                    {
+
+                        AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                        restrictions.Add(new AdomdRestriction("CATALOG_NAME", cube.ParentConnection.Database));
+                        restrictions.Add(new AdomdRestriction("CUBE_NAME", cube.Name));
+                        restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn));
+                        restrictions.Add(new AdomdRestriction("MEMBER_NAME", sLine.Trim()));
+                        System.Data.DataTable tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
+
+                        if (tblExactMatchMembers.Rows.Count > 0)
+                        {
+                            foreach (System.Data.DataRow row in tblExactMatchMembers.Rows)
+                            {
+                                if (!dictLevelsOfFoundMembers.ContainsKey(Convert.ToString(row["LEVEL_UNIQUE_NAME"])))
+                                    dictLevelsOfFoundMembers.Add(Convert.ToString(row["LEVEL_UNIQUE_NAME"]), new List<object>());
+                                dictLevelsOfFoundMembers[Convert.ToString(row["LEVEL_UNIQUE_NAME"])].Add(Convert.ToString(row["MEMBER_UNIQUE_NAME"]));
+                            }
+                        }
+                        else
+                        {
+                            listMembersNotFound.Add(sLine.Trim());
+                        }
+                    }
+
+                    SetFilterListProgress((int)(90 * (++iNumLinesFinished) / args.Lines.Length), true, null);
+                }
+
+                Excel.CubeField field = pvt.CubeFields.get_Item(args.LookIn);
+                field.CreatePivotFields();
+
+                foreach (string sLevelUniqueName in dictLevelsOfFoundMembers.Keys)
+                {
+                    Excel.PivotField pivotField = (Excel.PivotField)field.PivotFields.Item(sLevelUniqueName);
+                    if (field.Orientation == Excel.XlPivotFieldOrientation.xlPageField)
+                    {
+                        field.EnableMultiplePageItems = true;
+                    }
+                    System.Array arrNewVisibleItems = dictLevelsOfFoundMembers[sLevelUniqueName].ToArray();
+                    pivotField.VisibleItemsList = arrNewVisibleItems;
+                    if (field.Orientation == Excel.XlPivotFieldOrientation.xlHidden)
+                    {
+                        field.Orientation = Excel.XlPivotFieldOrientation.xlRowField; //if it's not in the PivotTable, then add it to rows
+                    }
+                    pivotField.ClearValueFilters();
+                    pivotField.ClearLabelFilters();
+                }
+
+                SetFilterListProgress(100, false, listMembersNotFound.ToArray());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+
+                SetFilterListProgress(0, false, listMembersNotFound.ToArray());
+            }
+            finally
+            {
+                AddInWorking = false;
+            }
+        }
+
+        private void btnCancelFilterList_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (workerFilterList != null)
+                {
+                    workerFilterList.CancelAsync();
+                }
+            }
+            catch { }
+        }
+
+        private delegate void SetFilterListProgress_Delegate(int iProgress, bool bVisible, string[] arrMembersNotFound);
+        private void SetFilterListProgress(int iProgress, bool bVisible, string[] arrMembersNotFound)
+        {
+            if (progressFilterList.InvokeRequired)
+            {
+                //avoid the "cross-thread operation not valid" error message
+                progressFilterList.BeginInvoke(new SetFilterListProgress_Delegate(SetFilterListProgress), new object[] { iProgress, bVisible, arrMembersNotFound });
+            }
+            else
+            {
+                progressFilterList.Value = iProgress;
+                progressFilterList.Visible = bVisible;
+                btnCancelFilterList.Visible = bVisible;
+
+                if (iProgress == 100)
+                {
+                    btnCancelFilterList.Visible = false;
+                    btnFilterList.Enabled = true;
+
+                    if (arrMembersNotFound.Length == 0)
+                    {
+                        this.Close();
+                    }
+                    else
+                    {
+                        txtFilterList.ReadOnly = false;
+                        string sError = "The following members were not found.\r\n";
+                        if (arrMembersNotFound.Length > 10) sError += " (Showing first 10)\r\n";
+                        sError += "\r\n" + string.Join("\r\n", arrMembersNotFound);
+                        MessageBox.Show(sError);
+                    }
+                }
+            }
         }
     }
 }

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabCalcs = new System.Windows.Forms.TabPage();
@@ -68,7 +71,18 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearchError = new System.Windows.Forms.Label();
             this.dataGridSearchResults = new System.Windows.Forms.DataGridView();
+            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tabFilterList = new System.Windows.Forms.TabPage();
+            this.btnFilterList = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cmbFilterListLookIn = new System.Windows.Forms.ComboBox();
+            this.txtFilterList = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.tabDefaults = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.btnSaveDefaults = new System.Windows.Forms.Button();
@@ -77,11 +91,10 @@
             this.linkCodeplex = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
-            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnCancelFilterList = new System.Windows.Forms.Button();
+            this.progressFilterList = new System.Windows.Forms.ProgressBar();
+            this.lblFilterListError = new System.Windows.Forms.Label();
+            this.chkRefreshDataWhenOpeningTheFile = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -89,6 +102,7 @@
             this.tabSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridSearchResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeSearchMatchBindingSource)).BeginInit();
+            this.tabFilterList.SuspendLayout();
             this.tabDefaults.SuspendLayout();
             this.tabAbout.SuspendLayout();
             this.SuspendLayout();
@@ -102,6 +116,7 @@
             this.tabControl.Controls.Add(this.tabLibrary);
             this.tabControl.Controls.Add(this.tabMDX);
             this.tabControl.Controls.Add(this.tabSearch);
+            this.tabControl.Controls.Add(this.tabFilterList);
             this.tabControl.Controls.Add(this.tabDefaults);
             this.tabControl.Controls.Add(this.tabAbout);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
@@ -563,6 +578,14 @@
             this.dataGridSearchResults.AutoGenerateColumns = false;
             this.dataGridSearchResults.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridSearchResults.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridSearchResults.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridSearchResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridSearchResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCheck,
@@ -571,10 +594,26 @@
             this.colFolder,
             this.colDesc});
             this.dataGridSearchResults.DataSource = this.cubeSearchMatchBindingSource;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridSearchResults.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridSearchResults.Enabled = false;
             this.dataGridSearchResults.Location = new System.Drawing.Point(10, 118);
             this.dataGridSearchResults.MultiSelect = false;
             this.dataGridSearchResults.Name = "dataGridSearchResults";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridSearchResults.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridSearchResults.RowHeadersVisible = false;
             this.dataGridSearchResults.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridSearchResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -585,12 +624,129 @@
             this.dataGridSearchResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseEnter);
             this.dataGridSearchResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellClick);
             // 
+            // colCheck
+            // 
+            this.colCheck.DataPropertyName = "Checked";
+            this.colCheck.Frozen = true;
+            this.colCheck.HeaderText = "Add";
+            this.colCheck.MinimumWidth = 30;
+            this.colCheck.Name = "colCheck";
+            this.colCheck.Width = 30;
+            // 
+            // colName
+            // 
+            this.colName.DataPropertyName = "Name";
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            this.colName.Width = 140;
+            // 
+            // colType
+            // 
+            this.colType.DataPropertyName = "Type";
+            this.colType.HeaderText = "Type";
+            this.colType.MinimumWidth = 30;
+            this.colType.Name = "colType";
+            this.colType.ReadOnly = true;
+            this.colType.Width = 60;
+            // 
+            // colFolder
+            // 
+            this.colFolder.DataPropertyName = "Folder";
+            this.colFolder.HeaderText = "Folder";
+            this.colFolder.Name = "colFolder";
+            this.colFolder.ReadOnly = true;
+            this.colFolder.Width = 120;
+            // 
+            // colDesc
+            // 
+            this.colDesc.DataPropertyName = "Description";
+            this.colDesc.HeaderText = "Description";
+            this.colDesc.Name = "colDesc";
+            this.colDesc.ReadOnly = true;
+            this.colDesc.Width = 300;
+            // 
             // cubeSearchMatchBindingSource
             // 
             this.cubeSearchMatchBindingSource.DataSource = typeof(OlapPivotTableExtensions.CubeSearcher.CubeSearchMatch);
             // 
+            // tabFilterList
+            // 
+            this.tabFilterList.Controls.Add(this.btnCancelFilterList);
+            this.tabFilterList.Controls.Add(this.progressFilterList);
+            this.tabFilterList.Controls.Add(this.lblFilterListError);
+            this.tabFilterList.Controls.Add(this.btnFilterList);
+            this.tabFilterList.Controls.Add(this.label9);
+            this.tabFilterList.Controls.Add(this.cmbFilterListLookIn);
+            this.tabFilterList.Controls.Add(this.txtFilterList);
+            this.tabFilterList.Controls.Add(this.label8);
+            this.tabFilterList.Location = new System.Drawing.Point(4, 22);
+            this.tabFilterList.Name = "tabFilterList";
+            this.tabFilterList.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFilterList.Size = new System.Drawing.Size(439, 305);
+            this.tabFilterList.TabIndex = 6;
+            this.tabFilterList.Text = "Filter List";
+            this.tabFilterList.ToolTipText = "Paste in a list to filter your PivotTable";
+            this.tabFilterList.UseVisualStyleBackColor = true;
+            // 
+            // btnFilterList
+            // 
+            this.btnFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterList.Location = new System.Drawing.Point(309, 276);
+            this.btnFilterList.Name = "btnFilterList";
+            this.btnFilterList.Size = new System.Drawing.Size(119, 23);
+            this.btnFilterList.TabIndex = 9;
+            this.btnFilterList.Text = "Filter PivotTable";
+            this.btnFilterList.UseVisualStyleBackColor = true;
+            this.btnFilterList.Click += new System.EventHandler(this.btnFilterList_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 59);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(204, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "To the members with the following names:";
+            // 
+            // cmbFilterListLookIn
+            // 
+            this.cmbFilterListLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFilterListLookIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFilterListLookIn.FormattingEnabled = true;
+            this.cmbFilterListLookIn.Location = new System.Drawing.Point(9, 24);
+            this.cmbFilterListLookIn.MaxDropDownItems = 10;
+            this.cmbFilterListLookIn.Name = "cmbFilterListLookIn";
+            this.cmbFilterListLookIn.Size = new System.Drawing.Size(424, 21);
+            this.cmbFilterListLookIn.TabIndex = 4;
+            // 
+            // txtFilterList
+            // 
+            this.txtFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFilterList.BackColor = System.Drawing.SystemColors.Window;
+            this.txtFilterList.Location = new System.Drawing.Point(9, 76);
+            this.txtFilterList.MaxLength = 1000000;
+            this.txtFilterList.Multiline = true;
+            this.txtFilterList.Name = "txtFilterList";
+            this.txtFilterList.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtFilterList.Size = new System.Drawing.Size(423, 192);
+            this.txtFilterList.TabIndex = 3;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 8);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(78, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Filter hierarchy:";
+            // 
             // tabDefaults
             // 
+            this.tabDefaults.Controls.Add(this.chkRefreshDataWhenOpeningTheFile);
             this.tabDefaults.Controls.Add(this.label6);
             this.tabDefaults.Controls.Add(this.btnSaveDefaults);
             this.tabDefaults.Controls.Add(this.chkShowCalcMembers);
@@ -677,47 +833,54 @@
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "OLAP PivotTable Extensions v0.0.0.0";
             // 
-            // colCheck
+            // btnCancelFilterList
             // 
-            this.colCheck.DataPropertyName = "Checked";
-            this.colCheck.Frozen = true;
-            this.colCheck.HeaderText = "Add";
-            this.colCheck.MinimumWidth = 30;
-            this.colCheck.Name = "colCheck";
-            this.colCheck.Width = 30;
+            this.btnCancelFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancelFilterList.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCancelFilterList.Location = new System.Drawing.Point(9, 276);
+            this.btnCancelFilterList.Name = "btnCancelFilterList";
+            this.btnCancelFilterList.Size = new System.Drawing.Size(60, 23);
+            this.btnCancelFilterList.TabIndex = 14;
+            this.btnCancelFilterList.Text = "Cancel";
+            this.btnCancelFilterList.UseVisualStyleBackColor = false;
+            this.btnCancelFilterList.Visible = false;
+            this.btnCancelFilterList.Click += new System.EventHandler(this.btnCancelFilterList_Click);
             // 
-            // colName
+            // progressFilterList
             // 
-            this.colName.DataPropertyName = "Name";
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            this.colName.Width = 140;
+            this.progressFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressFilterList.Location = new System.Drawing.Point(78, 279);
+            this.progressFilterList.Name = "progressFilterList";
+            this.progressFilterList.Size = new System.Drawing.Size(206, 18);
+            this.progressFilterList.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressFilterList.TabIndex = 13;
+            this.progressFilterList.Visible = false;
             // 
-            // colType
+            // lblFilterListError
             // 
-            this.colType.DataPropertyName = "Type";
-            this.colType.HeaderText = "Type";
-            this.colType.MinimumWidth = 30;
-            this.colType.Name = "colType";
-            this.colType.ReadOnly = true;
-            this.colType.Width = 60;
+            this.lblFilterListError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFilterListError.AutoEllipsis = true;
+            this.lblFilterListError.BackColor = System.Drawing.Color.Transparent;
+            this.lblFilterListError.ForeColor = System.Drawing.Color.Red;
+            this.lblFilterListError.Location = new System.Drawing.Point(6, 279);
+            this.lblFilterListError.Name = "lblFilterListError";
+            this.lblFilterListError.Size = new System.Drawing.Size(296, 18);
+            this.lblFilterListError.TabIndex = 15;
+            this.lblFilterListError.Text = "Error: Text here";
+            this.lblFilterListError.Visible = false;
             // 
-            // colFolder
+            // chkRefreshDataWhenOpeningTheFile
             // 
-            this.colFolder.DataPropertyName = "Folder";
-            this.colFolder.HeaderText = "Folder";
-            this.colFolder.Name = "colFolder";
-            this.colFolder.ReadOnly = true;
-            this.colFolder.Width = 120;
-            // 
-            // colDesc
-            // 
-            this.colDesc.DataPropertyName = "Description";
-            this.colDesc.HeaderText = "Description";
-            this.colDesc.Name = "colDesc";
-            this.colDesc.ReadOnly = true;
-            this.colDesc.Width = 300;
+            this.chkRefreshDataWhenOpeningTheFile.AutoSize = true;
+            this.chkRefreshDataWhenOpeningTheFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkRefreshDataWhenOpeningTheFile.Location = new System.Drawing.Point(13, 57);
+            this.chkRefreshDataWhenOpeningTheFile.Name = "chkRefreshDataWhenOpeningTheFile";
+            this.chkRefreshDataWhenOpeningTheFile.Size = new System.Drawing.Size(290, 17);
+            this.chkRefreshDataWhenOpeningTheFile.TabIndex = 3;
+            this.chkRefreshDataWhenOpeningTheFile.Text = "Turn on \"Refresh data when opening the file\" by default";
+            this.chkRefreshDataWhenOpeningTheFile.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -744,6 +907,8 @@
             this.tabSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridSearchResults)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeSearchMatchBindingSource)).EndInit();
+            this.tabFilterList.ResumeLayout(false);
+            this.tabFilterList.PerformLayout();
             this.tabDefaults.ResumeLayout(false);
             this.tabDefaults.PerformLayout();
             this.tabAbout.ResumeLayout(false);
@@ -806,5 +971,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFolder;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDesc;
+        private System.Windows.Forms.TabPage tabFilterList;
+        private System.Windows.Forms.ComboBox cmbFilterListLookIn;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnFilterList;
+        private System.Windows.Forms.Button btnCancelFilterList;
+        private System.Windows.Forms.ProgressBar progressFilterList;
+        private System.Windows.Forms.Label lblFilterListError;
+        private System.Windows.Forms.CheckBox chkRefreshDataWhenOpeningTheFile;
+        private System.Windows.Forms.TextBox txtFilterList;
     }
 }
