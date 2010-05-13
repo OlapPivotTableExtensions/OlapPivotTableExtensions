@@ -89,11 +89,12 @@ namespace OlapPivotTableExtensions
                     cmdFilterListMenuItem = (Office.CommandBarButton)popupFilter.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
                 else
                     cmdFilterListMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
-                
+
                 cmdFilterListMenuItem.Caption = "Filter List...";
                 cmdFilterListMenuItem.FaceId = 517;
                 cmdFilterListMenuItem.Tag = MENU_TAG;
                 cmdFilterListMenuItem.BeginGroup = true;
+                cmdFilterListMenuItem.Visible = false;
                 cmdFilterListMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
 
                 cmdMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
@@ -212,7 +213,7 @@ namespace OlapPivotTableExtensions
             {
                 if (Ctrl.InstanceId != cmdMenuItem.InstanceId)
                     return;
-
+                
                 frm = new MainForm(Application);
                 frm.ShowDialog();
             }

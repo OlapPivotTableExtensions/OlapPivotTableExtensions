@@ -7,6 +7,7 @@ namespace CustomActions
 {
     /// <summary>
     /// This class takes advantage of the User Settings registry in which Office will spread HKLM registry settings to the HKCU branch
+    /// Excel 2010 doesn't use this registry setting. Instead it uses HKLM\Software\Microsoft\Office\Excel\Addins\OlapPivotTableExtensions
     /// </summary>
     internal class ManageUserSettings
     {

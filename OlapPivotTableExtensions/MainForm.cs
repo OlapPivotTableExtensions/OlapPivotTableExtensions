@@ -231,7 +231,7 @@ namespace OlapPivotTableExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("There was a problem setting up the search tab.\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("There was a problem setting up the search tab.\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
                 }
                 finally
                 {
@@ -381,6 +381,12 @@ namespace OlapPivotTableExtensions
                 }
             }
 
+            //support PowerPivot in-process cube
+            if (connParser["Data Source"] != null && connParser["Data Source"].ToLower() == "$embedded$" && connParser["Location"] == null)
+            {
+                sConnectionString += ";Location=" + this.application.ActiveWorkbook.FullName;
+            }
+
             if (connCube == null)
             {
                 if (!IsExcel2007OrHigherPivotTableVersion())
@@ -432,8 +438,14 @@ namespace OlapPivotTableExtensions
                         }
                         else
                         {
-                            throw ex;
+                            MessageBox.Show(ex.Message + "\r\n" + sConnectionString);
+                            throw;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + "\r\n" + sConnectionString + "\r\n" + connCube.ClientVersion + "\r\n" + connCube.GetType().Assembly.Location + "\r\n" + ex.StackTrace);
+                        throw;
                     }
                 }
 

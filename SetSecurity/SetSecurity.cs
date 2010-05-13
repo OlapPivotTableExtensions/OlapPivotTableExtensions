@@ -21,6 +21,8 @@ namespace CustomActions
     [System.Security.Permissions.PermissionSetAttribute(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
     public sealed partial class SetSecurity : Installer
     {
+        private static string _TargetDir;
+
         public SetSecurity()
         {
             InitializeComponent();
@@ -41,6 +43,8 @@ namespace CustomActions
                 string assemblyName = this.Context.Parameters["assemblyName"];
                 string assemblyCodeGroupName = this.Context.Parameters["assemblyCodeGroupName"];
                 string assemblyCodeGroupDescription = this.Context.Parameters["assemblyCodeGroupDescription"];
+
+                _TargetDir = targetDir;
 
                 // Note that a code group with solutionCodeGroupName name is created in the 
                 // Install method and removed in the Rollback and Uninstall methods.
@@ -97,6 +101,8 @@ namespace CustomActions
 
                 //added for OLAP PivotTable Extensions
                 ManageUserSettings.Install(allUsers);
+
+                ClearDisabledItems.CheckDisabledItems(targetDir);
             }
             catch (Exception ex)
             {
@@ -110,6 +116,13 @@ namespace CustomActions
         {
             try
             {
+                try
+                {
+                    string targetDir = this.Context.Parameters["targetDir"];
+                    _TargetDir = targetDir;
+                }
+                catch { }
+
                 // Call the base implementation.
                 base.Rollback(savedState);
 
@@ -150,6 +163,12 @@ namespace CustomActions
         {
             try
             {
+                try
+                {
+                    string targetDir = this.Context.Parameters["targetDir"];
+                    _TargetDir = targetDir;
+                }
+                catch { }
 
                 // Call the base implementation.
                 base.Uninstall(savedState);
@@ -184,10 +203,25 @@ namespace CustomActions
             }
             catch (Exception ex)
             {
+                LogInstallOperation("Problem in SetSecurity.Uninstall: " + ex.Message + "\r\n" + ex.StackTrace);
+
                 //doesn't appear to report this exception to the user, so we have to do it ourselves
                 System.Windows.Forms.MessageBox.Show("Problem in SetSecurity.Uninstall: " + ex.Message + "\r\n" + ex.StackTrace);
                 throw;
             }
+        }
+
+        public static void LogInstallOperation(string sMessage)
+        {
+            try
+            {
+                string sPath = "Install_SetSecurity.log";
+                if (!string.IsNullOrEmpty(_TargetDir))
+                    sPath = Path.Combine(_TargetDir, sPath);
+
+                System.IO.File.AppendAllText(sPath, DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " - " + sMessage + "\r\n");
+            }
+            catch { }
         }
     }
 }
