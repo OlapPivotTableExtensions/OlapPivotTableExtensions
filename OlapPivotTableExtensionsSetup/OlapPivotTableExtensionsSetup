@@ -52,12 +52,6 @@
         "Entry"
         {
         "MsmKey" = "8:_456130A4A9A6512E44D65389D4BC74FA"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_456130A4A9A6512E44D65389D4BC74FA"
         "OwnerKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -83,12 +77,6 @@
         {
         "MsmKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
         "OwnerKey" = "8:_05EF1C35ED9F3046302E91D113C47F4F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5F5DA125B215D6D1562E3C4A1AEAE712"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -155,6 +143,12 @@
         {
         "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
         "OwnerKey" = "8:_7DBE2E6CDCE1062AB1B008A50F983F2D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9B7CAC2E577972C9805BFA87329291D7"
+        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -268,7 +262,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5F5DA125B215D6D1562E3C4A1AEAE712"
+        "OwnerKey" = "8:_9B7CAC2E577972C9805BFA87329291D7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -354,8 +348,13 @@
                 {
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
                     {
-                    "Name" = "8:Microsoft .NET Framework 2.0"
+                    "Name" = "8:.NET Framework 2.0"
                     "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.VSTORuntime.2.0.SE"
+                    {
+                    "Name" = "8:Microsoft Visual Studio 2005 Tools for Office Second Edition runtime"
+                    "ProductCode" = "8:Microsoft.VSTORuntime.2.0.SE"
                     }
                 }
             }
@@ -682,37 +681,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5F5DA125B215D6D1562E3C4A1AEAE712"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_5F5DA125B215D6D1562E3C4A1AEAE712"
-                    {
-                    "Name" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7DBE2E6CDCE1062AB1B008A50F983F2D"
             {
             "AssemblyRegister" = "3:1"
@@ -871,6 +839,37 @@
                     }
                 }
             "SourcePath" = "8:office.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9B7CAC2E577972C9805BFA87329291D7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9B7CAC2E577972C9805BFA87329291D7"
+                    {
+                    "Name" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
@@ -1079,7 +1078,7 @@
             {
             "Name" = "8:Visual Studio 2005 Tools for Office SE Runtime"
             "Condition" = "8:VSTORTVERSION >= \"#3\""
-            "Message" = "8:You must first install the Visual Studio 2005 Tools for Office SE Runtime"
+            "Message" = "8:You must first install the Visual Studio 2005 Tools for Office SE Runtime version 8.0.50727.940 or higher"
             "InstallUrl" = "8:http://www.microsoft.com/downloads/details.aspx?FamilyId=8315654B-A5AE-4108-B7FC-186402563F2B&displaylang=en"
             }
         }
@@ -1103,7 +1102,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
         "ProductCode" = "8:{80EEE3C6-2707-4BDF-86F5-C2EDF9CDE905}"
-        "PackageCode" = "8:{66247A26-E2DF-4704-9E17-ACF11FECE5B3}"
+        "PackageCode" = "8:{FA960B53-578F-402E-AD0C-FDD798A0D6B3}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1359,6 +1358,88 @@
                                     "Transitive" = "11:FALSE"
                                         "Keys"
                                         {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0CA52CF03F654451B65962CA35435B22"
+                                            {
+                                            "Name" = "8:Excel"
+                                            "Condition" = "8:ALLUSERS"
+                                            "AlwaysCreate" = "11:TRUE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:TRUE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E7B3AC130EBA49B8A2172E0724C3FFAC"
+                                                    {
+                                                    "Name" = "8:Addins"
+                                                    "Condition" = "8:ALLUSERS"
+                                                    "AlwaysCreate" = "11:TRUE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:TRUE"
+                                                        "Keys"
+                                                        {
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_14782B2EB210402CABE4762C0B83727B"
+                                                            {
+                                                            "Name" = "8:OlapPivotTableExtensions"
+                                                            "Condition" = "8:ALLUSERS"
+                                                            "AlwaysCreate" = "11:TRUE"
+                                                            "DeleteAtUninstall" = "11:TRUE"
+                                                            "Transitive" = "11:TRUE"
+                                                                "Keys"
+                                                                {
+                                                                }
+                                                                "Values"
+                                                                {
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_0599CCEFB2BB4D7D92DA871C6ED55290"
+                                                                    {
+                                                                    "Name" = "8:Manifest"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_18425CA85860489D95B83B33B752831F"
+                                                                    {
+                                                                    "Name" = "8:LoadBehavior"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:3"
+                                                                    "Value" = "3:3"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_70112027C5824A71BEFBFE35DB8BD726"
+                                                                    {
+                                                                    "Name" = "8:Description"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:Excel add-in for Analysis Services PivotTables"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A5F79BF7E3D54FC58D5BC83C76581D5C"
+                                                                    {
+                                                                    "Name" = "8:FriendlyName"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:OLAP PivotTable Extensions"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B7B6B582186D412795125938F00FBD6D"
+                                                                    {
+                                                                    "Name" = "8:CommandLineSafe"
+                                                                    "Condition" = "8:ALLUSERS"
+                                                                    "Transitive" = "11:TRUE"
+                                                                    "ValueTypes" = "3:3"
+                                                                    "Value" = "3:1"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_F9F914F5B6C0479BA592A5E9EF9CCE24"
                                             {
                                             "Name" = "8:12.0"
@@ -1466,7 +1547,7 @@
                                                                                                                             "Condition" = "8:ALLUSERS"
                                                                                                                             "Transitive" = "11:TRUE"
                                                                                                                             "ValueTypes" = "3:1"
-                                                                                                                            "Value" = "8:Excel 2007 add-in for Analysis Services PivotTables"
+                                                                                                                            "Value" = "8:Excel add-in for Analysis Services PivotTables"
                                                                                                                             }
                                                                                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D1F6616BBD524927BBF1B63DC2E5BD02"
                                                                                                                             {
@@ -1837,7 +1918,7 @@
                                                                     "Condition" = "8:NOT ALLUSERS"
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:1"
-                                                                    "Value" = "8:Excel 2007 add-in for Analysis Services PivotTables"
+                                                                    "Value" = "8:Excel add-in for Analysis Services PivotTables"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CAB054F2B7C0460FA1EB5E0BAE28F279"
                                                                     {

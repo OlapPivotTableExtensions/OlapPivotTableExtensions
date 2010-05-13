@@ -44,6 +44,7 @@
   -->
   <ItemGroup>
     <Compile Include="CaspolSecurityPolicyCreator.cs" />
+    <Compile Include="ClearDisabledItems.cs" />
     <Compile Include="ManageUserSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetSecurity.cs">

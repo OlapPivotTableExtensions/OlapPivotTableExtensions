@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("OLAP PivotTable Extensions")]
-[assembly: AssemblyDescription("Excel 2007 add-in for Analysis Services PivotTables")]
+[assembly: AssemblyDescription("Excel add-in for Analysis Services PivotTables")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OLAP PivotTable Extensions - http://codeplex.com/OlapPivotTableExtend")]

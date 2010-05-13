@@ -89,6 +89,8 @@ namespace CustomActions
             bool   machinePolicyLevel,
             string solutionCodeGroupName)
         {
+            SetSecurity.LogInstallOperation("Removing previous security policies. Ignore any errors on this caspol.exe run.");
+
             string frameworkFolder = GetFrameworkFolder();
             string policyLevel;
             if (machinePolicyLevel)
@@ -109,6 +111,8 @@ namespace CustomActions
 
         private static void RunCaspolCommand(string frameworkFolder, string arguments)
         {
+            SetSecurity.LogInstallOperation("Running " + Path.Combine(frameworkFolder, "caspol.exe") + " with options: " + arguments);
+            
             ProcessStartInfo processStartInfo = new ProcessStartInfo(Path.Combine(frameworkFolder, "caspol.exe"));
             processStartInfo.CreateNoWindow = true;
             processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -120,6 +124,8 @@ namespace CustomActions
 
             Process process = Process.Start(processStartInfo);
             string caspolOutputMessage = process.StandardOutput.ReadToEnd();
+            SetSecurity.LogInstallOperation("caspol.exe output: " + caspolOutputMessage);
+
             process.WaitForExit();
 
             int exitCode = 0;
