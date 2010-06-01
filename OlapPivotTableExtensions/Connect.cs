@@ -1,16 +1,120 @@
 using System;
+using Extensibility;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Tools.Applications.Runtime;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 
 namespace OlapPivotTableExtensions
 {
-    public partial class ThisAddIn
-    {
+    /// <summary>
+	///   The object for implementing an Add-in.
+	/// </summary>
+	/// <seealso class='IDTExtensibility2' />
+	[GuidAttribute("DD16A145-E2F0-40B9-9993-5018BA8B6FF3"), ProgId("OlapPivotTableExtensions.Connect")]
+	public class Connect : Object, Extensibility.IDTExtensibility2
+	{
+		/// <summary>
+		///		Implements the constructor for the Add-in object.
+		///		Place your initialization code within this method.
+		/// </summary>
+		public Connect()
+		{
+		}
+
+		/// <summary>
+		///      Implements the OnConnection method of the IDTExtensibility2 interface.
+		///      Receives notification that the Add-in is being loaded.
+		/// </summary>
+		/// <param term='application'>
+		///      Root object of the host application.
+		/// </param>
+		/// <param term='connectMode'>
+		///      Describes how the Add-in is being loaded.
+		/// </param>
+		/// <param term='addInInst'>
+		///      Object representing this Add-in.
+		/// </param>
+		/// <seealso class='IDTExtensibility2' />
+		public void OnConnection(object application, Extensibility.ext_ConnectMode connectMode, object addInInst, ref System.Array custom)
+		{
+            try
+            {
+                Application = (Excel.Application)application;
+                addInInstance = addInInst;
+
+                CreateOlapPivotTableExtensionsMenu();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+		/// <summary>
+		///     Implements the OnDisconnection method of the IDTExtensibility2 interface.
+		///     Receives notification that the Add-in is being unloaded.
+		/// </summary>
+		/// <param term='disconnectMode'>
+		///      Describes how the Add-in is being unloaded.
+		/// </param>
+		/// <param term='custom'>
+		///      Array of parameters that are host application specific.
+		/// </param>
+		/// <seealso class='IDTExtensibility2' />
+		public void OnDisconnection(Extensibility.ext_DisconnectMode disconnectMode, ref System.Array custom)
+		{
+            DeleteOlapPivotTableExtensionsMenu();
+        }
+
+		/// <summary>
+		///      Implements the OnAddInsUpdate method of the IDTExtensibility2 interface.
+		///      Receives notification that the collection of Add-ins has changed.
+		/// </summary>
+		/// <param term='custom'>
+		///      Array of parameters that are host application specific.
+		/// </param>
+		/// <seealso class='IDTExtensibility2' />
+		public void OnAddInsUpdate(ref System.Array custom)
+		{
+		}
+
+		/// <summary>
+		///      Implements the OnStartupComplete method of the IDTExtensibility2 interface.
+		///      Receives notification that the host application has completed loading.
+		/// </summary>
+		/// <param term='custom'>
+		///      Array of parameters that are host application specific.
+		/// </param>
+		/// <seealso class='IDTExtensibility2' />
+		public void OnStartupComplete(ref System.Array custom)
+		{
+		}
+
+		/// <summary>
+		///      Implements the OnBeginShutdown method of the IDTExtensibility2 interface.
+		///      Receives notification that the host application is being unloaded.
+		/// </summary>
+		/// <param term='custom'>
+		///      Array of parameters that are host application specific.
+		/// </param>
+		/// <seealso class='IDTExtensibility2' />
+		public void OnBeginShutdown(ref System.Array custom)
+		{
+		}
+		
+		private Excel.Application Application;
+		private object addInInstance;
+
+
+
+
+
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
         private const string REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT = "RefreshDataByDefault";
+        private global::System.Object missing = global::System.Type.Missing;
+
 
         private const string MENU_TAG = "OLAP PivotTable Extensions";
         private const string PIVOTTABLE_CONTEXT_MENU = "PivotTable Context Menu";
@@ -127,7 +231,6 @@ namespace OlapPivotTableExtensions
             }
         }
 
-
         public static string GetOlapPivotTableHierarchy(Excel.PivotCell cell)
         {
             try
@@ -211,9 +314,9 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (Ctrl.InstanceId != cmdMenuItem.InstanceId)
+                if (Ctrl.Tag != cmdMenuItem.Tag || Ctrl.Caption!= cmdMenuItem.Caption || Ctrl.FaceId != cmdMenuItem.FaceId)
                     return;
-                
+
                 frm = new MainForm(Application);
                 frm.ShowDialog();
             }
@@ -227,7 +330,7 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (Ctrl.InstanceId != cmdSearchMenuItem.InstanceId)
+                if (Ctrl.Tag != cmdSearchMenuItem.Tag || Ctrl.Caption != cmdSearchMenuItem.Caption || Ctrl.FaceId != cmdSearchMenuItem.FaceId)
                     return;
 
                 frm = new MainForm(Application);
@@ -245,7 +348,7 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (Ctrl.InstanceId != cmdFilterListMenuItem.InstanceId)
+                if (Ctrl.Tag != cmdFilterListMenuItem.Tag || Ctrl.Caption != cmdFilterListMenuItem.Caption || Ctrl.FaceId != cmdFilterListMenuItem.FaceId)
                     return;
 
                 frm = new MainForm(Application);
@@ -284,43 +387,6 @@ namespace OlapPivotTableExtensions
             }
             catch { }
         }        
-        
-        
-        private void ThisAddIn_Startup(object sender, System.EventArgs e)
-        {
-            try
-            {
-                #region VSTO generated code
 
-                this.Application = (Excel.Application)Microsoft.Office.Tools.Excel.ExcelLocale1033Proxy.Wrap(typeof(Excel.Application), this.Application);
-
-                #endregion
-
-                CreateOlapPivotTableExtensionsMenu();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
-            }
-        }
-
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
-        {
-            DeleteOlapPivotTableExtensionsMenu();
-        }
-
-        #region VSTO generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InternalStartup()
-        {
-            this.Startup += new System.EventHandler(ThisAddIn_Startup);
-            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
-        }
-
-        #endregion
-    }
+	}
 }

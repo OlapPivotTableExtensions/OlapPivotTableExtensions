@@ -1,15 +1,23 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlapPivotTableExtensions", "OlapPivotTableExtensions\OlapPivotTableExtensions.csproj", "{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlapPivotTableExtensions", "OlapPivotTableExtensions\OlapPivotTableExtensions.csproj", "{7412296C-23BE-4AB0-A3E0-793D1170CBE0}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OlapPivotTableExtensionsSetup", "OlapPivotTableExtensionsSetup\OlapPivotTableExtensionsSetup", "{45840507-DDD9-48EC-9E7B-458E41D8EB53}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OlapPivotTableExtensionsSetup", "OlapPivotTableExtensionsSetup\OlapPivotTableExtensionsSetup.vdproj", "{4F78DC0B-C34C-45A7-8537-103001C1C91B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetSecurity", "SetSecurity\SetSecurity.csproj", "{56E8E807-0807-45E0-B19A-98912AE47630}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OlapPivotTableExtensionsShim", "OlapPivotTableExtensionsShim\OlapPivotTableExtensionsShim.vcproj", "{B3503205-6CAE-4BEF-BBF0-5130812F169A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB} = {0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB} = {0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedAggregator", "ManagedAggregator\ManagedAggregator.csproj", "{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomInstallActions", "CustomInstallActions\CustomInstallActions.csproj", "{56E8E807-0807-45E0-B19A-98912AE47630}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -19,25 +27,51 @@ Global
 		SccProjectUniqueName2 = OlapPivotTableExtensionsSetup\\OlapPivotTableExtensionsSetup
 		SccProjectName2 = OlapPivotTableExtensionsSetup
 		SccLocalPath2 = OlapPivotTableExtensionsSetup
-		SccProjectUniqueName3 = SetSecurity\\SetSecurity.csproj
-		SccProjectName3 = SetSecurity
-		SccLocalPath3 = SetSecurity
+		SccProjectUniqueName3 = CustomInstallActions\\CustomInstallActions.csproj
+		SccProjectName3 = CustomInstallActions
+		SccLocalPath3 = CustomInstallActions
+		SccProjectUniqueName4 = OlapPivotTableExtensionsShim\\OlapPivotTableExtensionsShim.vcproj
+		SccProjectName4 = OlapPivotTableExtensionsShim
+		SccLocalPath4 = OlapPivotTableExtensionsShim
+		SccProjectUniqueName5 = ManagedAggregator\\ManagedAggregator.csproj
+		SccProjectName5 = ManagedAggregator
+		SccLocalPath5 = ManagedAggregator
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Release32|Win32 = Release32|Win32
+		Release32|x64 = Release32|x64
+		Release64|Win32 = Release64|Win32
+		Release64|x64 = Release64|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EB6304F7-E7A3-4164-8BFA-E233A50941CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB6304F7-E7A3-4164-8BFA-E233A50941CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB6304F7-E7A3-4164-8BFA-E233A50941CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB6304F7-E7A3-4164-8BFA-E233A50941CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45840507-DDD9-48EC-9E7B-458E41D8EB53}.Debug|Any CPU.ActiveCfg = Debug
-		{45840507-DDD9-48EC-9E7B-458E41D8EB53}.Release|Any CPU.ActiveCfg = Release
-		{56E8E807-0807-45E0-B19A-98912AE47630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56E8E807-0807-45E0-B19A-98912AE47630}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56E8E807-0807-45E0-B19A-98912AE47630}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56E8E807-0807-45E0-B19A-98912AE47630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release32|Win32.ActiveCfg = Release|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release32|Win32.Build.0 = Release|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release32|x64.ActiveCfg = Release|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release64|Win32.ActiveCfg = Release64|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release64|x64.ActiveCfg = Release64|Any CPU
+		{7412296C-23BE-4AB0-A3E0-793D1170CBE0}.Release64|x64.Build.0 = Release64|Any CPU
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release32|Win32.ActiveCfg = Release
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release32|Win32.Build.0 = Release
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release32|x64.ActiveCfg = Release
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release64|Win32.ActiveCfg = Release64
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release64|x64.ActiveCfg = Release64
+		{4F78DC0B-C34C-45A7-8537-103001C1C91B}.Release64|x64.Build.0 = Release64
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release32|Win32.ActiveCfg = Release|Win32
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release32|Win32.Build.0 = Release|Win32
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release32|x64.ActiveCfg = Release|x64
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release64|Win32.ActiveCfg = Release64|Win32
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release64|x64.ActiveCfg = Release64|x64
+		{B3503205-6CAE-4BEF-BBF0-5130812F169A}.Release64|x64.Build.0 = Release64|x64
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release32|Win32.ActiveCfg = Release|Any CPU
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release32|Win32.Build.0 = Release|Any CPU
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release32|x64.ActiveCfg = Release|Any CPU
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release64|Win32.ActiveCfg = Release64|Any CPU
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release64|x64.ActiveCfg = Release64|Any CPU
+		{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}.Release64|x64.Build.0 = Release64|Any CPU
+		{56E8E807-0807-45E0-B19A-98912AE47630}.Release32|Win32.ActiveCfg = Release|Any CPU
+		{56E8E807-0807-45E0-B19A-98912AE47630}.Release32|x64.ActiveCfg = Release|Any CPU
+		{56E8E807-0807-45E0-B19A-98912AE47630}.Release64|Win32.ActiveCfg = Release|Any CPU
+		{56E8E807-0807-45E0-B19A-98912AE47630}.Release64|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

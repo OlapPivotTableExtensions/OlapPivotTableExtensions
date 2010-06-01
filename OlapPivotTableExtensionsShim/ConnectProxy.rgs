@@ -1,0 +1,49 @@
+HKCR
+{
+	OlapPivotTableExtensions.Connect = s 'Connect Class'
+	{
+		CLSID = s '{dd16a145-e2f0-40b9-9993-5018ba8b6ff3}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove '{dd16a145-e2f0-40b9-9993-5018ba8b6ff3}' = s 'OlapPivotTableExtensions.Connect'
+		{
+			ProgID = s 'OlapPivotTableExtensions.Connect'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			
+		}
+	}
+}
+
+HKLM
+{
+	NoRemove Software
+	{
+		NoRemove Microsoft
+		{
+			NoRemove Office
+			{
+				NoRemove Excel
+				{
+					NoRemove Addins
+					{
+						ForceRemove OlapPivotTableExtensions.Connect
+						{
+							val 'Description' = s 'OlapPivotTableExtensions shim'
+							val 'FriendlyName' = s 'OlapPivotTableExtensions shim'
+							val 'LoadBehavior' = d 3
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+

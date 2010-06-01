@@ -26,9 +26,12 @@ namespace CustomActions
                         if (bDisabledItem != null)
                         {
                             string sDisabledItem = System.Text.Encoding.Unicode.GetString(bDisabledItem);
-                            if (sDisabledItem != null && sDisabledItem.ToLower().Contains(TargetPath.ToLower()))
+                            if (sDisabledItem != null)
                             {
-                                appKey.DeleteValue(sName);
+                                if (sDisabledItem.ToLower().Contains(TargetPath.ToLower()) || sDisabledItem.ToLower().Contains("mscoree.dll"))
+                                {
+                                    appKey.DeleteValue(sName);
+                                }
                             }
                         }
                     }

@@ -7,316 +7,148 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
         "Entry"
         {
-        "MsmKey" = "8:_05EF1C35ED9F3046302E91D113C47F4F"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2DC26FD4D5C081337BC456C94FEED48B"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2DC26FD4D5C081337BC456C94FEED48B"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_456130A4A9A6512E44D65389D4BC74FA"
-        "OwnerKey" = "8:_EB4989317C5754E114E6CEEDC8B10729"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_456130A4A9A6512E44D65389D4BC74FA"
-        "OwnerKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "OwnerKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "OwnerKey" = "8:_05EF1C35ED9F3046302E91D113C47F4F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7DBE2E6CDCE1062AB1B008A50F983F2D"
-        "OwnerKey" = "8:_8B257FB855E29A629952277A4FE55396"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_805327BF8EE34F0AA113184682C96EB8"
+        "MsmKey" = "8:_17870CE30A894F80ACB4F97D72E9DF0A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
+        "MsmKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8B257FB855E29A629952277A4FE55396"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8C6535F457524F7F8CD240BC5DDD1779"
+        "MsmKey" = "8:_248E4B09250F46C482D2F93017CFE488"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
-        "OwnerKey" = "8:_05EF1C35ED9F3046302E91D113C47F4F"
+        "MsmKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
-        "OwnerKey" = "8:_8B257FB855E29A629952277A4FE55396"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
-        "OwnerKey" = "8:_7DBE2E6CDCE1062AB1B008A50F983F2D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9B7CAC2E577972C9805BFA87329291D7"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D8CCB3C14E0F96FA7E4C6804B3EE75E4"
-        "OwnerKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_4D49A83F9D1340EB96E82C1AE2DE503C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB4989317C5754E114E6CEEDC8B10729"
-        "OwnerKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
+        "MsmKey" = "8:_64987CCF50E90259B017C159FE29E2A7"
+        "OwnerKey" = "8:_248E4B09250F46C482D2F93017CFE488"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB4989317C5754E114E6CEEDC8B10729"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_6B6F4EF9134E43C9B7C8CE7FECC38B2B"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB4989317C5754E114E6CEEDC8B10729"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
+        "MsmKey" = "8:_9785DCBD01BF4F8285774D086AE1F928"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ED111BA80B6A953676A1F4F78DE4B53F"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_A14D580B19B728050EB1B14B6920E886"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ED111BA80B6A953676A1F4F78DE4B53F"
-        "OwnerKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
+        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
+        "OwnerKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F983BE1C154FB786B432D53E6E2E73DC"
-        "OwnerKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
+        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
+        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F983BE1C154FB786B432D53E6E2E73DC"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "MsmKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F983BE1C154FB786B432D53E6E2E73DC"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ED111BA80B6A953676A1F4F78DE4B53F"
+        "MsmKey" = "8:_F4869849434D4BE68A2B306E6E876DBA"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_913F7E080FC2815996B7F0F5B59BCBFF"
+        "OwnerKey" = "8:_17870CE30A894F80ACB4F97D72E9DF0A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8B257FB855E29A629952277A4FE55396"
+        "OwnerKey" = "8:_6B6F4EF9134E43C9B7C8CE7FECC38B2B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_895F8CD7BB6F48219CDBCA89B62505FE"
+        "OwnerKey" = "8:_9785DCBD01BF4F8285774D086AE1F928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7DBE2E6CDCE1062AB1B008A50F983F2D"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2DC26FD4D5C081337BC456C94FEED48B"
+        "OwnerKey" = "8:_A14D580B19B728050EB1B14B6920E886"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
+        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9B7CAC2E577972C9805BFA87329291D7"
+        "OwnerKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F76630E749166C06DA3A81FBDC37DB77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2685AE724EA1079020DA35421DF8C5CE"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EB4989317C5754E114E6CEEDC8B10729"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_456130A4A9A6512E44D65389D4BC74FA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_05EF1C35ED9F3046302E91D113C47F4F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7E74FF5814357789739E7256EE9FE0D1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F983BE1C154FB786B432D53E6E2E73DC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_587CBE5C3ADCDB0A53523269760AC9FB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_805327BF8EE34F0AA113184682C96EB8"
+        "OwnerKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -348,13 +180,13 @@
                 {
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
                     {
-                    "Name" = "8:.NET Framework 2.0"
+                    "Name" = "8:.NET Framework 2.0 (x86)"
                     "ProductCode" = "8:Microsoft.Net.Framework.2.0"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.VSTORuntime.2.0.SE"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
-                    "Name" = "8:Microsoft Visual Studio 2005 Tools for Office Second Edition runtime"
-                    "ProductCode" = "8:Microsoft.VSTORuntime.2.0.SE"
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
                     }
                 }
             }
@@ -383,6 +215,48 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
+        }
+        "Release64"
+        {
+        "DisplayName" = "8:Release64"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Release64\\OlapPivotTableExtensionsSetup.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    {
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
                 }
             }
         }
@@ -391,117 +265,61 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_5B9B10D39A1F49388CCFDD623C018B0F"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_1A90D42080984982AB9E5314B04EB2D8"
             {
-            "Name" = "8:Primary output from SetSecurity (Active)"
+            "Name" = "8:CustomInstallActions"
             "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "Object" = "8:_9785DCBD01BF4F8285774D086AE1F928"
             "FileType" = "3:1"
             "InstallAction" = "3:1"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_6B5245E4_2690_40BE_88A2_30264F7321A9"
+            "Identifier" = "8:_81982CBB_A66E_430F_8ADF_1C1E223BD882"
             "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/assemblyName=\"OlapPivotTableExtensions.dll\" /targetDir=\"[TARGETDIR]\\\" /solutionCodeGroupName=\"OlapPivotTableExtensions\" /solutionCodeGroupDescription=\"Code group for OlapPivotTableExtensions\" /assemblyCodeGroupName=\"OlapPivotTableExtensions\" /assemblyCodeGroupDescription=\"Code group for OlapPivotTableExtensions\" /allUsers=[ALLUSERS]"
+            "CustomActionData" = "8:/targetDir=\"[TARGETDIR]\\\" /allUsers=[ALLUSERS]"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_610E474B01504867943AB419C4280458"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_265981891E50472A89C9FF26CBF0330E"
             {
-            "Name" = "8:Primary output from SetSecurity (Active)"
+            "Name" = "8:CustomInstallActions"
             "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "Object" = "8:_9785DCBD01BF4F8285774D086AE1F928"
             "FileType" = "3:1"
             "InstallAction" = "3:2"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_1C0D8375_7CA8_4CFD_8959_CC869EEEE85B"
+            "Identifier" = "8:_D412D288_51D0_4B86_AB4F_3CC99DE86F3A"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_6DDA26A440FA4497A248A3AD2BDC8DD0"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_8B42D9D6449547708C7C701162BCBAAD"
             {
-            "Name" = "8:AdomdClient Permissions"
+            "Name" = "8:CustomInstallActions"
             "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
-            "FileType" = "3:1"
-            "InstallAction" = "3:4"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:2"
-            "Identifier" = "8:_3BAB53EE_96FE_4429_A27F_A2EB2422D849"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\""
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7CC33A4B0CAB42D9966E3F18426F05D2"
-            {
-            "Name" = "8:AdomdClient Permissions"
-            "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
-            "FileType" = "3:1"
-            "InstallAction" = "3:2"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:2"
-            "Identifier" = "8:_C7C89E88_5C86_4EE4_B72E_649EC4E10CFB"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7E2D0C84222949759D2CF441B817B7FF"
-            {
-            "Name" = "8:Primary output from SetSecurity (Active)"
-            "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
-            "FileType" = "3:1"
-            "InstallAction" = "3:3"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_6397B7B2_5596_4673_8B48_0E1B90316632"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensions\""
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_9C884ADA2447467BB4D2DD3672DE746C"
-            {
-            "Name" = "8:Primary output from SetSecurity (Active)"
-            "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "Object" = "8:_9785DCBD01BF4F8285774D086AE1F928"
             "FileType" = "3:1"
             "InstallAction" = "3:4"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_3D65352C_F475_4146_9770_FEF379661F18"
+            "Identifier" = "8:_9B1FF540_0830_4AAD_BD18_B90EA6BD952E"
             "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensions\""
+            "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A1D1AA66909C47A2A45910D226559222"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_9F27A41926D64011ABA11BB30BEF381C"
             {
-            "Name" = "8:AdomdClient Permissions"
+            "Name" = "8:CustomInstallActions"
             "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
-            "FileType" = "3:1"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:2"
-            "Identifier" = "8:_14DEEBFD_D049_474E_AB8C_EFFCEB55B8F4"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/assemblyName=\"Microsoft.AnalysisServices.AdomdClient.dll\" /targetDir=\"[TARGETDIR]\\\" /solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\" /solutionCodeGroupDescription=\"Code group for AdomdClient\" /assemblyCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\" /assemblyCodeGroupDescription=\"Code group for AdomdClient\" /allUsers=[ALLUSERS]"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C825B3EBC9A54BA7AACD37DBFC183872"
-            {
-            "Name" = "8:AdomdClient Permissions"
-            "Condition" = "8:"
-            "Object" = "8:_805327BF8EE34F0AA113184682C96EB8"
+            "Object" = "8:_9785DCBD01BF4F8285774D086AE1F928"
             "FileType" = "3:1"
             "InstallAction" = "3:3"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
-            "Sequence" = "3:2"
-            "Identifier" = "8:_2AA9839D_08CC_460B_B538_BD40925BD2F9"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_62F9A758_123D_4529_AA3C_D56CF0E185DD"
             "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:/solutionCodeGroupName=\"OlapPivotTableExtensionsAdomdClient\""
+            "CustomActionData" = "8:"
             }
         }
         "DefaultFeature"
@@ -514,7 +332,7 @@
         {
             "LaunchCondition"
             {
-                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_966D7F2DBE1F408FA5A7478D55FD804E"
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_20ED2AB44B474075BA0922A433F16B4C"
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
@@ -526,169 +344,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_05EF1C35ED9F3046302E91D113C47F4F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Tools.Common2007, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_05EF1C35ED9F3046302E91D113C47F4F"
-                    {
-                    "Name" = "8:Microsoft.Office.Tools.Common2007.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Tools.Common2007.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2685AE724EA1079020DA35421DF8C5CE"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_2685AE724EA1079020DA35421DF8C5CE"
-                    {
-                    "Name" = "8:Microsoft.Office.Interop.Excel.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Interop.Excel.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2DC26FD4D5C081337BC456C94FEED48B"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:TRUE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.OfficeTools.Controls.ManagedWrapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_2DC26FD4D5C081337BC456C94FEED48B"
-                    {
-                    "Name" = "8:Microsoft.VisualStudio.OfficeTools.Controls.ManagedWrapper.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.VisualStudio.OfficeTools.Controls.ManagedWrapper.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_456130A4A9A6512E44D65389D4BC74FA"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:office, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_456130A4A9A6512E44D65389D4BC74FA"
-                    {
-                    "Name" = "8:office.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:office.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_587CBE5C3ADCDB0A53523269760AC9FB"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_587CBE5C3ADCDB0A53523269760AC9FB"
-                    {
-                    "Name" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7DBE2E6CDCE1062AB1B008A50F983F2D"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:TRUE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_7DBE2E6CDCE1062AB1B008A50F983F2D"
+                    "_3ED1DE820EC3F4FE8E0483A1BD87B22C"
                     {
                     "Name" = "8:Microsoft.Vbe.Interop.dll"
                     "Attributes" = "3:512"
@@ -697,7 +360,7 @@
             "SourcePath" = "8:Microsoft.Vbe.Interop.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -708,112 +371,19 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7E74FF5814357789739E7256EE9FE0D1"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4D49A83F9D1340EB96E82C1AE2DE503C"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Tools.Common, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_7E74FF5814357789739E7256EE9FE0D1"
-                    {
-                    "Name" = "8:Microsoft.Office.Tools.Common.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Tools.Common.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\OlapPivotTableExtensions.ico"
+            "TargetName" = "8:OlapPivotTableExtensions.ico"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_895F8CD7BB6F48219CDBCA89B62505FE"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ADODB, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-                "ScatterAssemblies"
-                {
-                    "_895F8CD7BB6F48219CDBCA89B62505FE"
-                    {
-                    "Name" = "8:adodb.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:C:\\Program Files\\Microsoft Visual Studio 9.0\\Visual Studio Tools for Office\\PIA\\Office12\\adodb.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8B257FB855E29A629952277A4FE55396"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:TRUE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_8B257FB855E29A629952277A4FE55396"
-                    {
-                    "Name" = "8:Microsoft.Office.Interop.Excel.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Interop.Excel.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8C6535F457524F7F8CD240BC5DDD1779"
-            {
-            "SourcePath" = "8:NoImpersonate.js"
-            "TargetName" = "8:NoImpersonate.js"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:FALSE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
             "System" = "11:FALSE"
@@ -825,74 +395,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_913F7E080FC2815996B7F0F5B59BCBFF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64987CCF50E90259B017C159FE29E2A7"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:TRUE"
-            "AssemblyAsmDisplayName" = "8:office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_913F7E080FC2815996B7F0F5B59BCBFF"
-                    {
-                    "Name" = "8:office.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:office.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:mscorlib.tlb"
+            "TargetName" = "8:mscorlib.tlb"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9B7CAC2E577972C9805BFA87329291D7"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_9B7CAC2E577972C9805BFA87329291D7"
-                    {
-                    "Name" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D8CCB3C14E0F96FA7E4C6804B3EE75E4"
-            {
-            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.tlb"
-            "TargetName" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.tlb"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -903,27 +411,89 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:2"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6B6F4EF9134E43C9B7C8CE7FECC38B2B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ADODB, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_6B6F4EF9134E43C9B7C8CE7FECC38B2B"
+                    {
+                    "Name" = "8:adodb.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:C:\\Program Files\\Microsoft Visual Studio 9.0\\Visual Studio Tools for Office\\PIA\\Office12\\adodb.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A14D580B19B728050EB1B14B6920E886"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A14D580B19B728050EB1B14B6920E886"
+                    {
+                    "Name" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.AnalysisServices.AdomdClient.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EB4989317C5754E114E6CEEDC8B10729"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A4BB4524FCD3AB9DAA770784975638C8"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Vbe.Interop, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
+            "AssemblyAsmDisplayName" = "8:office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_EB4989317C5754E114E6CEEDC8B10729"
+                    "_A4BB4524FCD3AB9DAA770784975638C8"
                     {
-                    "Name" = "8:Microsoft.Vbe.Interop.dll"
+                    "Name" = "8:Office.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Vbe.Interop.dll"
+            "SourcePath" = "8:Office.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -938,54 +508,23 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED111BA80B6A953676A1F4F78DE4B53F"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:TRUE"
-            "AssemblyAsmDisplayName" = "8:VSTOStorageWrapper.Interop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_ED111BA80B6A953676A1F4F78DE4B53F"
-                    {
-                    "Name" = "8:VSTOStorageWrapper.Interop.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:VSTOStorageWrapper.Interop.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F76630E749166C06DA3A81FBDC37DB77"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Tools.Excel, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_F76630E749166C06DA3A81FBDC37DB77"
+                    "_CD4EF4E6776DDC84855DFDEC6FFAE69F"
                     {
-                    "Name" = "8:Microsoft.Office.Tools.Excel.dll"
+                    "Name" = "8:Microsoft.Office.Interop.Excel.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Office.Tools.Excel.dll"
+            "SourcePath" = "8:Microsoft.Office.Interop.Excel.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -996,27 +535,16 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F983BE1C154FB786B432D53E6E2E73DC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4869849434D4BE68A2B306E6E876DBA"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.SmartTag, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_F983BE1C154FB786B432D53E6E2E73DC"
-                    {
-                    "Name" = "8:Microsoft.Office.Interop.SmartTag.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Interop.SmartTag.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:NoImpersonate.js"
+            "TargetName" = "8:NoImpersonate.js"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1027,8 +555,8 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -1037,29 +565,7 @@
         }
         "Folder"
         {
-            "{1525181F-901A-416C-8A58-119130FE478E}:_7064D883350946B292B22657E9361EC2"
-            {
-            "Name" = "8:#1916"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:DesktopFolder"
-                "Folders"
-                {
-                }
-            }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_7C8DF8C586B5454B97D289DD3754DABA"
-            {
-            "Name" = "8:#1919"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:ProgramMenuFolder"
-                "Folders"
-                {
-                }
-            }
-            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_729FBA7E3E804B6699F949968E6C65B0"
             {
             "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
             "Name" = "8:#1925"
@@ -1071,44 +577,124 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_8C65FB8F943946C8B5B724C836DA0012"
+            {
+            "Name" = "8:#1916"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:DesktopFolder"
+                "Folders"
+                {
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_D6B127EAF2804575BB178309A1523415"
+            {
+            "Name" = "8:#1919"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:ProgramMenuFolder"
+                "Folders"
+                {
+                }
+            }
         }
         "LaunchCondition"
         {
-            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_EE693273BA8C482ABAA38BCBE775E307"
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_8A97ED54112F430A9202EB715D35EC2D"
             {
-            "Name" = "8:Visual Studio 2005 Tools for Office SE Runtime"
-            "Condition" = "8:VSTORTVERSION >= \"#3\""
-            "Message" = "8:You must first install the Visual Studio 2005 Tools for Office SE Runtime version 8.0.50727.940 or higher"
-            "InstallUrl" = "8:http://www.microsoft.com/downloads/details.aspx?FamilyId=8315654B-A5AE-4108-B7FC-186402563F2B&displaylang=en"
+            "Name" = "8:64-bit Office"
+            "Condition" = "8:(NOT INSTALLER64) OR OFFICE2010BITNESS=\"x64\""
+            "Message" = "8:This computer does not have Office 2010 64-bit. Please use the OLAP PivotTable Extensions for 32-bit Excel installer."
+            "InstallUrl" = "8:"
+            }
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_908FC0FA327D4159A604B2B769A0A154"
+            {
+            "Name" = "8:32-bit Excel 2007 or 2010"
+            "Condition" = "8:INSTALLER64 OR EXCEL2007<>\"\" OR EXCEL2010X86<>\"\""
+            "Message" = "8:Either Excel 2007 or 32-bit Excel 2010 must be installed on this computer to install the 32-bit version of OLAP PivotTable Extensions."
+            "InstallUrl" = "8:"
+            }
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_C0AB1BE26C5243D2B564584292D26032"
+            {
+            "Name" = "8:Office 2010 PIA"
+            "Condition" = "8:(EXCEL2010X86=\"\" AND OFFICE2010BITNESS<>\"x64\") OR ((EXCEL2010X86<>\"\" OR OFFICE2010BITNESS=\"x64\") AND OFFICE2010PIA)"
+            "Message" = "8:You must first install the Office 2010 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below and follow the instructions. After you have installed the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
+            "InstallUrl" = "8:http://olappivottableextend.codeplex.com/wikipage?title=Office%202010%20Primary%20Interop%20Assemblies"
+            }
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_DA5545333C46467EB5E4ECA961687ABB"
+            {
+            "Name" = "8:Office 2007 PIA"
+            "Condition" = "8:(EXCEL2007=\"\") OR (EXCEL2007<>\"\" AND OFFICE2007PIA)"
+            "Message" = "8:You must first install the Office 2007 Primary Interop Assemblies. Click Yes below, install the Primary Interop Assemblies, then rerun the OLAP PivotTable Extensions setup."
+            "InstallUrl" = "8:http://download.microsoft.com/download/e/1/d/e1df4622-5f6c-4fb9-845b-38d009cc1188/PrimaryInteropAssembly.exe"
             }
         }
         "Locator"
         {
-            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_FAF1D2A917F041FE86A638AF0CD71F67"
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_1CDD732CC171470E883C69BF9A1FA382"
             {
-            "Name" = "8:Search for VSTO 2005 SE Runtime"
+            "Name" = "8:Excel 2010 64-bit"
             "Root" = "2:1"
-            "RegKey" = "8:Software\\Microsoft\\vsto runtime Setup\\v2.0.50727"
-            "Value" = "8:Update"
-            "Property" = "8:VSTORTVERSION"
+            "RegKey" = "8:Software\\Microsoft\\Office\\14.0\\Excel\\InstallRoot"
+            "Value" = "8:Path"
+            "Property" = "8:EXCEL2010X64"
+            }
+            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_3384789296564961ADF85489EABD35C5"
+            {
+            "Name" = "8:Office 2010 PIA"
+            "ComponentId" = "8:{EA7564AC-C67D-4868-BE5C-26E4FC2223FF}"
+            "Property" = "8:OFFICE2010PIA"
+            }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_428191F15C5549CFAF689F48524AD7A8"
+            {
+            "Name" = "8:Excel 2007"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\12.0\\Excel\\InstallRoot"
+            "Value" = "8:Path"
+            "Property" = "8:EXCEL2007"
+            }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_57600AE8569940C49627B38A71E08BE2"
+            {
+            "Name" = "8:64-bit Office 2010"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\14.0\\Outlook"
+            "Value" = "8:Bitness"
+            "Property" = "8:OFFICE2010BITNESS"
+            }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_A15E7994601E4A79AEFF8DBDB31E3B8C"
+            {
+            "Name" = "8:Excel 2010 32-bit"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\14.0\\Excel\\InstallRoot"
+            "Value" = "8:Path"
+            "Property" = "8:EXCEL2010X86"
+            }
+            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_B67FCD8DFFEB4ECC92CD6C2CC5D2AF11"
+            {
+            "Name" = "8:Office 2007 PIA"
+            "ComponentId" = "8:{1ABEAF09-435F-47D6-9FEB-0AD05D4EF3EA}"
+            "Property" = "8:OFFICE2007PIA"
             }
         }
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{80EEE3C6-2707-4BDF-86F5-C2EDF9CDE905}"
-        "PackageCode" = "8:{FA960B53-578F-402E-AD0C-FDD798A0D6B3}"
+        "ProductCode" = "8:{A62421BA-3133-4811-AF2D-16F9B010EB07}"
+        "PackageCode" = "8:{F5211DD6-407D-40A0-86DB-88CA6D02A30A}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.6.2"
+        "ProductVersion" = "8:0.7.0"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -1118,13 +704,13 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_4D49A83F9D1340EB96E82C1AE2DE503C"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:cscript.exe \"$(ProjectDir)NoImpersonate.js\" \"$(BuiltOuputPath)\" "
+        "PostBuildEvent" = "8:cscript.exe \"$(ProjectDir)NoImpersonate.js\" \"$(BuiltOuputPath)\" $(Configuration)"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -1153,7 +739,7 @@
                                 {
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_26F38E76AD294EFF927D113D33CBD53D"
                                     {
-                                    "Name" = "8:OlapPivotTableExtensions"
+                                    "Name" = "8:OlapPivotTableExtensions.Connect"
                                     "Condition" = "8:ALLUSERS"
                                     "AlwaysCreate" = "11:TRUE"
                                     "DeleteAtUninstall" = "11:TRUE"
@@ -1178,7 +764,7 @@
                                                     "Condition" = "8:ALLUSERS"
                                                     "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                                    "Value" = "8:{DD16A145-E2F0-40B9-9993-5018BA8B6FF3}"
                                                     }
                                                 }
                                             }
@@ -1191,7 +777,7 @@
                                             "Condition" = "8:ALLUSERS"
                                             "Transitive" = "11:TRUE"
                                             "ValueTypes" = "3:1"
-                                            "Value" = "8:"
+                                            "Value" = "8:Connect Class"
                                             }
                                         }
                                     }
@@ -1206,35 +792,13 @@
                                         {
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0B9D6CFBED774FD7B811BAEF0A51D17F"
                                             {
-                                            "Name" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                            "Name" = "8:{DD16A145-E2F0-40B9-9993-5018BA8B6FF3}"
                                             "Condition" = "8:ALLUSERS"
                                             "AlwaysCreate" = "11:TRUE"
                                             "DeleteAtUninstall" = "11:TRUE"
                                             "Transitive" = "11:TRUE"
                                                 "Keys"
                                                 {
-                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_76668212476A4C6DB83CA7F5F89CDA94"
-                                                    {
-                                                    "Name" = "8:VersionIndependentProgID"
-                                                    "Condition" = "8:ALLUSERS"
-                                                    "AlwaysCreate" = "11:TRUE"
-                                                    "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:TRUE"
-                                                        "Keys"
-                                                        {
-                                                        }
-                                                        "Values"
-                                                        {
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4FCDB60C68EC40D1B55D4B7A3E61763A"
-                                                            {
-                                                            "Name" = "8:"
-                                                            "Condition" = "8:ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions"
-                                                            }
-                                                        }
-                                                    }
                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_8C69C839FA6D4D418BDAF1856C801CE4"
                                                     {
                                                     "Name" = "8:ProgID"
@@ -1253,7 +817,7 @@
                                                             "Condition" = "8:ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions"
+                                                            "Value" = "8:OlapPivotTableExtensions.Connect"
                                                             }
                                                         }
                                                     }
@@ -1269,29 +833,13 @@
                                                         }
                                                         "Values"
                                                         {
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4B68711895F8427B9BBEA68A15B17E6F"
-                                                            {
-                                                            "Name" = "8:ManifestName"
-                                                            "Condition" = "8:ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions.dll.manifest"
-                                                            }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_6C33FB9A092E4AFBBD2813157D9FE8D2"
                                                             {
                                                             "Name" = "8:ThreadingModel"
                                                             "Condition" = "8:ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:Both"
-                                                            }
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_776F58A4C5F647BFB940D7D8774F7182"
-                                                            {
-                                                            "Name" = "8:ManifestLocation"
-                                                            "Condition" = "8:ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:[TARGETDIR]"
+                                                            "Value" = "8:Apartment"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DBF3D6E8467948208D38C84D8F8101DF"
                                                             {
@@ -1299,22 +847,8 @@
                                                             "Condition" = "8:ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:2"
-                                                            "Value" = "8:%CommonProgramFiles%\\Microsoft Shared\\VSTO\\8.0\\AddinLoader.dll"
+                                                            "Value" = "8:[TARGETDIR]OlapPivotTableExtensionsShim.dll"
                                                             }
-                                                        }
-                                                    }
-                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_FAB67C9334AB4F8DB7D8792231364141"
-                                                    {
-                                                    "Name" = "8:Programmable"
-                                                    "Condition" = "8:ALLUSERS"
-                                                    "AlwaysCreate" = "11:TRUE"
-                                                    "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:TRUE"
-                                                        "Keys"
-                                                        {
-                                                        }
-                                                        "Values"
-                                                        {
                                                         }
                                                     }
                                                 }
@@ -1326,7 +860,7 @@
                                                     "Condition" = "8:ALLUSERS"
                                                     "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:OlapPivotTableExtensions  -- an addin created with VSTO technology"
+                                                    "Value" = "8:OlapPivotTableExtensions.Connect"
                                                     }
                                                 }
                                             }
@@ -1378,7 +912,7 @@
                                                         {
                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_14782B2EB210402CABE4762C0B83727B"
                                                             {
-                                                            "Name" = "8:OlapPivotTableExtensions"
+                                                            "Name" = "8:OlapPivotTableExtensions.Connect"
                                                             "Condition" = "8:ALLUSERS"
                                                             "AlwaysCreate" = "11:TRUE"
                                                             "DeleteAtUninstall" = "11:TRUE"
@@ -1388,14 +922,6 @@
                                                                 }
                                                                 "Values"
                                                                 {
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_0599CCEFB2BB4D7D92DA871C6ED55290"
-                                                                    {
-                                                                    "Name" = "8:Manifest"
-                                                                    "Condition" = "8:ALLUSERS"
-                                                                    "Transitive" = "11:TRUE"
-                                                                    "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
-                                                                    }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_18425CA85860489D95B83B33B752831F"
                                                                     {
                                                                     "Name" = "8:LoadBehavior"
@@ -1419,14 +945,6 @@
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:1"
                                                                     "Value" = "8:OLAP PivotTable Extensions"
-                                                                    }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B7B6B582186D412795125938F00FBD6D"
-                                                                    {
-                                                                    "Name" = "8:CommandLineSafe"
-                                                                    "Condition" = "8:ALLUSERS"
-                                                                    "Transitive" = "11:TRUE"
-                                                                    "ValueTypes" = "3:3"
-                                                                    "Value" = "3:1"
                                                                     }
                                                                 }
                                                             }
@@ -1523,7 +1041,7 @@
                                                                                                                 {
                                                                                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_85BDE5D1FB1F42AF9F438B8B21C6339D"
                                                                                                                     {
-                                                                                                                    "Name" = "8:OlapPivotTableExtensions"
+                                                                                                                    "Name" = "8:OlapPivotTableExtensions.Connect"
                                                                                                                     "Condition" = "8:ALLUSERS"
                                                                                                                     "AlwaysCreate" = "11:TRUE"
                                                                                                                     "DeleteAtUninstall" = "11:TRUE"
@@ -1533,14 +1051,6 @@
                                                                                                                         }
                                                                                                                         "Values"
                                                                                                                         {
-                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1F3F0390B29F489FB5FE7DA96DB921BE"
-                                                                                                                            {
-                                                                                                                            "Name" = "8:Manifest"
-                                                                                                                            "Condition" = "8:ALLUSERS"
-                                                                                                                            "Transitive" = "11:TRUE"
-                                                                                                                            "ValueTypes" = "3:1"
-                                                                                                                            "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
-                                                                                                                            }
                                                                                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BD8590ECE6174523A830D81853244186"
                                                                                                                             {
                                                                                                                             "Name" = "8:Description"
@@ -1556,14 +1066,6 @@
                                                                                                                             "Transitive" = "11:TRUE"
                                                                                                                             "ValueTypes" = "3:1"
                                                                                                                             "Value" = "8:OLAP PivotTable Extensions"
-                                                                                                                            }
-                                                                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DD7A4EC8504649618706621366F6DAEB"
-                                                                                                                            {
-                                                                                                                            "Name" = "8:CommandLineSafe"
-                                                                                                                            "Condition" = "8:ALLUSERS"
-                                                                                                                            "Transitive" = "11:TRUE"
-                                                                                                                            "ValueTypes" = "3:3"
-                                                                                                                            "Value" = "3:1"
                                                                                                                             }
                                                                                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E7F145AADCB84BD7A579EDFAC389107C"
                                                                                                                             {
@@ -1670,7 +1172,7 @@
                                         {
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2FF57335C35F40A6A934A9AEBBF093B2"
                                             {
-                                            "Name" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                            "Name" = "8:{DD16A145-E2F0-40B9-9993-5018BA8B6FF3}"
                                             "Condition" = "8:NOT ALLUSERS"
                                             "AlwaysCreate" = "11:TRUE"
                                             "DeleteAtUninstall" = "11:TRUE"
@@ -1695,43 +1197,7 @@
                                                             "Condition" = "8:NOT ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions"
-                                                            }
-                                                        }
-                                                    }
-                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0DFF8938E53D41FD8D1415CFE3E1529C"
-                                                    {
-                                                    "Name" = "8:Programmable"
-                                                    "Condition" = "8:NOT ALLUSERS"
-                                                    "AlwaysCreate" = "11:TRUE"
-                                                    "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:TRUE"
-                                                        "Keys"
-                                                        {
-                                                        }
-                                                        "Values"
-                                                        {
-                                                        }
-                                                    }
-                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_57FD7499D0C7493CA0B9AD0CCF98A874"
-                                                    {
-                                                    "Name" = "8:VersionIndependentProgID"
-                                                    "Condition" = "8:NOT ALLUSERS"
-                                                    "AlwaysCreate" = "11:TRUE"
-                                                    "DeleteAtUninstall" = "11:TRUE"
-                                                    "Transitive" = "11:TRUE"
-                                                        "Keys"
-                                                        {
-                                                        }
-                                                        "Values"
-                                                        {
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4703532CA0F642C887AF93C2BE21F1B7"
-                                                            {
-                                                            "Name" = "8:"
-                                                            "Condition" = "8:NOT ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions"
+                                                            "Value" = "8:OlapPivotTableExtensions.Connect"
                                                             }
                                                         }
                                                     }
@@ -1753,15 +1219,7 @@
                                                             "Condition" = "8:NOT ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:Both"
-                                                            }
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3866F9338AE0474DA03D3BE46AE55A7A"
-                                                            {
-                                                            "Name" = "8:ManifestLocation"
-                                                            "Condition" = "8:NOT ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:[TARGETDIR]"
+                                                            "Value" = "8:Apartment"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4B55AF316A1B4B598A511F8B26A71407"
                                                             {
@@ -1769,15 +1227,7 @@
                                                             "Condition" = "8:NOT ALLUSERS"
                                                             "Transitive" = "11:TRUE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:%CommonProgramFiles%\\Microsoft Shared\\VSTO\\8.0\\AddinLoader.dll"
-                                                            }
-                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B1C2C4A8BC35495C9A7ECFEBF00D31DC"
-                                                            {
-                                                            "Name" = "8:ManifestName"
-                                                            "Condition" = "8:NOT ALLUSERS"
-                                                            "Transitive" = "11:TRUE"
-                                                            "ValueTypes" = "3:1"
-                                                            "Value" = "8:OlapPivotTableExtensions.dll.manifest"
+                                                            "Value" = "8:[TARGETDIR]OlapPivotTableExtensionsShim.dll"
                                                             }
                                                         }
                                                     }
@@ -1790,7 +1240,7 @@
                                                     "Condition" = "8:NOT ALLUSERS"
                                                     "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:OlapPivotTableExtensions -- an addin created with VSTO technology"
+                                                    "Value" = "8:OlapPivotTableExtensions.Connect"
                                                     }
                                                 }
                                             }
@@ -1801,7 +1251,7 @@
                                     }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_DA2F0280384F42F7B11A67D4F7DF3C61"
                                     {
-                                    "Name" = "8:OlapPivotTableExtensions"
+                                    "Name" = "8:OlapPivotTableExtensions.Connect"
                                     "Condition" = "8:NOT ALLUSERS"
                                     "AlwaysCreate" = "11:TRUE"
                                     "DeleteAtUninstall" = "11:TRUE"
@@ -1826,7 +1276,7 @@
                                                     "Condition" = "8:NOT ALLUSERS"
                                                     "Transitive" = "11:TRUE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
+                                                    "Value" = "8:{DD16A145-E2F0-40B9-9993-5018BA8B6FF3}"
                                                     }
                                                 }
                                             }
@@ -1839,7 +1289,7 @@
                                             "Condition" = "8:NOT ALLUSERS"
                                             "Transitive" = "11:TRUE"
                                             "ValueTypes" = "3:1"
-                                            "Value" = "8:OlapPivotTableExtensions -- an addin created with VSTO technology"
+                                            "Value" = "8:OlapPivotTableExtensions.Connect"
                                             }
                                         }
                                     }
@@ -1886,7 +1336,7 @@
                                                         {
                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_90CE82B283FD46609D73AE1B01F987AA"
                                                             {
-                                                            "Name" = "8:OlapPivotTableExtensions"
+                                                            "Name" = "8:OlapPivotTableExtensions.Connect"
                                                             "Condition" = "8:NOT ALLUSERS"
                                                             "AlwaysCreate" = "11:TRUE"
                                                             "DeleteAtUninstall" = "11:TRUE"
@@ -1896,14 +1346,6 @@
                                                                 }
                                                                 "Values"
                                                                 {
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3686ABB9509F4FBE816D4612F82986CB"
-                                                                    {
-                                                                    "Name" = "8:CommandLineSafe"
-                                                                    "Condition" = "8:NOT ALLUSERS"
-                                                                    "Transitive" = "11:TRUE"
-                                                                    "ValueTypes" = "3:3"
-                                                                    "Value" = "3:1"
-                                                                    }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3BD8B9F2B91643808F9F4F5AA01D419A"
                                                                     {
                                                                     "Name" = "8:FriendlyName"
@@ -1919,14 +1361,6 @@
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:1"
                                                                     "Value" = "8:Excel add-in for Analysis Services PivotTables"
-                                                                    }
-                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CAB054F2B7C0460FA1EB5E0BAE28F279"
-                                                                    {
-                                                                    "Name" = "8:Manifest"
-                                                                    "Condition" = "8:NOT ALLUSERS"
-                                                                    "Transitive" = "11:TRUE"
-                                                                    "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR]OlapPivotTableExtensions.dll.manifest"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E1EE83A553094F0A84AE5526DA871A08"
                                                                     {
@@ -1992,20 +1426,26 @@
         }
         "UserInterface"
         {
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_0E02D03FB81E44278A5D2D30AC6AE621"
+            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_01FAACB243AA40029A810D85F91A1E76"
+            {
+            "UseDynamicProperties" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:<VsdDialogDir>\\VsdBasicDialogs.wim"
+            }
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_23B4D3061EC1491B9012CB8060429981"
             {
             "Name" = "8:#1900"
-            "Sequence" = "3:2"
+            "Sequence" = "3:1"
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_0057E521957C4702AF00EC983971B603"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_2870D4EBA0994B72B0E951645440C155"
                     {
-                    "Sequence" = "3:200"
-                    "DisplayName" = "8:Installation Folder"
+                    "Sequence" = "3:300"
+                    "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
                         "Properties"
                         {
                             "BannerBitmap"
@@ -2021,7 +1461,224 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_324C549AA1224ADA919C6332898689A9"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_6CEB017B64A84282A0E0A50033D3F6B5"
+                    {
+                    "Sequence" = "3:200"
+                    "DisplayName" = "8:Installation Folder"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "InstallAllUsersVisible"
+                            {
+                            "Name" = "8:InstallAllUsersVisible"
+                            "DisplayName" = "8:#1059"
+                            "Description" = "8:#1159"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_E647E68F920A4E1EBFD34E7014147579"
+                    {
+                    "Sequence" = "3:100"
+                    "DisplayName" = "8:Welcome"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "CopyrightWarning"
+                            {
+                            "Name" = "8:CopyrightWarning"
+                            "DisplayName" = "8:#1002"
+                            "Description" = "8:#1102"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:#1202"
+                            "DefaultValue" = "8:#1202"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Welcome"
+                            {
+                            "Name" = "8:Welcome"
+                            "DisplayName" = "8:#1003"
+                            "Description" = "8:#1103"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:The installer will guide you through the steps required to install [ProductName] on your computer."
+                            "DefaultValue" = "8:#1203"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                }
+            }
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_295D00DDD8424CA487445A525F2041C7"
+            {
+            "Name" = "8:#1902"
+            "Sequence" = "3:2"
+            "Attributes" = "3:3"
+                "Dialogs"
+                {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_0D4080AC2F6A4D25BC6E304E9B6D408A"
+                    {
+                    "Sequence" = "3:100"
+                    "DisplayName" = "8:Finished"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                }
+            }
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_2F7249497181492F95419D9800CD3073"
+            {
+            "Name" = "8:#1901"
+            "Sequence" = "3:2"
+            "Attributes" = "3:2"
+                "Dialogs"
+                {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_EC009007C41E401585AA90E20A706602"
+                    {
+                    "Sequence" = "3:100"
+                    "DisplayName" = "8:Progress"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "ShowProgress"
+                            {
+                            "Name" = "8:ShowProgress"
+                            "DisplayName" = "8:#1009"
+                            "Description" = "8:#1109"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                }
+            }
+            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_D5AAEBBD106249109BACC0F313146262"
+            {
+            "UseDynamicProperties" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:<VsdDialogDir>\\VsdUserInterface.wim"
+            }
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_D5FDBCBD2F5C46E8BA93A34A829EB610"
+            {
+            "Name" = "8:#1901"
+            "Sequence" = "3:1"
+            "Attributes" = "3:2"
+                "Dialogs"
+                {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_94A3F6F310A846E897E2F3F3F4A181DE"
+                    {
+                    "Sequence" = "3:100"
+                    "DisplayName" = "8:Progress"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "ShowProgress"
+                            {
+                            "Name" = "8:ShowProgress"
+                            "DisplayName" = "8:#1009"
+                            "Description" = "8:#1109"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                }
+            }
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_F191B3CCDE67471EAD0F8CE4513C4FC3"
+            {
+            "Name" = "8:#1900"
+            "Sequence" = "3:2"
+            "Attributes" = "3:1"
+                "Dialogs"
+                {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_2A8613E0CC1E45C2ABDC2E9E8C77C9FC"
                     {
                     "Sequence" = "3:300"
                     "DisplayName" = "8:Confirm Installation"
@@ -2043,7 +1700,7 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8EA6DB60FD6140FD8BA1EF97EBF913BD"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_70A6E2E511E747DDA3E4A29C3382BE3D"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Welcome"
@@ -2091,97 +1748,13 @@
                             }
                         }
                     }
-                }
-            }
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_1EF5878944854500B991ECEEC5759122"
-            {
-            "Name" = "8:#1901"
-            "Sequence" = "3:1"
-            "Attributes" = "3:2"
-                "Dialogs"
-                {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_96B86301589F49848EC77CEC40BC569C"
-                    {
-                    "Sequence" = "3:100"
-                    "DisplayName" = "8:Progress"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "ShowProgress"
-                            {
-                            "Name" = "8:ShowProgress"
-                            "DisplayName" = "8:#1009"
-                            "Description" = "8:#1109"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:1"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                }
-            }
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_62C73988860D4EC6BA26F59939B2DFAE"
-            {
-            "Name" = "8:#1902"
-            "Sequence" = "3:2"
-            "Attributes" = "3:3"
-                "Dialogs"
-                {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_9205F725025F4FA2A18942EF3DB97A08"
-                    {
-                    "Sequence" = "3:100"
-                    "DisplayName" = "8:Finished"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                }
-            }
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_65241AA3A0C64E99AB3A891E44E7AB01"
-            {
-            "Name" = "8:#1900"
-            "Sequence" = "3:1"
-            "Attributes" = "3:1"
-                "Dialogs"
-                {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_1FA45B6518524277A2D20F5CDF849421"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_83B67244315C4FFFAAD176447A6E38F5"
                     {
                     "Sequence" = "3:200"
                     "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
                         "Properties"
                         {
                             "BannerBitmap"
@@ -2193,115 +1766,20 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "InstallAllUsersVisible"
-                            {
-                            "Name" = "8:InstallAllUsersVisible"
-                            "DisplayName" = "8:#1059"
-                            "Description" = "8:#1159"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:1"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_43504C82EA60436887895343426E61FC"
-                    {
-                    "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirm Installation"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_7B4909A36FDB41DE8B99F9BA94903DE3"
-                    {
-                    "Sequence" = "3:100"
-                    "DisplayName" = "8:Welcome"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "CopyrightWarning"
-                            {
-                            "Name" = "8:CopyrightWarning"
-                            "DisplayName" = "8:#1002"
-                            "Description" = "8:#1102"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
-                            "DefaultValue" = "8:#1202"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Welcome"
-                            {
-                            "Name" = "8:Welcome"
-                            "DisplayName" = "8:#1003"
-                            "Description" = "8:#1103"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
-                            "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
                     }
                 }
             }
-            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_8DA4461274FE454C915C253FA6DDDAE9"
-            {
-            "UseDynamicProperties" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:<VsdDialogDir>\\VsdBasicDialogs.wim"
-            }
-            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_B056D6DC894E4B9CA672E32613C3BB3E"
-            {
-            "UseDynamicProperties" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:<VsdDialogDir>\\VsdUserInterface.wim"
-            }
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_C4819AB3FA534B7CADAC33749BB1CA92"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_FF82622FA2E84D08967459D8CF1C088D"
             {
             "Name" = "8:#1902"
             "Sequence" = "3:1"
             "Attributes" = "3:3"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_B69A3A69ECD244E7BC0C57BF0EB132F6"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_3FC3BFAD195E4276BBB449585228CC7F"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Finished"
@@ -2329,53 +1807,9 @@
                             "Type" = "3:15"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1258"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1258"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                }
-            }
-            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_CAB07D485BD6460FADF7BA77B0B1D571"
-            {
-            "Name" = "8:#1901"
-            "Sequence" = "3:2"
-            "Attributes" = "3:2"
-                "Dialogs"
-                {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_77D6074A38404932BCE23EC2E788277D"
-                    {
-                    "Sequence" = "3:100"
-                    "DisplayName" = "8:Progress"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "ShowProgress"
-                            {
-                            "Name" = "8:ShowProgress"
-                            "DisplayName" = "8:#1009"
-                            "Description" = "8:#1109"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:1"
-                            "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -2388,12 +1822,96 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_805327BF8EE34F0AA113184682C96EB8"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17870CE30A894F80ACB4F97D72E9DF0A"
             {
-            "SourcePath" = "8:..\\SetSecurity\\obj\\Debug\\SetSecurity.dll"
+            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release\\ManagedAggregator.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{0BAB0BF2-A603-4A21-940A-7C9FDCA78ADB}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
+            {
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{7412296C-23BE-4AB0-A3E0-793D1170CBE0}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_248E4B09250F46C482D2F93017CFE488"
+            {
+            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Release\\OlapPivotTableExtensionsShim.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{B3503205-6CAE-4BEF-BBF0-5130812F169A}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9785DCBD01BF4F8285774D086AE1F928"
+            {
+            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Release\\CustomInstallActions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2411,34 +1929,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{56E8E807-0807-45E0-B19A-98912AE47630}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E7D43D3D9BA64CB29283CDEB15CD5DCF"
-            {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C34F7C7EF00647469FE49DF2CDC0054D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:3"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{EB6304F7-E7A3-4164-8BFA-E233A50941CC}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
