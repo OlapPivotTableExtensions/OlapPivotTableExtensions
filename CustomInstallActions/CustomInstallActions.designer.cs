@@ -1,6 +1,6 @@
 namespace CustomActions
 {
-    partial class SetSecurity
+    partial class CustomInstallActions
     {
         /// <summary>
         /// Required designer variable.

@@ -34,6 +34,12 @@ namespace OlapPivotTableExtensions
                 System.Reflection.AssemblyFileVersionAttribute attrVersion = (System.Reflection.AssemblyFileVersionAttribute)typeof(MainForm).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), true)[0];
                 lblVersion.Text = "OLAP PivotTable Extensions v" + attrVersion.Version;
 
+#if X64
+                lblVersion.Text += " (64-bit)";
+#else
+                lblVersion.Text += " (32-bit)";
+#endif
+
                 application = app;
                 pvt = app.ActiveCell.PivotTable;
 
@@ -44,12 +50,12 @@ namespace OlapPivotTableExtensions
 
                 tabControl.SelectedTab = tabCalcs;
 
-                chkShowCalcMembers.Checked = ThisAddIn.ShowCalcMembersByDefault;
-                chkRefreshDataWhenOpeningTheFile.Checked = ThisAddIn.RefreshDataByDefault;
+                chkShowCalcMembers.Checked = Connect.ShowCalcMembersByDefault;
+                chkRefreshDataWhenOpeningTheFile.Checked = Connect.RefreshDataByDefault;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "OLAP PivotTable Extensions");
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
                 this.Visible = false;
                 this.Close();
             }
@@ -703,8 +709,8 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                ThisAddIn.ShowCalcMembersByDefault = chkShowCalcMembers.Checked;
-                ThisAddIn.RefreshDataByDefault = this.chkRefreshDataWhenOpeningTheFile.Checked;
+                Connect.ShowCalcMembersByDefault = chkShowCalcMembers.Checked;
+                Connect.RefreshDataByDefault = this.chkRefreshDataWhenOpeningTheFile.Checked;
                 this.Close();
             }
             catch (Exception ex)

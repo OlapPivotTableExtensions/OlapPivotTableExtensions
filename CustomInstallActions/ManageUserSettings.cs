@@ -7,7 +7,7 @@ namespace CustomActions
 {
     /// <summary>
     /// This class takes advantage of the User Settings registry in which Office will spread HKLM registry settings to the HKCU branch
-    /// Excel 2010 doesn't use this registry setting. Instead it uses HKLM\Software\Microsoft\Office\Excel\Addins\OlapPivotTableExtensions
+    /// Excel 2010 doesn't use this registry setting. Instead it uses HKLM\Software\Microsoft\Office\Excel\Addins\OlapPivotTableExtensions.Connect
     /// </summary>
     internal class ManageUserSettings
     {
@@ -22,6 +22,7 @@ namespace CustomActions
 
         public static void Uninstall(bool bAllUsers)
         {
+            System.Windows.Forms.MessageBox.Show("Uninstall user settings: " + bAllUsers);
             if (bAllUsers)
             {
                 IncrementCount();
@@ -73,7 +74,7 @@ namespace CustomActions
         private static void RegisterDeleteInstruction()
         {
             RegistryKey appKey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey(REGISTRY_PATH);
-            appKey.CreateSubKey(@"Delete\Software\Microsoft\Office\Excel\AddIns\OlapPivotTableExtensions");
+            appKey.CreateSubKey(@"Delete\Software\Microsoft\Office\Excel\AddIns\OlapPivotTableExtensions.Connect");
             appKey.Close();
         }
         

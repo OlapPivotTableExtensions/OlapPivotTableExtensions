@@ -1,0 +1,39 @@
+// OlapPivotTableExtensionsShim.idl 
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(140EBE37-D0FF-42D7-9D5D-F0662D970E7B),
+	version(1.0),
+	helpstring("OlapPivotTableExtensionsShim 1.0 Type Library")
+]
+library OlapPivotTableExtensionsShimLib
+{
+	importlib("stdole2.tlb");
+
+	[
+		uuid(dd16a145-e2f0-40b9-9993-5018ba8b6ff3),
+		helpstring("ConnectProxy Class")
+	]
+	coclass ConnectProxy
+	{
+		[default] interface IUnknown;
+	};
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
