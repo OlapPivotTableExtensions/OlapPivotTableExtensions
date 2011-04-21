@@ -6,7 +6,7 @@
 	ProjectGUID="{B3503205-6CAE-4BEF-BBF0-5130812F169A}"
 	RootNamespace="OlapPivotTableExtensionsShim"
 	SccProjectName="$/OlapPivotTableExtend/OlapPivotTableExtensionsShim"
-	SccAuxPath="https://tfs03.codeplex.com"
+	SccAuxPath="https://tfs.codeplex.com/tfs/tfs03"
 	SccLocalPath="."
 	SccProvider="{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}"
 	Keyword="AtlProj"

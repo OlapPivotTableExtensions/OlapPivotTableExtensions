@@ -7,10 +7,10 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:"
-"SccLocalPath" = "8:"
-"SccAuxPath" = "8:"
-"SccProvider" = "8:"
+"SccProjectName" = "8:SAK"
+"SccLocalPath" = "8:SAK"
+"SccAuxPath" = "8:SAK"
+"SccProvider" = "8:SAK"
     "Hierarchy"
     {
         "Entry"
@@ -33,13 +33,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
-        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
+        "MsmKey" = "8:_466D85672B2C8D0185984E57D6B24A25"
+        "OwnerKey" = "8:_717806306DD971B8F748F1ED3CCCCC7D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+        "MsmKey" = "8:_466D85672B2C8D0185984E57D6B24A25"
         "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,6 +63,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_717806306DD971B8F748F1ED3CCCCC7D"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9785DCBD01BF4F8285774D086AE1F928"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -75,26 +81,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
-        "OwnerKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+        "MsmKey" = "8:_C75E8145304EEB902777F29CC5231922"
+        "OwnerKey" = "8:_466D85672B2C8D0185984E57D6B24A25"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
+        "MsmKey" = "8:_C75E8145304EEB902777F29CC5231922"
         "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
-        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
-        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
+        "MsmKey" = "8:_C75E8145304EEB902777F29CC5231922"
+        "OwnerKey" = "8:_717806306DD971B8F748F1ED3CCCCC7D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,19 +136,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
+        "OwnerKey" = "8:_717806306DD971B8F748F1ED3CCCCC7D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+        "OwnerKey" = "8:_466D85672B2C8D0185984E57D6B24A25"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A4BB4524FCD3AB9DAA770784975638C8"
+        "OwnerKey" = "8:_C75E8145304EEB902777F29CC5231922"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -344,14 +344,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_466D85672B2C8D0185984E57D6B24A25"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_3ED1DE820EC3F4FE8E0483A1BD87B22C"
+                    "_466D85672B2C8D0185984E57D6B24A25"
                     {
                     "Name" = "8:Microsoft.Vbe.Interop.dll"
                     "Attributes" = "3:512"
@@ -428,7 +428,7 @@
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:C:\\Program Files\\Microsoft Visual Studio 9.0\\Visual Studio Tools for Office\\PIA\\Office12\\adodb.dll"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Visual Studio Tools for Office\\PIA\\Office12\\adodb.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -444,6 +444,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_717806306DD971B8F748F1ED3CCCCC7D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
+                "ScatterAssemblies"
+                {
+                    "_717806306DD971B8F748F1ED3CCCCC7D"
+                    {
+                    "Name" = "8:Microsoft.Office.Interop.Excel.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.Office.Interop.Excel.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A14D580B19B728050EB1B14B6920E886"
@@ -477,51 +508,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A4BB4524FCD3AB9DAA770784975638C8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C75E8145304EEB902777F29CC5231922"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_A4BB4524FCD3AB9DAA770784975638C8"
+                    "_C75E8145304EEB902777F29CC5231922"
                     {
                     "Name" = "8:Office.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:Office.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CD4EF4E6776DDC84855DFDEC6FFAE69F"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
-                "ScatterAssemblies"
-                {
-                    "_CD4EF4E6776DDC84855DFDEC6FFAE69F"
-                    {
-                    "Name" = "8:Microsoft.Office.Interop.Excel.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Office.Interop.Excel.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -620,8 +620,8 @@
             {
             "Name" = "8:Office 2010 PIA"
             "Condition" = "8:(EXCEL2010X86=\"\" AND OFFICE2010BITNESS<>\"x64\") OR ((EXCEL2010X86<>\"\" OR OFFICE2010BITNESS=\"x64\") AND OFFICE2010PIA)"
-            "Message" = "8:You must first install the Office 2010 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below and follow the instructions. After you have installed the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
-            "InstallUrl" = "8:http://olappivottableextend.codeplex.com/wikipage?title=Office%202010%20Primary%20Interop%20Assemblies"
+            "Message" = "8:You must first install the Office 2010 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
+            "InstallUrl" = "8:http://download.microsoft.com/download/C/1/D/C1D6DBBB-700D-4669-98CF-820AC3AE8E55/PIARedist.exe"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_DA5545333C46467EB5E4ECA961687ABB"
             {
@@ -687,14 +687,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{A62421BA-3133-4811-AF2D-16F9B010EB07}"
-        "PackageCode" = "8:{F5211DD6-407D-40A0-86DB-88CA6D02A30A}"
+        "ProductCode" = "8:{95513D59-3435-406E-8965-1FFC2B9538FD}"
+        "PackageCode" = "8:{B4068A05-ECF8-4642-9530-DFC40C7C234C}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.7.0"
+        "ProductVersion" = "8:0.7.1"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
