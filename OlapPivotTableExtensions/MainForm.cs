@@ -31,6 +31,8 @@ namespace OlapPivotTableExtensions
 
             try
             {
+                SetCulture(app);
+
                 System.Reflection.AssemblyFileVersionAttribute attrVersion = (System.Reflection.AssemblyFileVersionAttribute)typeof(MainForm).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), true)[0];
                 lblVersion.Text = "OLAP PivotTable Extensions v" + attrVersion.Version;
 
@@ -61,6 +63,15 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        //fix for the "old format or invalid type library" error on non-english locales
+        private void SetCulture(Excel.Application app)
+        {
+            System.Globalization.CultureInfo nci =
+            new System.Globalization.CultureInfo(
+            app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI));
+            System.Threading.Thread.CurrentThread.CurrentCulture = nci;
+        }
+
         private void SetMDX()
         {
             StringBuilder sMdxQuery = new StringBuilder(pvt.MDX);
@@ -71,7 +82,11 @@ namespace OlapPivotTableExtensions
                 StringBuilder sCalcs = new StringBuilder();
                 foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
                 {
-                    sCalcs.AppendFormat("MEMBER {0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n","\r").Replace("\r","\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
+                    if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedSet)
+                        sCalcs.Append("SET ");
+                    else
+                        sCalcs.Append("MEMBER ");
+                    sCalcs.AppendFormat("{0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
                 }
                 if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -172,7 +187,8 @@ namespace OlapPivotTableExtensions
             List<string> listCalcs = new List<string>();
             foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
             {
-                listCalcs.Add(calc.Name);
+                if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedMember)
+                    listCalcs.Add(calc.Name);
             }
             listCalcs.Sort();
 
@@ -973,7 +989,27 @@ namespace OlapPivotTableExtensions
                         }
                         if (field.Orientation == Excel.XlPivotFieldOrientation.xlPageField)
                         {
-                            field.CurrentPageName = m.UniqueName;
+                            if (chkAddToCurrentFilters.Checked)
+                            {
+                                field.EnableMultiplePageItems = true;
+
+                                Excel.PivotField pivotField = (Excel.PivotField)field.PivotFields.Item(m.ParentLevel.UniqueName);
+                                List<object> listVisibleItems = new List<object>();
+                                bool bFoundThisItem = false;
+                                foreach (object o in (System.Array)pivotField.VisibleItemsList)
+                                {
+                                    listVisibleItems.Add(o);
+                                    if (Convert.ToString(o) == m.UniqueName) bFoundThisItem = true;
+                                }
+                                if (!bFoundThisItem)
+                                    listVisibleItems.Add(Convert.ToString(m.UniqueName));
+                                System.Array arrNewVisibleItems = listVisibleItems.ToArray();
+                                pivotField.VisibleItemsList = arrNewVisibleItems;
+                            }
+                            else
+                            {
+                                field.CurrentPageName = m.UniqueName;
+                            }
                         }
                         else
                         {
@@ -1363,5 +1399,6 @@ namespace OlapPivotTableExtensions
                 }
             }
         }
+
     }
 }

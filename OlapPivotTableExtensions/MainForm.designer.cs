@@ -58,6 +58,7 @@
             this.txtMDX = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabSearch = new System.Windows.Forms.TabPage();
+            this.chkAddToCurrentFilters = new System.Windows.Forms.CheckBox();
             this.btnCancelSearch = new System.Windows.Forms.Button();
             this.prgSearch = new System.Windows.Forms.ProgressBar();
             this.lblNoSearchMatches = new System.Windows.Forms.Label();
@@ -78,12 +79,16 @@
             this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabFilterList = new System.Windows.Forms.TabPage();
+            this.btnCancelFilterList = new System.Windows.Forms.Button();
+            this.progressFilterList = new System.Windows.Forms.ProgressBar();
+            this.lblFilterListError = new System.Windows.Forms.Label();
             this.btnFilterList = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.cmbFilterListLookIn = new System.Windows.Forms.ComboBox();
             this.txtFilterList = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tabDefaults = new System.Windows.Forms.TabPage();
+            this.chkRefreshDataWhenOpeningTheFile = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.btnSaveDefaults = new System.Windows.Forms.Button();
             this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
@@ -91,10 +96,6 @@
             this.linkCodeplex = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
-            this.btnCancelFilterList = new System.Windows.Forms.Button();
-            this.progressFilterList = new System.Windows.Forms.ProgressBar();
-            this.lblFilterListError = new System.Windows.Forms.Label();
-            this.chkRefreshDataWhenOpeningTheFile = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -404,6 +405,7 @@
             // 
             // tabSearch
             // 
+            this.tabSearch.Controls.Add(this.chkAddToCurrentFilters);
             this.tabSearch.Controls.Add(this.btnCancelSearch);
             this.tabSearch.Controls.Add(this.prgSearch);
             this.tabSearch.Controls.Add(this.lblNoSearchMatches);
@@ -424,6 +426,16 @@
             this.tabSearch.TabIndex = 5;
             this.tabSearch.Text = "Search";
             this.tabSearch.UseVisualStyleBackColor = true;
+            // 
+            // chkAddToCurrentFilters
+            // 
+            this.chkAddToCurrentFilters.AutoSize = true;
+            this.chkAddToCurrentFilters.Location = new System.Drawing.Point(304, 95);
+            this.chkAddToCurrentFilters.Name = "chkAddToCurrentFilters";
+            this.chkAddToCurrentFilters.Size = new System.Drawing.Size(120, 17);
+            this.chkAddToCurrentFilters.TabIndex = 13;
+            this.chkAddToCurrentFilters.Text = "Add to current filters";
+            this.chkAddToCurrentFilters.UseVisualStyleBackColor = true;
             // 
             // btnCancelSearch
             // 
@@ -478,7 +490,7 @@
             this.chkMemberProperties.AutoSize = true;
             this.chkMemberProperties.Checked = true;
             this.chkMemberProperties.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkMemberProperties.Location = new System.Drawing.Point(133, 95);
+            this.chkMemberProperties.Location = new System.Drawing.Point(126, 95);
             this.chkMemberProperties.Name = "chkMemberProperties";
             this.chkMemberProperties.Size = new System.Drawing.Size(149, 17);
             this.chkMemberProperties.TabIndex = 6;
@@ -689,6 +701,44 @@
             this.tabFilterList.ToolTipText = "Paste in a list to filter your PivotTable";
             this.tabFilterList.UseVisualStyleBackColor = true;
             // 
+            // btnCancelFilterList
+            // 
+            this.btnCancelFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancelFilterList.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCancelFilterList.Location = new System.Drawing.Point(9, 276);
+            this.btnCancelFilterList.Name = "btnCancelFilterList";
+            this.btnCancelFilterList.Size = new System.Drawing.Size(60, 23);
+            this.btnCancelFilterList.TabIndex = 14;
+            this.btnCancelFilterList.Text = "Cancel";
+            this.btnCancelFilterList.UseVisualStyleBackColor = false;
+            this.btnCancelFilterList.Visible = false;
+            this.btnCancelFilterList.Click += new System.EventHandler(this.btnCancelFilterList_Click);
+            // 
+            // progressFilterList
+            // 
+            this.progressFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressFilterList.Location = new System.Drawing.Point(78, 279);
+            this.progressFilterList.Name = "progressFilterList";
+            this.progressFilterList.Size = new System.Drawing.Size(206, 18);
+            this.progressFilterList.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressFilterList.TabIndex = 13;
+            this.progressFilterList.Visible = false;
+            // 
+            // lblFilterListError
+            // 
+            this.lblFilterListError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFilterListError.AutoEllipsis = true;
+            this.lblFilterListError.BackColor = System.Drawing.Color.Transparent;
+            this.lblFilterListError.ForeColor = System.Drawing.Color.Red;
+            this.lblFilterListError.Location = new System.Drawing.Point(6, 279);
+            this.lblFilterListError.Name = "lblFilterListError";
+            this.lblFilterListError.Size = new System.Drawing.Size(296, 18);
+            this.lblFilterListError.TabIndex = 15;
+            this.lblFilterListError.Text = "Error: Text here";
+            this.lblFilterListError.Visible = false;
+            // 
             // btnFilterList
             // 
             this.btnFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -756,6 +806,17 @@
             this.tabDefaults.TabIndex = 4;
             this.tabDefaults.Text = "Defaults";
             this.tabDefaults.UseVisualStyleBackColor = true;
+            // 
+            // chkRefreshDataWhenOpeningTheFile
+            // 
+            this.chkRefreshDataWhenOpeningTheFile.AutoSize = true;
+            this.chkRefreshDataWhenOpeningTheFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkRefreshDataWhenOpeningTheFile.Location = new System.Drawing.Point(13, 57);
+            this.chkRefreshDataWhenOpeningTheFile.Name = "chkRefreshDataWhenOpeningTheFile";
+            this.chkRefreshDataWhenOpeningTheFile.Size = new System.Drawing.Size(290, 17);
+            this.chkRefreshDataWhenOpeningTheFile.TabIndex = 3;
+            this.chkRefreshDataWhenOpeningTheFile.Text = "Turn on \"Refresh data when opening the file\" by default";
+            this.chkRefreshDataWhenOpeningTheFile.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
@@ -832,55 +893,6 @@
             this.lblVersion.Size = new System.Drawing.Size(220, 13);
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "OLAP PivotTable Extensions v0.0.0.0";
-            // 
-            // btnCancelFilterList
-            // 
-            this.btnCancelFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCancelFilterList.BackColor = System.Drawing.SystemColors.Control;
-            this.btnCancelFilterList.Location = new System.Drawing.Point(9, 276);
-            this.btnCancelFilterList.Name = "btnCancelFilterList";
-            this.btnCancelFilterList.Size = new System.Drawing.Size(60, 23);
-            this.btnCancelFilterList.TabIndex = 14;
-            this.btnCancelFilterList.Text = "Cancel";
-            this.btnCancelFilterList.UseVisualStyleBackColor = false;
-            this.btnCancelFilterList.Visible = false;
-            this.btnCancelFilterList.Click += new System.EventHandler(this.btnCancelFilterList_Click);
-            // 
-            // progressFilterList
-            // 
-            this.progressFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressFilterList.Location = new System.Drawing.Point(78, 279);
-            this.progressFilterList.Name = "progressFilterList";
-            this.progressFilterList.Size = new System.Drawing.Size(206, 18);
-            this.progressFilterList.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressFilterList.TabIndex = 13;
-            this.progressFilterList.Visible = false;
-            // 
-            // lblFilterListError
-            // 
-            this.lblFilterListError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblFilterListError.AutoEllipsis = true;
-            this.lblFilterListError.BackColor = System.Drawing.Color.Transparent;
-            this.lblFilterListError.ForeColor = System.Drawing.Color.Red;
-            this.lblFilterListError.Location = new System.Drawing.Point(6, 279);
-            this.lblFilterListError.Name = "lblFilterListError";
-            this.lblFilterListError.Size = new System.Drawing.Size(296, 18);
-            this.lblFilterListError.TabIndex = 15;
-            this.lblFilterListError.Text = "Error: Text here";
-            this.lblFilterListError.Visible = false;
-            // 
-            // chkRefreshDataWhenOpeningTheFile
-            // 
-            this.chkRefreshDataWhenOpeningTheFile.AutoSize = true;
-            this.chkRefreshDataWhenOpeningTheFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkRefreshDataWhenOpeningTheFile.Location = new System.Drawing.Point(13, 57);
-            this.chkRefreshDataWhenOpeningTheFile.Name = "chkRefreshDataWhenOpeningTheFile";
-            this.chkRefreshDataWhenOpeningTheFile.Size = new System.Drawing.Size(290, 17);
-            this.chkRefreshDataWhenOpeningTheFile.TabIndex = 3;
-            this.chkRefreshDataWhenOpeningTheFile.Text = "Turn on \"Refresh data when opening the file\" by default";
-            this.chkRefreshDataWhenOpeningTheFile.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -981,5 +993,6 @@
         private System.Windows.Forms.Label lblFilterListError;
         private System.Windows.Forms.CheckBox chkRefreshDataWhenOpeningTheFile;
         private System.Windows.Forms.TextBox txtFilterList;
+        private System.Windows.Forms.CheckBox chkAddToCurrentFilters;
     }
 }
