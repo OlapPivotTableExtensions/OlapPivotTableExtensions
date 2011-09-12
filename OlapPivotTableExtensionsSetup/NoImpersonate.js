@@ -172,5 +172,28 @@ catch (e) {
     WScript.Quit(1);
 }
 
-    
+
+
+try {
+    //fix a bug where the install log would say "Ignoring disallowed property EXCEL2007" on certain machines
+    sql = "SELECT `Property`, `Value` FROM `Property`";
+    view = database.OpenView(sql);
+    view.Execute();
+    record = view.Fetch();
+    while (record) {
+        if (record.StringData(1) == "SecureCustomProperties") {
+            WScript.StdOut.WriteLine("SecureCustomProperties was set to: " + record.StringData(2));
+            record.StringData(2) = record.StringData(2) + ";EXCEL2007;EXCEL2010X86;EXCEL2010X64;OFFICE2007PIA;OFFICE2010PIA;TARGETDIR;VSDNETURLMSG;VSDNETMSG;USERNAME;COMPANYNAME;SOURCEDIR;ROOTDRIVE";
+            WScript.StdOut.WriteLine("SecureCustomProperties changed to: " + record.StringData(2));
+            view.Modify(msiViewModifyUpdate, record);
+        }
+        record = view.Fetch();
+    }
+    view.Close();
+    database.Commit();
+}
+catch (e) {
+    WScript.StdErr.WriteLine(e);
+    WScript.Quit(1);
+}
 

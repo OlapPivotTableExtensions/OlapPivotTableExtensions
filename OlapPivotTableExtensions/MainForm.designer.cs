@@ -79,6 +79,7 @@
             this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabFilterList = new System.Windows.Forms.TabPage();
+            this.btnFilterListShowCurrentFilters = new System.Windows.Forms.Button();
             this.btnCancelFilterList = new System.Windows.Forms.Button();
             this.progressFilterList = new System.Windows.Forms.ProgressBar();
             this.lblFilterListError = new System.Windows.Forms.Label();
@@ -93,9 +94,14 @@
             this.btnSaveDefaults = new System.Windows.Forms.Button();
             this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
             this.tabAbout = new System.Windows.Forms.TabPage();
+            this.lblExcelUILanguage = new System.Windows.Forms.Label();
+            this.lblUpgradePivotTableInstructions = new System.Windows.Forms.Label();
+            this.linkUpgradePivotTable = new System.Windows.Forms.LinkLabel();
+            this.lblPivotTableVersion = new System.Windows.Forms.Label();
             this.linkCodeplex = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
+            this.btnUpgradeOnRefresh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -684,6 +690,7 @@
             // 
             // tabFilterList
             // 
+            this.tabFilterList.Controls.Add(this.btnFilterListShowCurrentFilters);
             this.tabFilterList.Controls.Add(this.btnCancelFilterList);
             this.tabFilterList.Controls.Add(this.progressFilterList);
             this.tabFilterList.Controls.Add(this.lblFilterListError);
@@ -700,6 +707,17 @@
             this.tabFilterList.Text = "Filter List";
             this.tabFilterList.ToolTipText = "Paste in a list to filter your PivotTable";
             this.tabFilterList.UseVisualStyleBackColor = true;
+            // 
+            // btnFilterListShowCurrentFilters
+            // 
+            this.btnFilterListShowCurrentFilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterListShowCurrentFilters.Location = new System.Drawing.Point(313, 24);
+            this.btnFilterListShowCurrentFilters.Name = "btnFilterListShowCurrentFilters";
+            this.btnFilterListShowCurrentFilters.Size = new System.Drawing.Size(119, 23);
+            this.btnFilterListShowCurrentFilters.TabIndex = 16;
+            this.btnFilterListShowCurrentFilters.Text = "Show Current Filters";
+            this.btnFilterListShowCurrentFilters.UseVisualStyleBackColor = true;
+            this.btnFilterListShowCurrentFilters.Click += new System.EventHandler(this.btnFilterListShowCurrentFilters_Click);
             // 
             // btnCancelFilterList
             // 
@@ -768,7 +786,7 @@
             this.cmbFilterListLookIn.Location = new System.Drawing.Point(9, 24);
             this.cmbFilterListLookIn.MaxDropDownItems = 10;
             this.cmbFilterListLookIn.Name = "cmbFilterListLookIn";
-            this.cmbFilterListLookIn.Size = new System.Drawing.Size(424, 21);
+            this.cmbFilterListLookIn.Size = new System.Drawing.Size(293, 21);
             this.cmbFilterListLookIn.TabIndex = 4;
             // 
             // txtFilterList
@@ -852,6 +870,11 @@
             // 
             // tabAbout
             // 
+            this.tabAbout.Controls.Add(this.btnUpgradeOnRefresh);
+            this.tabAbout.Controls.Add(this.lblExcelUILanguage);
+            this.tabAbout.Controls.Add(this.lblUpgradePivotTableInstructions);
+            this.tabAbout.Controls.Add(this.linkUpgradePivotTable);
+            this.tabAbout.Controls.Add(this.lblPivotTableVersion);
             this.tabAbout.Controls.Add(this.linkCodeplex);
             this.tabAbout.Controls.Add(this.label5);
             this.tabAbout.Controls.Add(this.lblVersion);
@@ -862,6 +885,45 @@
             this.tabAbout.TabIndex = 2;
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
+            // 
+            // lblExcelUILanguage
+            // 
+            this.lblExcelUILanguage.AutoSize = true;
+            this.lblExcelUILanguage.Location = new System.Drawing.Point(12, 95);
+            this.lblExcelUILanguage.Name = "lblExcelUILanguage";
+            this.lblExcelUILanguage.Size = new System.Drawing.Size(101, 13);
+            this.lblExcelUILanguage.TabIndex = 6;
+            this.lblExcelUILanguage.Text = "Excel UI Language:";
+            // 
+            // lblUpgradePivotTableInstructions
+            // 
+            this.lblUpgradePivotTableInstructions.AutoSize = true;
+            this.lblUpgradePivotTableInstructions.Location = new System.Drawing.Point(11, 207);
+            this.lblUpgradePivotTableInstructions.Name = "lblUpgradePivotTableInstructions";
+            this.lblUpgradePivotTableInstructions.Size = new System.Drawing.Size(262, 13);
+            this.lblUpgradePivotTableInstructions.TabIndex = 5;
+            this.lblUpgradePivotTableInstructions.Text = "To upgrade, save as .xlsx then refresh the PivotTable.";
+            // 
+            // linkUpgradePivotTable
+            // 
+            this.linkUpgradePivotTable.AutoSize = true;
+            this.linkUpgradePivotTable.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkUpgradePivotTable.Location = new System.Drawing.Point(12, 188);
+            this.linkUpgradePivotTable.Name = "linkUpgradePivotTable";
+            this.linkUpgradePivotTable.Size = new System.Drawing.Size(182, 13);
+            this.linkUpgradePivotTable.TabIndex = 4;
+            this.linkUpgradePivotTable.TabStop = true;
+            this.linkUpgradePivotTable.Text = "How to Upgrade PivotTable Versions";
+            this.linkUpgradePivotTable.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUpgradePivotTable_LinkClicked);
+            // 
+            // lblPivotTableVersion
+            // 
+            this.lblPivotTableVersion.AutoSize = true;
+            this.lblPivotTableVersion.Location = new System.Drawing.Point(11, 171);
+            this.lblPivotTableVersion.Name = "lblPivotTableVersion";
+            this.lblPivotTableVersion.Size = new System.Drawing.Size(161, 13);
+            this.lblPivotTableVersion.TabIndex = 3;
+            this.lblPivotTableVersion.Text = "Version of This PivotTable: 2007";
             // 
             // linkCodeplex
             // 
@@ -893,6 +955,16 @@
             this.lblVersion.Size = new System.Drawing.Size(220, 13);
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "OLAP PivotTable Extensions v0.0.0.0";
+            // 
+            // btnUpgradeOnRefresh
+            // 
+            this.btnUpgradeOnRefresh.Location = new System.Drawing.Point(15, 224);
+            this.btnUpgradeOnRefresh.Name = "btnUpgradeOnRefresh";
+            this.btnUpgradeOnRefresh.Size = new System.Drawing.Size(192, 23);
+            this.btnUpgradeOnRefresh.TabIndex = 7;
+            this.btnUpgradeOnRefresh.Text = "Set UpgradeOnRefresh to True";
+            this.btnUpgradeOnRefresh.UseVisualStyleBackColor = true;
+            this.btnUpgradeOnRefresh.Click += new System.EventHandler(this.btnUpgradeOnRefresh_Click);
             // 
             // MainForm
             // 
@@ -994,5 +1066,11 @@
         private System.Windows.Forms.CheckBox chkRefreshDataWhenOpeningTheFile;
         private System.Windows.Forms.TextBox txtFilterList;
         private System.Windows.Forms.CheckBox chkAddToCurrentFilters;
+        private System.Windows.Forms.Label lblPivotTableVersion;
+        private System.Windows.Forms.LinkLabel linkUpgradePivotTable;
+        private System.Windows.Forms.Label lblUpgradePivotTableInstructions;
+        private System.Windows.Forms.Button btnFilterListShowCurrentFilters;
+        private System.Windows.Forms.Label lblExcelUILanguage;
+        private System.Windows.Forms.Button btnUpgradeOnRefresh;
     }
 }

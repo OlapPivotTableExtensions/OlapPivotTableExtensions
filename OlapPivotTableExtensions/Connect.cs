@@ -43,6 +43,12 @@ namespace OlapPivotTableExtensions
                 Application = (Excel.Application)application;
                 addInInstance = addInInst;
 
+                OriginalLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.EnglishName;
+
+                m_xlAppEvents = new xlEvents();
+                m_xlAppEvents.DisableEventsIfEmbedded = true;
+                m_xlAppEvents.SetupConnection(Application);
+                
                 CreateOlapPivotTableExtensionsMenu();
             }
             catch (Exception ex)
@@ -101,13 +107,24 @@ namespace OlapPivotTableExtensions
 		/// <seealso class='IDTExtensibility2' />
 		public void OnBeginShutdown(ref System.Array custom)
 		{
-		}
+            try
+            {
+                m_xlAppEvents.RemoveConnection();
+                m_xlAppEvents = null;
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(Application);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during close of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+
+        }
 		
 		private Excel.Application Application;
 		private object addInInstance;
+        private xlEvents m_xlAppEvents;
 
-
-
+        public static string OriginalLanguage = "";
 
 
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
@@ -121,6 +138,8 @@ namespace OlapPivotTableExtensions
         private Office.CommandBarButton cmdMenuItem = null;
         private Office.CommandBarButton cmdSearchMenuItem = null;
         private Office.CommandBarButton cmdFilterListMenuItem = null;
+        private Office.CommandBarPopup cmdShowPropertyAsCaptionMenuItem = null;
+        private Office.CommandBarButton cmdClearPivotTableCacheMenuItem = null;
 
         private MainForm frm;
 
@@ -182,6 +201,14 @@ namespace OlapPivotTableExtensions
                 cmdSearchMenuItem.Tag = MENU_TAG;
                 cmdSearchMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdSearchMenuItem_Click);
 
+
+                cmdClearPivotTableCacheMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                cmdClearPivotTableCacheMenuItem.Caption = "Clear PivotTable Cache";
+                cmdClearPivotTableCacheMenuItem.FaceId = 47;
+                cmdClearPivotTableCacheMenuItem.Tag = MENU_TAG;
+                cmdClearPivotTableCacheMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdClearPivotTableCacheMenuItem_Click);
+
+
                 Office.CommandBarPopup popupFilter = null;
                 try
                 {
@@ -207,8 +234,257 @@ namespace OlapPivotTableExtensions
                 cmdMenuItem.Tag = MENU_TAG;
                 cmdMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
 
-                Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
-                Application.SheetPivotTableUpdate += new Microsoft.Office.Interop.Excel.AppEvents_SheetPivotTableUpdateEventHandler(Application_SheetPivotTableUpdate);
+                foreach (object btn in ptcon.Controls)
+                {
+                    if (btn is Office.CommandBarButton)
+                    {
+                        Office.CommandBarButton mybtn = (Office.CommandBarButton)btn;
+                        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
+                    }
+                    else if (btn is Office.CommandBarPopup)
+                    {
+                        Office.CommandBarPopup mybtn = (Office.CommandBarPopup)btn;
+                        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
+                    }
+                }
+
+                object popupAdditionalActionsIndex = System.Reflection.Missing.Value;
+                try
+                {
+                    //find the Additional Actions sub-menu under the PivotTable context menu by ID 31595
+                    Office.CommandBarPopup popup = (Office.CommandBarPopup)Application.CommandBars.FindControl(Office.MsoControlType.msoControlPopup, 31595, missing, missing);
+                    popupAdditionalActionsIndex = popup.Index - 2; //not sure why -2 works
+                }
+                catch { }
+
+                //add this button before the Additional Actions button
+                cmdShowPropertyAsCaptionMenuItem = (Office.CommandBarPopup)ptcon.Controls.Add(Office.MsoControlType.msoControlPopup, System.Reflection.Missing.Value, System.Reflection.Missing.Value, popupAdditionalActionsIndex, true);
+                cmdShowPropertyAsCaptionMenuItem.Caption = "Show Property as Caption";
+                cmdShowPropertyAsCaptionMenuItem.Tag = MENU_TAG;
+
+                //the following code works around an issue that is surfaced by typical event handling
+                //http://olappivottableextend.codeplex.com/discussions/271174
+                //typical event handling: Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
+                m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
+                m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        void cmdClearPivotTableCacheMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                if (Ctrl.Tag != cmdClearPivotTableCacheMenuItem.Tag || Ctrl.Caption != cmdClearPivotTableCacheMenuItem.Caption || Ctrl.FaceId != cmdClearPivotTableCacheMenuItem.FaceId)
+                    return;
+
+                Excel.PivotTable pvt = Application.ActiveCell.PivotTable;
+                Microsoft.Office.Interop.Excel.PivotCache cache = pvt.PivotCache();
+                cache.WorkbookConnection.OLEDBConnection.MaintainConnection = true;
+                if (!cache.IsConnected)
+                    cache.MakeConnection();
+
+                ADODB.Connection connADO = cache.ADOConnection as ADODB.Connection;
+                if (connADO == null) throw new Exception("Could not cast PivotCache.ADOConnection to ADODB.Connection.");
+
+                string sConnectionFile = cache.WorkbookConnection.OLEDBConnection.SourceConnectionFile;
+                bool bUseConnectionFile = cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile;
+                string sConnectionString = connADO.ConnectionString;
+                Excel.WorkbookConnection connOld = cache.WorkbookConnection;
+
+                if (cache.WorkbookConnection.OLEDBConnection.CommandType != Excel.XlCmdType.xlCmdCube)
+                    throw new Exception("Connection command type is not Cube. This functionality is not supported in this scenario.");
+
+                int iPivotTablesSharingConnection = 0;
+                foreach (Excel.PivotCache otherCache in Application.ActiveWorkbook.PivotCaches())
+                {
+                    if (connOld.Name == otherCache.WorkbookConnection.Name)
+                    {
+                        iPivotTablesSharingConnection++;
+                    }
+                }
+                if (iPivotTablesSharingConnection > 1)
+                {
+                    if (MessageBox.Show("There are multiple PivotTables using this same connection. For this feature to work, this PivotTable must be on its own connection.\r\n\r\nWould you like to move this PivotTable to a new connection?", "OLAP PivotTable Extensions", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        int iSuffix = 1;
+                        bool bSuffixTaken = true;
+                        while (bSuffixTaken)
+                        {
+                            bSuffixTaken = false;
+                            foreach (Excel.WorkbookConnection otherConn in Application.ActiveWorkbook.Connections)
+                            {
+                                if (connOld.Name + iSuffix == otherConn.Name)
+                                {
+                                    bSuffixTaken = true;
+                                    iSuffix++;
+                                    break;
+                                }
+                            }
+                        }
+
+                        System.Collections.Generic.Dictionary<string, string> dictCalculatedMembers = new System.Collections.Generic.Dictionary<string, string>();
+                        System.Collections.Generic.Dictionary<string, string> dictCalculatedSets = new System.Collections.Generic.Dictionary<string, string>();
+                        System.Collections.Generic.Dictionary<string, Excel.XlPivotFieldOrientation> dictCalculatedMemberOrientations = new System.Collections.Generic.Dictionary<string, Excel.XlPivotFieldOrientation>();
+                        foreach (Excel.CalculatedMember memb in pvt.CalculatedMembers)
+                        {
+                            if (memb.Type == Excel.XlCalculatedMemberType.xlCalculatedMember)
+                            {
+                                dictCalculatedMembers.Add(memb.Name, memb.Formula);
+                                dictCalculatedMemberOrientations.Add(memb.Name, pvt.CubeFields[memb.Name].Orientation);
+                            }
+                            else
+                            {
+                                dictCalculatedSets.Add(memb.Name, memb.Formula);
+                                dictCalculatedMemberOrientations.Add(memb.Name, pvt.CubeFields[memb.Name].Orientation);
+                            }
+                        }
+
+                        if (dictCalculatedMemberOrientations.Count > 0)
+                        {
+                            MessageBox.Show("Due to a bug in Excel, calculated members and sets are removed from the PivotTable during changing the connection. OLAP PivotTable Extensions will attempt to restore them. After clearing this PivotTable's cache completes, ensure that the fields are still in the right location and order. If they are not right, fixing their order and location then rerunning this command should fix the problem.", "OLAP PivotTable Extensions");
+                        }
+
+                        Excel.WorkbookConnection connNew = Application.ActiveWorkbook.Connections.Add(cache.WorkbookConnection.Name + iSuffix, "", "OLEDB;" + sConnectionString + ";Cube=" + connOld.OLEDBConnection.CommandText, connOld.OLEDBConnection.CommandText, connOld.OLEDBConnection.CommandType);
+                        connNew.OLEDBConnection.MaintainConnection = true;
+                        connNew.OLEDBConnection.RefreshOnFileOpen = connOld.OLEDBConnection.RefreshOnFileOpen;
+                        connNew.OLEDBConnection.RefreshPeriod = connOld.OLEDBConnection.RefreshPeriod;
+                        connNew.OLEDBConnection.RetrieveInOfficeUILang = connOld.OLEDBConnection.RetrieveInOfficeUILang;
+                        connNew.OLEDBConnection.RobustConnect = connOld.OLEDBConnection.RobustConnect;
+                        connNew.OLEDBConnection.ServerCredentialsMethod = connOld.OLEDBConnection.ServerCredentialsMethod;
+                        connNew.OLEDBConnection.ServerFillColor = connOld.OLEDBConnection.ServerFillColor;
+                        connNew.OLEDBConnection.ServerFontStyle = connOld.OLEDBConnection.ServerFontStyle;
+                        connNew.OLEDBConnection.ServerNumberFormat = connOld.OLEDBConnection.ServerNumberFormat;
+                        connNew.OLEDBConnection.ServerSSOApplicationID = connOld.OLEDBConnection.ServerSSOApplicationID;
+                        connNew.OLEDBConnection.ServerTextColor = connOld.OLEDBConnection.ServerTextColor;
+                        connNew.OLEDBConnection.SourceConnectionFile = connOld.OLEDBConnection.SourceConnectionFile;
+                        connNew.OLEDBConnection.AlwaysUseConnectionFile = connOld.OLEDBConnection.AlwaysUseConnectionFile;
+                        pvt.ChangeConnection(connNew);
+                        cache = pvt.PivotCache();
+                        pvt.PivotCache().MakeConnection();
+
+                        string sCurrentCalcName = null;
+                        try
+                        {
+                            foreach (string sName in dictCalculatedMemberOrientations.Keys)
+                            {
+                                sCurrentCalcName = sName;
+                                if (dictCalculatedMembers.ContainsKey(sName))
+                                {
+                                    Excel.CalculatedMember memb = pvt.CalculatedMembers.Add(sName, dictCalculatedMembers[sName], System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
+                                }
+                                else
+                                {
+                                    Excel.CalculatedMember memb = pvt.CalculatedMembers.Add(sName, dictCalculatedSets[sName], System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedSet);
+                                }
+                            }
+
+                            sCurrentCalcName = null;
+                            pvt.RefreshTable();
+
+                            foreach (string sName in dictCalculatedMemberOrientations.Keys)
+                            {
+                                sCurrentCalcName = sName;
+                                pvt.CubeFields.get_Item(sName).Orientation = dictCalculatedMemberOrientations[sName];
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (sCurrentCalcName != null)
+                                throw new Exception("Problem adding " + sCurrentCalcName + " to the PivotTable. Error was: " + ex.Message, ex);
+                            else
+                                throw new Exception("Problem adding calculated members/sets to the PivotTable. Error was: " + ex.Message, ex);
+                        }
+
+                        connADO = cache.ADOConnection as ADODB.Connection;
+                        if (connADO == null) throw new Exception("Could not cast PivotCache.ADOConnection to ADODB.Connection.");
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                string sCubeInConnectionString = null;
+                try
+                {
+                    sCubeInConnectionString = Convert.ToString(connADO.Properties["Cube"].Value);
+                }
+                catch { }
+
+                if (!string.IsNullOrEmpty(sCubeInConnectionString))
+                {
+                    if (string.Compare(sCubeInConnectionString, Convert.ToString(cache.WorkbookConnection.OLEDBConnection.CommandText), true) != 0)
+                    {
+                        throw new Exception("The connection string contains Cube=" + sCubeInConnectionString + " but the command text is " + Convert.ToString(cache.WorkbookConnection.OLEDBConnection.CommandText));
+                    }
+                }
+
+                //find the last measure in the PivotTable. This will be the field we remove then add back to cause the PivotTable to requery the cube without calling Refresh which recreates the connection
+                int iMaxPos = -1;
+                Excel.CubeField fieldMeasure = null;
+                Excel.CubeField fieldFallbackMeasure = null;
+                foreach (Excel.CubeField field in pvt.CubeFields)
+                {
+                    if (field.Orientation == Excel.XlPivotFieldOrientation.xlDataField)
+                    {
+                        if (field.Position > iMaxPos)
+                        {
+                            iMaxPos = field.Position;
+                            fieldMeasure = field;
+                        }
+                    }
+                    else if (fieldFallbackMeasure == null && field.DragToData)
+                    {
+                        fieldFallbackMeasure = field;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(sCubeInConnectionString))
+                {
+                    cache.WorkbookConnection.OLEDBConnection.Connection = "OLEDB;" + sConnectionString + ";Cube=" + cache.WorkbookConnection.OLEDBConnection.CommandText;
+                    cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = false;
+                    cache.MakeConnection();
+
+                    connADO = pvt.PivotCache().ADOConnection as ADODB.Connection;
+                    if (connADO == null) throw new Exception("Could not cast PivotCache.ADOConnection to ADODB.Connection.");
+                }
+
+                try
+                {
+                    object iRecords = null;
+
+                    connADO.Execute("[Measures].AllMembers = null;", out iRecords, (int)ADODB.CommandTypeEnum.adCmdText);
+
+                    //remove and re-add a measure to cause the PivotTable to requery the nulled out cube
+                    if (fieldMeasure != null) // && iDataFieldCount > 1)
+                    {
+                        string sMeasureName = fieldMeasure.Name;
+                        fieldMeasure.Orientation = Excel.XlPivotFieldOrientation.xlHidden;
+
+                        fieldMeasure = pvt.CubeFields[sMeasureName];
+                        fieldMeasure.Orientation = Excel.XlPivotFieldOrientation.xlDataField;
+                    }
+                    else
+                    {
+                        fieldFallbackMeasure.Orientation = Excel.XlPivotFieldOrientation.xlDataField;
+                        fieldFallbackMeasure.Orientation = Excel.XlPivotFieldOrientation.xlHidden;
+                    }
+
+                }
+                finally
+                {
+                    if (string.IsNullOrEmpty(sCubeInConnectionString))
+                    {
+                        cache.WorkbookConnection.OLEDBConnection.Connection = "OLEDB;" + sConnectionString;
+                        cache.WorkbookConnection.OLEDBConnection.SourceConnectionFile = sConnectionFile;
+                        cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = bUseConnectionFile;
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
@@ -254,7 +530,7 @@ namespace OlapPivotTableExtensions
             }
         }
 
-        void Application_SheetBeforeRightClick(object Sh, Microsoft.Office.Interop.Excel.Range Target, ref bool Cancel)
+        void m_xlAppEvents_xlSheetBeforeRightClick(object Sh, Microsoft.Office.Interop.Excel.Range Target, ref bool Cancel)
         {
             try
             {
@@ -264,12 +540,17 @@ namespace OlapPivotTableExtensions
                     string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
                     cmdSearchMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                     cmdFilterListMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
+                    cmdClearPivotTableCacheMenuItem.Visible = true;
+
+                    SetupShowPropertyAsCaption();
                 }
                 else
                 {
                     cmdMenuItem.Visible = false;
                     cmdSearchMenuItem.Visible = false;
                     cmdFilterListMenuItem.Visible = false;
+                    cmdShowPropertyAsCaptionMenuItem.Visible = false;
+                    cmdClearPivotTableCacheMenuItem.Visible = false;
                 }
             }
             catch
@@ -278,7 +559,88 @@ namespace OlapPivotTableExtensions
             }
         }
 
-        void Application_SheetPivotTableUpdate(object Sh, Microsoft.Office.Interop.Excel.PivotTable Target)
+        void SetupShowPropertyAsCaption()
+        {
+            try
+            {
+                if (Application.ActiveCell.PivotCell.PivotCellType == Excel.XlPivotCellType.xlPivotCellPivotItem
+                    && !Application.ActiveCell.PivotCell.PivotField.IsMemberProperty)
+                {
+                    cmdShowPropertyAsCaptionMenuItem.Visible = true;
+                    foreach (Office.CommandBarButton btn in cmdShowPropertyAsCaptionMenuItem.Controls)
+                    {
+                        btn.Delete(System.Reflection.Missing.Value);
+                    }
+
+                    bool bAddSeparator = false;
+                    if (Application.ActiveCell.PivotCell.PivotField.UseMemberPropertyAsCaption)
+                    {
+                        Office.CommandBarButton btnStopUsingMemberPropertyAsCaption = (Office.CommandBarButton)cmdShowPropertyAsCaptionMenuItem.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                        btnStopUsingMemberPropertyAsCaption.Caption = "Reset Caption";
+                        btnStopUsingMemberPropertyAsCaption.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(btnStopUsingMemberPropertyAsCaption_Click);
+
+                        bAddSeparator = true;
+                    }
+
+                    bool bHasProperties = false;
+                    foreach (Excel.PivotField memberProperty in Application.ActiveCell.PivotCell.PivotField.CubeField.PivotFields)
+                    {
+                        if (memberProperty.IsMemberProperty && memberProperty.Name.StartsWith(Application.ActiveCell.PivotCell.PivotField.Name))
+                        {
+                            Office.CommandBarButton btn = (Office.CommandBarButton)cmdShowPropertyAsCaptionMenuItem.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                            btn.Caption = memberProperty.Caption;
+                            btn.Parameter = memberProperty.Name;
+                            btn.BeginGroup = bAddSeparator;
+                            bAddSeparator = false;
+                            btn.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(btnShowPropertyAsCaption_Click);
+                            bHasProperties = true;
+                        }
+                    }
+
+                    if (!bHasProperties)
+                    {
+                        Office.CommandBarButton btn = (Office.CommandBarButton)cmdShowPropertyAsCaptionMenuItem.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                        btn.Caption = "(No Properties Retrieved)";
+                        btn.Enabled = false;
+                    }
+                }
+                else
+                {
+                    cmdShowPropertyAsCaptionMenuItem.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem setting up Show Property as Caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        void btnShowPropertyAsCaption_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                Application.ActiveCell.PivotCell.PivotField.MemberPropertyCaption = Ctrl.Parameter;
+                Application.ActiveCell.PivotCell.PivotField.UseMemberPropertyAsCaption = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem using member property as caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        void btnStopUsingMemberPropertyAsCaption_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                Application.ActiveCell.PivotCell.PivotField.UseMemberPropertyAsCaption = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem using resetting caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        void m_xlAppEvents_xlSheetPivotTableUpdate(object Sh, Microsoft.Office.Interop.Excel.PivotTable Target)
         {
             try
             {
@@ -377,7 +739,7 @@ namespace OlapPivotTableExtensions
                     {
                         foreach (Office.CommandBarControl btn2 in ((Office.CommandBarPopup)btn).Controls)
                         {
-                            if (btn2.Tag == MENU_TAG)
+                            if (btn2.Tag == MENU_TAG || btn.Tag == MENU_TAG)
                             {
                                 btn2.Delete(System.Reflection.Missing.Value);
                             }
