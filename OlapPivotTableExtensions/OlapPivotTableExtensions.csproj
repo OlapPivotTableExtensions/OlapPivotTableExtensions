@@ -35,12 +35,13 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>.\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\OLAP PivotTable Extensions\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
     <RegisterForComInterop>false</RegisterForComInterop>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -140,6 +141,7 @@
     </Compile>
     <Compile Include="PivotTableKpiUtility.cs" />
     <Compile Include="SortableList.cs" />
+    <Compile Include="xlEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OlapPivotTableExtensions.snk" />

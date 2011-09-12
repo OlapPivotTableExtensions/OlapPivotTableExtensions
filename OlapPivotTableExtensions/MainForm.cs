@@ -21,6 +21,7 @@ namespace OlapPivotTableExtensions
         private CubeSearcher searcher;
         public bool AddInWorking = false;
         private BackgroundWorker workerFilterList;
+        private int xlPivotTableVersion14 = 4; //since we're using the Excel 2007 object model, we can't see the Excel 2010 version
 
         private int _LibraryComboDividerItemIndex = int.MaxValue;
 
@@ -31,7 +32,10 @@ namespace OlapPivotTableExtensions
 
             try
             {
+                string sLanguage = "Windows Language: " + Connect.OriginalLanguage;
+                sLanguage += "\r\nWindows UI Language: " + System.Globalization.CultureInfo.InstalledUICulture.EnglishName;
                 SetCulture(app);
+                sLanguage = sLanguage + "\r\nExcel UI Language: " + System.Threading.Thread.CurrentThread.CurrentCulture.EnglishName;
 
                 System.Reflection.AssemblyFileVersionAttribute attrVersion = (System.Reflection.AssemblyFileVersionAttribute)typeof(MainForm).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), true)[0];
                 lblVersion.Text = "OLAP PivotTable Extensions v" + attrVersion.Version;
@@ -54,6 +58,46 @@ namespace OlapPivotTableExtensions
 
                 chkShowCalcMembers.Checked = Connect.ShowCalcMembersByDefault;
                 chkRefreshDataWhenOpeningTheFile.Checked = Connect.RefreshDataByDefault;
+
+                try
+                {
+                    System.Globalization.CultureInfo nciInstall = new System.Globalization.CultureInfo(app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDInstall));
+                    sLanguage += "\r\nExcel Install Language: " + nciInstall.EnglishName;
+                }
+                catch { }
+
+                lblExcelUILanguage.Text = sLanguage;
+
+                lblPivotTableVersion.Text = "Version of This PivotTable: " + GetPivotTableVersion();
+
+                if (string.Compare(GetPivotTableVersion(), GetExcelVersion()) >= 0)
+                {
+                    linkUpgradePivotTable.Visible = false;
+                    lblUpgradePivotTableInstructions.Visible = false;
+                    btnUpgradeOnRefresh.Visible = false;
+                }
+                else
+                {
+                    if (this.application.ActiveWorkbook.FileFormat == Excel.XlFileFormat.xlOpenXMLWorkbook //if it's xlsx
+                        || this.application.ActiveWorkbook.FileFormat == Excel.XlFileFormat.xlExcel12) //if it's xlsb
+                    {
+                        if (pvt.PivotCache().UpgradeOnRefresh)
+                        {
+                            lblUpgradePivotTableInstructions.Text = "To upgrade, refresh the PivotTable.";
+                            btnUpgradeOnRefresh.Visible = false;
+                        }
+                        else
+                        {
+                            lblUpgradePivotTableInstructions.Text = "To upgrade, click the UpgradeOnRefresh button, then refresh the PivotTable.";
+                            btnUpgradeOnRefresh.Visible = true;
+                        }
+                    }
+                    else
+                    {
+                        lblUpgradePivotTableInstructions.Text = "To upgrade, save as .xlsx then refresh the PivotTable.";
+                        btnUpgradeOnRefresh.Visible = false;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -156,7 +200,7 @@ namespace OlapPivotTableExtensions
                 try
                 {
                     //replace the line breaks in the formula we save to the PivotTable to workaround a bug in Excel Services: http://www.codeplex.com/OlapPivotTableExtend/Thread/View.aspx?ThreadId=41697
-                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula.Replace("\r\n","\r"), System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
+                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula.Replace("\r\n", "\r"), System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
                     if (bMeasure)
                     {
                         pvt.RefreshTable();
@@ -309,6 +353,7 @@ namespace OlapPivotTableExtensions
                     lblFilterListError.Visible = true;
                     btnFilterList.Enabled = false;
                     txtFilterList.Enabled = false;
+                    btnFilterListShowCurrentFilters.Enabled = false;
                 }
 
                 cmbFilterListLookIn.ResumeLayout();
@@ -571,6 +616,11 @@ namespace OlapPivotTableExtensions
         private void linkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.codeplex.com/OlapPivotTableExtend/Wiki/View.aspx?title=Calculations%20Help");
+        }
+
+        private void linkUpgradePivotTable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://office.microsoft.com/en-us/excel-help/working-with-different-pivottable-formats-in-office-excel-HA010167298.aspx");
         }
 
         private void radioExport_CheckedChanged(object sender, EventArgs e)
@@ -1172,6 +1222,33 @@ namespace OlapPivotTableExtensions
             return ((int)pvt.Version >= (int)Excel.XlPivotTableVersionList.xlPivotTableVersion12);
         }
 
+        private string GetPivotTableVersion()
+        {
+            if (pvt.Version == Excel.XlPivotTableVersionList.xlPivotTableVersion2000)
+                return "2000";
+            else if (pvt.Version == Excel.XlPivotTableVersionList.xlPivotTableVersion10)
+                return "2002";
+            else if (pvt.Version == Excel.XlPivotTableVersionList.xlPivotTableVersion11)
+                return "2003";
+            else if (pvt.Version == Excel.XlPivotTableVersionList.xlPivotTableVersion12)
+                return "2007";
+            else if ((int)pvt.Version == xlPivotTableVersion14) //since we're using the Excel 2007 object model, the Excel 2010 version isn't visible
+                return "2010";
+            else
+                return pvt.Version.ToString();
+        }
+
+        private string GetExcelVersion()
+        {
+            int iVersion = (int)decimal.Parse(application.Version);
+            if (iVersion == 12)
+                return "2007";
+            else if (iVersion == 14)
+                return "2010";
+            else
+                return "Unknown";
+        }
+
         private void cmbLookIn_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1241,6 +1318,7 @@ namespace OlapPivotTableExtensions
 
                 btnCancelFilterList.Visible = true;
                 btnFilterList.Enabled = false;
+                btnFilterListShowCurrentFilters.Enabled = false;
                 txtFilterList.ReadOnly = true;
 
                 FilterListWorkerArgs args = new FilterListWorkerArgs();
@@ -1271,6 +1349,9 @@ namespace OlapPivotTableExtensions
             try
             {
                 AddInWorking = true;
+
+                SetCulture(application);
+
                 ConnectAdomdClientCube();
 
                 if (e.Cancel) return;
@@ -1298,7 +1379,7 @@ namespace OlapPivotTableExtensions
                         restrictions.Add(new AdomdRestriction("CATALOG_NAME", cube.ParentConnection.Database));
                         restrictions.Add(new AdomdRestriction("CUBE_NAME", cube.Name));
                         restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn));
-                        restrictions.Add(new AdomdRestriction("MEMBER_NAME", sLine.Trim()));
+                        restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", sLine.Trim()));
                         System.Data.DataTable tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
 
                         if (tblExactMatchMembers.Rows.Count > 0)
@@ -1316,11 +1397,12 @@ namespace OlapPivotTableExtensions
                         }
                     }
 
-                    SetFilterListProgress((int)(90 * (++iNumLinesFinished) / args.Lines.Length), true, null);
+                    SetFilterListProgress((int)(90 * (++iNumLinesFinished) / args.Lines.Length), true, null, true);
                 }
 
                 Excel.CubeField field = pvt.CubeFields.get_Item(args.LookIn);
                 field.CreatePivotFields();
+                field.IncludeNewItemsInFilter = false; //if this is set to true, they essentially wanted to show everything but what was specifically unchecked. With Filter List, we're doing the reverse... showing only what's spefically checked
 
                 foreach (string sLevelUniqueName in dictLevelsOfFoundMembers.Keys)
                 {
@@ -1339,13 +1421,13 @@ namespace OlapPivotTableExtensions
                     pivotField.ClearLabelFilters();
                 }
 
-                SetFilterListProgress(100, false, listMembersNotFound.ToArray());
+                SetFilterListProgress(100, false, listMembersNotFound.ToArray(), true);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
 
-                SetFilterListProgress(0, false, listMembersNotFound.ToArray());
+                SetFilterListProgress(0, false, listMembersNotFound.ToArray(), true);
             }
             finally
             {
@@ -1365,13 +1447,13 @@ namespace OlapPivotTableExtensions
             catch { }
         }
 
-        private delegate void SetFilterListProgress_Delegate(int iProgress, bool bVisible, string[] arrMembersNotFound);
-        private void SetFilterListProgress(int iProgress, bool bVisible, string[] arrMembersNotFound)
+        private delegate void SetFilterListProgress_Delegate(int iProgress, bool bVisible, string[] arrMembersNotFound, bool bCloseIfSuccessful);
+        private void SetFilterListProgress(int iProgress, bool bVisible, string[] arrMembersNotFound, bool bCloseIfSuccessful)
         {
             if (progressFilterList.InvokeRequired)
             {
                 //avoid the "cross-thread operation not valid" error message
-                progressFilterList.BeginInvoke(new SetFilterListProgress_Delegate(SetFilterListProgress), new object[] { iProgress, bVisible, arrMembersNotFound });
+                progressFilterList.BeginInvoke(new SetFilterListProgress_Delegate(SetFilterListProgress), new object[] { iProgress, bVisible, arrMembersNotFound, bCloseIfSuccessful });
             }
             else
             {
@@ -1383,14 +1465,16 @@ namespace OlapPivotTableExtensions
                 {
                     btnCancelFilterList.Visible = false;
                     btnFilterList.Enabled = true;
+                    btnFilterListShowCurrentFilters.Enabled = true;
+                    txtFilterList.ReadOnly = false;
 
                     if (arrMembersNotFound.Length == 0)
                     {
-                        this.Close();
+                        if (bCloseIfSuccessful)
+                            this.Close();
                     }
                     else
                     {
-                        txtFilterList.ReadOnly = false;
                         string sError = "The following members were not found.\r\n";
                         if (arrMembersNotFound.Length > 10) sError += " (Showing first 10)\r\n";
                         sError += "\r\n" + string.Join("\r\n", arrMembersNotFound);
@@ -1400,5 +1484,142 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        private void btnFilterListShowCurrentFilters_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbFilterListLookIn.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Choose a field first.");
+                    return;
+                }
+
+                FilterListWorkerArgs args = new FilterListWorkerArgs();
+                args.Lines = GetSelectedMemberUniqueNames(Convert.ToString(this.cmbFilterListLookIn.SelectedItem));
+                args.LookIn = Convert.ToString(cmbFilterListLookIn.SelectedItem);
+
+                if (args.Lines.Length == 0)
+                    return;
+
+                progressFilterList.Visible = true;
+                progressFilterList.Value = 0;
+
+                btnCancelFilterList.Visible = true;
+                btnFilterList.Enabled = false;
+                btnFilterListShowCurrentFilters.Enabled = false;
+                txtFilterList.ReadOnly = true;
+
+                workerFilterList = new BackgroundWorker();
+                workerFilterList.DoWork += new DoWorkEventHandler(workerFilterList_ShowCurrentFilters_DoWork);
+                workerFilterList.WorkerSupportsCancellation = true;
+                workerFilterList.RunWorkerAsync(args);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
+
+        private string[] GetSelectedMemberUniqueNames(string CubeFieldName)
+        {
+            List<string> selectedMembers = new List<string>();
+            Excel.CubeField field = pvt.CubeFields.get_Item(CubeFieldName);
+            if (field.IncludeNewItemsInFilter == false)
+            {
+                field.CreatePivotFields();
+
+                foreach (Excel.PivotField pivotField in field.PivotFields)
+                {
+                    if (!pivotField.IsMemberProperty)
+                    {
+                        System.Array arrNewVisibleItems = (System.Array)pivotField.VisibleItemsList;
+                        foreach (string sMember in arrNewVisibleItems)
+                        {
+                            if (!string.IsNullOrEmpty(sMember))
+                            {
+                                selectedMembers.Add(sMember);
+                            }
+                        }
+                    }
+                }
+            }
+            return selectedMembers.ToArray();
+        }
+
+        void workerFilterList_ShowCurrentFilters_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> listMembersNotFound = new List<string>();
+
+            try
+            {
+                AddInWorking = true;
+
+                SetCulture(application);
+
+                ConnectAdomdClientCube();
+
+                if (e.Cancel) return;
+
+                FilterListWorkerArgs args = (FilterListWorkerArgs)e.Argument;
+
+                AdomdCommand cmd = new AdomdCommand();
+                cmd.Connection = cube.ParentConnection;
+
+                StringBuilder sFoundMemberCaptions = new StringBuilder();
+
+                int iNumLinesFinished = 0;
+                foreach (string sLine in args.Lines)
+                {
+                    if (e.Cancel) return;
+                    if (!string.IsNullOrEmpty(sLine.Trim()))
+                    {
+
+                        AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                        restrictions.Add(new AdomdRestriction("CATALOG_NAME", cube.ParentConnection.Database));
+                        restrictions.Add(new AdomdRestriction("CUBE_NAME", cube.Name));
+                        restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn));
+                        restrictions.Add(new AdomdRestriction("MEMBER_UNIQUE_NAME", sLine.Trim()));
+                        System.Data.DataTable tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
+
+                        if (tblExactMatchMembers.Rows.Count > 0)
+                        {
+                            foreach (System.Data.DataRow row in tblExactMatchMembers.Rows)
+                            {
+                                sFoundMemberCaptions.Append(Convert.ToString(row["MEMBER_CAPTION"])).AppendLine();
+                            }
+                        }
+                    }
+
+                    SetFilterListProgress((int)(90 * (++iNumLinesFinished) / args.Lines.Length), true, null, false);
+                }
+
+                txtFilterList.Text = sFoundMemberCaptions.ToString();
+
+                SetFilterListProgress(100, false, listMembersNotFound.ToArray(), false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+
+                SetFilterListProgress(0, false, listMembersNotFound.ToArray(), false);
+            }
+            finally
+            {
+                AddInWorking = false;
+            }
+        }
+
+        private void btnUpgradeOnRefresh_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                pvt.PivotCache().UpgradeOnRefresh = true;
+                btnUpgradeOnRefresh.Visible = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
     }
 }

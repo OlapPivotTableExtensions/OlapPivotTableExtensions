@@ -412,7 +412,7 @@ namespace OlapPivotTableExtensions
                     restrictions.Add(new AdomdRestriction("CUBE_NAME", _cube.Name));
                     if (!string.IsNullOrEmpty(_searchOnly))
                         restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", _searchOnly));
-                    restrictions.Add(new AdomdRestriction("MEMBER_NAME", _searchString));
+                    restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", _searchString));
                     System.Data.DataTable tblExactMatchMembers = _cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
 
                     List<string> listFoundMemberUniqueNames = new List<string>();
