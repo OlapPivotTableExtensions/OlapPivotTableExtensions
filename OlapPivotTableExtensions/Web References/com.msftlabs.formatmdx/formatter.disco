@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://formatmdx.msftlabs.com/formatter.asmx?wsdl" docRef="http://formatmdx.msftlabs.com/formatter.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://formatmdx.msftlabs.com/formatter.asmx" xmlns:q1="http://formatmdx.msftlabs.com/" binding="q1:FormatterSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://formatmdx.msftlabs.com/formatter.asmx" xmlns:q2="http://formatmdx.msftlabs.com/" binding="q2:FormatterSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
