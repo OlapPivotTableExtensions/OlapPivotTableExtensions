@@ -130,6 +130,7 @@ namespace OlapPivotTableExtensions
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
         private const string REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT = "RefreshDataByDefault";
+        private const string REGISTRY_PATH_FORMAT_MDX = "FormatMDX";
         private global::System.Object missing = global::System.Type.Missing;
 
 
@@ -184,6 +185,28 @@ namespace OlapPivotTableExtensions
                 regKey.SetValue(REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT, value, Microsoft.Win32.RegistryValueKind.DWord);
                 regKey.Close();
                 _RefreshDataByDefaultCached = value;
+            }
+        }
+
+        private static bool? _FormatMdxCached = null;
+        public static bool FormatMdx
+        {
+            get
+            {
+                if (_FormatMdxCached == null)
+                {
+                    Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                    _FormatMdxCached = ((int)regKey.GetValue(REGISTRY_PATH_FORMAT_MDX, 0) == 1) ? true : false;
+                    regKey.Close();
+                }
+                return (bool)_FormatMdxCached;
+            }
+            set
+            {
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                regKey.SetValue(REGISTRY_PATH_FORMAT_MDX, value, Microsoft.Win32.RegistryValueKind.DWord);
+                regKey.Close();
+                _FormatMdxCached = value;
             }
         }
 

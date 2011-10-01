@@ -116,6 +116,8 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML">
       <HintPath>System.XML.dll</HintPath>
@@ -141,6 +143,11 @@
     </Compile>
     <Compile Include="PivotTableKpiUtility.cs" />
     <Compile Include="SortableList.cs" />
+    <Compile Include="Web References\com.msftlabs.formatmdx\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="xlEvents.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,11 +157,33 @@
   <ItemGroup>
     <Content Include="DLLs\Microsoft.AnalysisServices.AdomdClient.dll" />
     <Content Include="OlapPivotTableExtensions.ico" />
+    <None Include="Web References\com.msftlabs.formatmdx\formatter.disco" />
+    <None Include="Web References\com.msftlabs.formatmdx\formatter.wsdl" />
+    <None Include="Web References\com.msftlabs.formatmdx\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://formatmdx.msftlabs.com/formatter.asmx">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\com.msftlabs.formatmdx\</RelPath>
+      <UpdateFromURL>http://formatmdx.msftlabs.com/formatter.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>OlapPivotTableExtensions_com_msftlabs_formatmdx_Formatter</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

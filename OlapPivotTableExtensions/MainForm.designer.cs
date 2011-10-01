@@ -55,7 +55,8 @@
             this.txtImportFilePath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabMDX = new System.Windows.Forms.TabPage();
-            this.txtMDX = new System.Windows.Forms.TextBox();
+            this.chkFormatMDX = new System.Windows.Forms.CheckBox();
+            this.richTextBoxMDX = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabSearch = new System.Windows.Forms.TabPage();
             this.chkAddToCurrentFilters = new System.Windows.Forms.CheckBox();
@@ -94,6 +95,7 @@
             this.btnSaveDefaults = new System.Windows.Forms.Button();
             this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
             this.tabAbout = new System.Windows.Forms.TabPage();
+            this.btnUpgradeOnRefresh = new System.Windows.Forms.Button();
             this.lblExcelUILanguage = new System.Windows.Forms.Label();
             this.lblUpgradePivotTableInstructions = new System.Windows.Forms.Label();
             this.linkUpgradePivotTable = new System.Windows.Forms.LinkLabel();
@@ -101,7 +103,8 @@
             this.linkCodeplex = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
-            this.btnUpgradeOnRefresh = new System.Windows.Forms.Button();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblFormattingMdxQuery = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -193,6 +196,7 @@
             this.txtCalcFormula.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCalcFormula.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCalcFormula.Location = new System.Drawing.Point(7, 82);
             this.txtCalcFormula.Multiline = true;
             this.txtCalcFormula.Name = "txtCalcFormula";
@@ -376,7 +380,9 @@
             // 
             // tabMDX
             // 
-            this.tabMDX.Controls.Add(this.txtMDX);
+            this.tabMDX.Controls.Add(this.lblFormattingMdxQuery);
+            this.tabMDX.Controls.Add(this.chkFormatMDX);
+            this.tabMDX.Controls.Add(this.richTextBoxMDX);
             this.tabMDX.Controls.Add(this.label3);
             this.tabMDX.Location = new System.Drawing.Point(4, 22);
             this.tabMDX.Name = "tabMDX";
@@ -386,24 +392,38 @@
             this.tabMDX.Text = "MDX";
             this.tabMDX.UseVisualStyleBackColor = true;
             // 
-            // txtMDX
+            // chkFormatMDX
             // 
-            this.txtMDX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.chkFormatMDX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkFormatMDX.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFormatMDX.Location = new System.Drawing.Point(209, 9);
+            this.chkFormatMDX.Name = "chkFormatMDX";
+            this.chkFormatMDX.Size = new System.Drawing.Size(221, 17);
+            this.chkFormatMDX.TabIndex = 5;
+            this.chkFormatMDX.Text = "Format MDX query using web service?";
+            this.chkFormatMDX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFormatMDX.UseVisualStyleBackColor = true;
+            this.chkFormatMDX.CheckedChanged += new System.EventHandler(this.chkFormatMDX_CheckedChanged);
+            // 
+            // richTextBoxMDX
+            // 
+            this.richTextBoxMDX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMDX.Location = new System.Drawing.Point(10, 24);
-            this.txtMDX.MaxLength = 1000000;
-            this.txtMDX.Multiline = true;
-            this.txtMDX.Name = "txtMDX";
-            this.txtMDX.ReadOnly = true;
-            this.txtMDX.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtMDX.Size = new System.Drawing.Size(423, 272);
-            this.txtMDX.TabIndex = 1;
+            this.richTextBoxMDX.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBoxMDX.Location = new System.Drawing.Point(10, 32);
+            this.richTextBoxMDX.Name = "richTextBoxMDX";
+            this.richTextBoxMDX.ReadOnly = true;
+            this.richTextBoxMDX.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.richTextBoxMDX.Size = new System.Drawing.Size(420, 263);
+            this.richTextBoxMDX.TabIndex = 4;
+            this.richTextBoxMDX.Text = "";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 7);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(7, 10);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 13);
             this.label3.TabIndex = 0;
@@ -886,6 +906,16 @@
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
             // 
+            // btnUpgradeOnRefresh
+            // 
+            this.btnUpgradeOnRefresh.Location = new System.Drawing.Point(15, 224);
+            this.btnUpgradeOnRefresh.Name = "btnUpgradeOnRefresh";
+            this.btnUpgradeOnRefresh.Size = new System.Drawing.Size(192, 23);
+            this.btnUpgradeOnRefresh.TabIndex = 7;
+            this.btnUpgradeOnRefresh.Text = "Set UpgradeOnRefresh to True";
+            this.btnUpgradeOnRefresh.UseVisualStyleBackColor = true;
+            this.btnUpgradeOnRefresh.Click += new System.EventHandler(this.btnUpgradeOnRefresh_Click);
+            // 
             // lblExcelUILanguage
             // 
             this.lblExcelUILanguage.AutoSize = true;
@@ -956,15 +986,23 @@
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "OLAP PivotTable Extensions v0.0.0.0";
             // 
-            // btnUpgradeOnRefresh
+            // tooltip
             // 
-            this.btnUpgradeOnRefresh.Location = new System.Drawing.Point(15, 224);
-            this.btnUpgradeOnRefresh.Name = "btnUpgradeOnRefresh";
-            this.btnUpgradeOnRefresh.Size = new System.Drawing.Size(192, 23);
-            this.btnUpgradeOnRefresh.TabIndex = 7;
-            this.btnUpgradeOnRefresh.Text = "Set UpgradeOnRefresh to True";
-            this.btnUpgradeOnRefresh.UseVisualStyleBackColor = true;
-            this.btnUpgradeOnRefresh.Click += new System.EventHandler(this.btnUpgradeOnRefresh_Click);
+            this.tooltip.AutoPopDelay = 5000;
+            this.tooltip.InitialDelay = 500;
+            this.tooltip.ReshowDelay = 100;
+            this.tooltip.ShowAlways = true;
+            // 
+            // lblFormattingMdxQuery
+            // 
+            this.lblFormattingMdxQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblFormattingMdxQuery.AutoSize = true;
+            this.lblFormattingMdxQuery.Location = new System.Drawing.Point(10, 281);
+            this.lblFormattingMdxQuery.Name = "lblFormattingMdxQuery";
+            this.lblFormattingMdxQuery.Size = new System.Drawing.Size(175, 13);
+            this.lblFormattingMdxQuery.TabIndex = 6;
+            this.lblFormattingMdxQuery.Text = "Formatting MDX query in progress...";
+            this.lblFormattingMdxQuery.Visible = false;
             // 
             // MainForm
             // 
@@ -1010,7 +1048,6 @@
         private System.Windows.Forms.TextBox txtCalcFormula;
         private System.Windows.Forms.Button btnAddCalc;
         private System.Windows.Forms.Button btnDeleteCalc;
-        private System.Windows.Forms.TextBox txtMDX;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel linkHelp;
         private System.Windows.Forms.TabPage tabAbout;
@@ -1072,5 +1109,9 @@
         private System.Windows.Forms.Button btnFilterListShowCurrentFilters;
         private System.Windows.Forms.Label lblExcelUILanguage;
         private System.Windows.Forms.Button btnUpgradeOnRefresh;
+        private System.Windows.Forms.RichTextBox richTextBoxMDX;
+        private System.Windows.Forms.CheckBox chkFormatMDX;
+        private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.Label lblFormattingMdxQuery;
     }
 }

@@ -25,6 +25,8 @@ namespace OlapPivotTableExtensions
 
         private int _LibraryComboDividerItemIndex = int.MaxValue;
 
+        private BackgroundWorker workerFormatMDX;
+
 
         public MainForm(Excel.Application app)
         {
@@ -58,6 +60,10 @@ namespace OlapPivotTableExtensions
 
                 chkShowCalcMembers.Checked = Connect.ShowCalcMembersByDefault;
                 chkRefreshDataWhenOpeningTheFile.Checked = Connect.RefreshDataByDefault;
+
+                chkFormatMDX.Enabled = false; //signals to checked event not to format the MDX right now
+                chkFormatMDX.Checked = Connect.FormatMdx;
+                chkFormatMDX.Enabled = true;
 
                 try
                 {
@@ -143,10 +149,18 @@ namespace OlapPivotTableExtensions
                 }
             }
 
-            txtMDX.Text = sMdxQuery.ToString();
-            txtMDX.SelectionStart = 0;
-            txtMDX.SelectionLength = sMdxQuery.Length;
-            txtMDX.Focus();
+            richTextBoxMDX.Text = sMdxQuery.ToString();
+            richTextBoxMDX.SelectionStart = 0;
+            richTextBoxMDX.SelectionLength = sMdxQuery.Length;
+            richTextBoxMDX.Focus();
+            richTextBoxMDX.ScrollToCaret();
+
+            if (Connect.FormatMdx)
+            {
+                InitiateFormatMDX(sMdxQuery.ToString());
+            }
+
+            tooltip.SetToolTip(chkFormatMDX, "Checking this box will send your MDX query over the internet to this web service:\r\nhttp://formatmdx.msftlabs.com/formatter.asmx");
         }
 
         private void btnDeleteCalc_Click(object sender, EventArgs e)
@@ -1240,7 +1254,7 @@ namespace OlapPivotTableExtensions
 
         private string GetExcelVersion()
         {
-            int iVersion = (int)decimal.Parse(application.Version);
+            int iVersion = (int)decimal.Parse(application.Version, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
             if (iVersion == 12)
                 return "2007";
             else if (iVersion == 14)
@@ -1619,6 +1633,101 @@ namespace OlapPivotTableExtensions
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
+
+        private void InitiateFormatMDX(string MDX)
+        {
+            workerFormatMDX = new BackgroundWorker();
+            workerFormatMDX.DoWork += new DoWorkEventHandler(workerFormatMDX_DoWork);
+            workerFormatMDX.RunWorkerAsync(MDX);
+
+            if (!lblFormattingMdxQuery.Visible)
+                richTextBoxMDX.Height -= (lblFormattingMdxQuery.Height + 5);
+            lblFormattingMdxQuery.ForeColor = System.Drawing.Color.Black;
+            lblFormattingMdxQuery.Text = "Formatting MDX query in progress...";
+            tooltip.SetToolTip(lblFormattingMdxQuery, "Calling web service...");
+            lblFormattingMdxQuery.Visible = true;
+        }
+
+        void workerFormatMDX_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                com.msftlabs.formatmdx.Formatter formatter = new com.msftlabs.formatmdx.Formatter();
+                com.msftlabs.formatmdx.Settings settings = new com.msftlabs.formatmdx.Settings();
+                settings.AdjustCase = false;
+                settings.CommaPlacement = com.msftlabs.formatmdx.CommaPlacementEnum.BegginingOfLine;
+                settings.OpenBraceAfterFunctionOrSubselectOnNewLine = false;
+                settings.SpacesPerIdent = 1;
+                settings.TabAsIdent = false;
+                formatter.Proxy = System.Net.WebRequest.GetSystemWebProxy(); //use current IE proxy settings
+                string sMdxRtf = formatter.FormatAsRtfWithSettings(e.Argument.ToString(), settings);
+                SetFormattedMDX(sMdxRtf, null);
+            }
+            catch (Exception ex)
+            {
+                SetFormattedMDX(null, ex);
+            }
+        }
+
+        private void chkFormatMDX_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkFormatMDX.Enabled)
+                {
+                    Connect.FormatMdx = chkFormatMDX.Checked;
+                    if (Connect.FormatMdx)
+                    {
+                        if (string.IsNullOrEmpty(richTextBoxMDX.Text))
+                            tabControl_SelectedIndexChanged(null, null);
+                        else
+                            InitiateFormatMDX(richTextBoxMDX.Text);
+                    }
+                }
+            }
+            catch (Exception exInner)
+            {
+                MessageBox.Show(exInner.Message + "\r\n" + exInner.StackTrace);
+            }
+        }
+
+        private delegate void SetFormattedMDX_Delegate(string MDX, Exception ex);
+        private void SetFormattedMDX(string MDX, Exception ex)
+        {
+            try
+            {
+                if (richTextBoxMDX.InvokeRequired)
+                {
+                    //avoid the "cross-thread operation not valid" error message
+                    richTextBoxMDX.BeginInvoke(new SetFormattedMDX_Delegate(SetFormattedMDX), new object[] { MDX, ex });
+                }
+                else
+                {
+                    if (ex == null)
+                    {
+                        richTextBoxMDX.Rtf = MDX;
+                        richTextBoxMDX.SelectionStart = 0;
+                        richTextBoxMDX.SelectionLength = richTextBoxMDX.Text.Length;
+                        richTextBoxMDX.Focus();
+                        richTextBoxMDX.ScrollToCaret();
+
+                        lblFormattingMdxQuery.Visible = false;
+                        richTextBoxMDX.Height += lblFormattingMdxQuery.Height + 5;
+                    }
+                    else
+                    {
+                        lblFormattingMdxQuery.ForeColor = System.Drawing.Color.Red;
+                        lblFormattingMdxQuery.Text = "An error occurred formatting MDX query. Mouse over to see error.";
+                        com.msftlabs.formatmdx.Formatter formatter = new com.msftlabs.formatmdx.Formatter();
+                        tooltip.SetToolTip(lblFormattingMdxQuery, "Problem formatting MDX using the " + formatter.Url + " web service. Error was:\r\n\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                    }
+                }
+            }
+            catch (Exception exInner)
+            {
+                MessageBox.Show(exInner.Message + "\r\n" + exInner.StackTrace);
             }
         }
     }

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://formatmdx.msftlabs.com/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://formatmdx.msftlabs.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://formatmdx.msftlabs.com/">
+      <s:element name="FormatAsPlainText">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsPlainTextResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsPlainTextResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsPlainTextWithSettings">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="setting" type="tns:Settings" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Settings">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TabAsIdent" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpacesPerIdent" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="AdjustCase" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="OpenBraceAfterFunctionOrSubselectOnNewLine" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CommaPlacement" type="tns:CommaPlacementEnum" />
+          <s:element minOccurs="0" maxOccurs="1" name="CasingForTokens" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CommaPlacementEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="EndOfLine" />
+          <s:enumeration value="BegginingOfLine" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="FormatAsPlainTextWithSettingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsPlainTextWithSettingsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsHtmlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsHtmlWithSettings">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="setting" type="tns:Settings" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsHtmlWithSettingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsHtmlWithSettingsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsRtf">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsRtfResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsRtfResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsRtfWithSettings">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="queryText" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="setting" type="tns:Settings" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FormatAsRtfWithSettingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FormatAsRtfWithSettingsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="FormatAsPlainTextSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsPlainText" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsPlainTextSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsPlainTextResponse" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsPlainTextWithSettingsSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsPlainTextWithSettings" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsPlainTextWithSettingsSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsPlainTextWithSettingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsHtml" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsHtmlWithSettingsSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsHtmlWithSettings" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsHtmlWithSettingsSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsHtmlWithSettingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsRtfSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsRtf" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsRtfSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsRtfResponse" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsRtfWithSettingsSoapIn">
+    <wsdl:part name="parameters" element="tns:FormatAsRtfWithSettings" />
+  </wsdl:message>
+  <wsdl:message name="FormatAsRtfWithSettingsSoapOut">
+    <wsdl:part name="parameters" element="tns:FormatAsRtfWithSettingsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="FormatterSoap">
+    <wsdl:operation name="FormatAsPlainText">
+      <wsdl:input message="tns:FormatAsPlainTextSoapIn" />
+      <wsdl:output message="tns:FormatAsPlainTextSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsPlainTextWithSettings">
+      <wsdl:input message="tns:FormatAsPlainTextWithSettingsSoapIn" />
+      <wsdl:output message="tns:FormatAsPlainTextWithSettingsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtml">
+      <wsdl:input message="tns:FormatAsHtmlSoapIn" />
+      <wsdl:output message="tns:FormatAsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtmlWithSettings">
+      <wsdl:input message="tns:FormatAsHtmlWithSettingsSoapIn" />
+      <wsdl:output message="tns:FormatAsHtmlWithSettingsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtf">
+      <wsdl:input message="tns:FormatAsRtfSoapIn" />
+      <wsdl:output message="tns:FormatAsRtfSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtfWithSettings">
+      <wsdl:input message="tns:FormatAsRtfWithSettingsSoapIn" />
+      <wsdl:output message="tns:FormatAsRtfWithSettingsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FormatterSoap" type="tns:FormatterSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FormatAsPlainText">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsPlainText" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsPlainTextWithSettings">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsPlainTextWithSettings" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtml">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtmlWithSettings">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsHtmlWithSettings" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtf">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsRtf" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtfWithSettings">
+      <soap:operation soapAction="http://formatmdx.msftlabs.com/FormatAsRtfWithSettings" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FormatterSoap12" type="tns:FormatterSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FormatAsPlainText">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsPlainText" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsPlainTextWithSettings">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsPlainTextWithSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtml">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsHtmlWithSettings">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsHtmlWithSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtf">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsRtf" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FormatAsRtfWithSettings">
+      <soap12:operation soapAction="http://formatmdx.msftlabs.com/FormatAsRtfWithSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Formatter">
+    <wsdl:port name="FormatterSoap" binding="tns:FormatterSoap">
+      <soap:address location="http://formatmdx.msftlabs.com/formatter.asmx" />
+    </wsdl:port>
+    <wsdl:port name="FormatterSoap12" binding="tns:FormatterSoap12">
+      <soap12:address location="http://formatmdx.msftlabs.com/formatter.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
