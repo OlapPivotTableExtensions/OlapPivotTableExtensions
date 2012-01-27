@@ -55,6 +55,7 @@
             this.txtImportFilePath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabMDX = new System.Windows.Forms.TabPage();
+            this.lblFormattingMdxQuery = new System.Windows.Forms.Label();
             this.chkFormatMDX = new System.Windows.Forms.CheckBox();
             this.richTextBoxMDX = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -104,7 +105,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.lblFormattingMdxQuery = new System.Windows.Forms.Label();
+            this.linkUnsupportedLanguageConfiguration = new System.Windows.Forms.LinkLabel();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -391,6 +392,17 @@
             this.tabMDX.TabIndex = 1;
             this.tabMDX.Text = "MDX";
             this.tabMDX.UseVisualStyleBackColor = true;
+            // 
+            // lblFormattingMdxQuery
+            // 
+            this.lblFormattingMdxQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblFormattingMdxQuery.AutoSize = true;
+            this.lblFormattingMdxQuery.Location = new System.Drawing.Point(10, 281);
+            this.lblFormattingMdxQuery.Name = "lblFormattingMdxQuery";
+            this.lblFormattingMdxQuery.Size = new System.Drawing.Size(175, 13);
+            this.lblFormattingMdxQuery.TabIndex = 6;
+            this.lblFormattingMdxQuery.Text = "Formatting MDX query in progress...";
+            this.lblFormattingMdxQuery.Visible = false;
             // 
             // chkFormatMDX
             // 
@@ -890,6 +902,7 @@
             // 
             // tabAbout
             // 
+            this.tabAbout.Controls.Add(this.linkUnsupportedLanguageConfiguration);
             this.tabAbout.Controls.Add(this.btnUpgradeOnRefresh);
             this.tabAbout.Controls.Add(this.lblExcelUILanguage);
             this.tabAbout.Controls.Add(this.lblUpgradePivotTableInstructions);
@@ -993,16 +1006,17 @@
             this.tooltip.ReshowDelay = 100;
             this.tooltip.ShowAlways = true;
             // 
-            // lblFormattingMdxQuery
+            // linkUnsupportedLanguageConfiguration
             // 
-            this.lblFormattingMdxQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblFormattingMdxQuery.AutoSize = true;
-            this.lblFormattingMdxQuery.Location = new System.Drawing.Point(10, 281);
-            this.lblFormattingMdxQuery.Name = "lblFormattingMdxQuery";
-            this.lblFormattingMdxQuery.Size = new System.Drawing.Size(175, 13);
-            this.lblFormattingMdxQuery.TabIndex = 6;
-            this.lblFormattingMdxQuery.Text = "Formatting MDX query in progress...";
-            this.lblFormattingMdxQuery.Visible = false;
+            this.linkUnsupportedLanguageConfiguration.AutoSize = true;
+            this.linkUnsupportedLanguageConfiguration.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkUnsupportedLanguageConfiguration.Location = new System.Drawing.Point(12, 148);
+            this.linkUnsupportedLanguageConfiguration.Name = "linkUnsupportedLanguageConfiguration";
+            this.linkUnsupportedLanguageConfiguration.Size = new System.Drawing.Size(247, 13);
+            this.linkUnsupportedLanguageConfiguration.TabIndex = 8;
+            this.linkUnsupportedLanguageConfiguration.TabStop = true;
+            this.linkUnsupportedLanguageConfiguration.Text = "UNSUPPORTED LANGUAGE CONFIGURATION!";
+            this.linkUnsupportedLanguageConfiguration.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUnsupportedLanguageConfiguration_LinkClicked);
             // 
             // MainForm
             // 
@@ -1018,6 +1032,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OLAP PivotTable Extensions";
             this.Activated += new System.EventHandler(this.MainForm_Activated);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.tabControl.ResumeLayout(false);
             this.tabCalcs.ResumeLayout(false);
             this.tabCalcs.PerformLayout();
@@ -1113,5 +1128,6 @@
         private System.Windows.Forms.CheckBox chkFormatMDX;
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.Label lblFormattingMdxQuery;
+        private System.Windows.Forms.LinkLabel linkUnsupportedLanguageConfiguration;
     }
 }

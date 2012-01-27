@@ -34,10 +34,27 @@ namespace OlapPivotTableExtensions
 
             try
             {
+                application = app;
+
                 string sLanguage = "Windows Language: " + Connect.OriginalLanguage;
                 sLanguage += "\r\nWindows UI Language: " + System.Globalization.CultureInfo.InstalledUICulture.EnglishName;
+
+                bool bCachedSupportedLanguageConfig = IsSupportedLanguageConfiguration;
+
+                //set the culture to the Excel UI language, then leave it until this form is closed
                 SetCulture(app);
-                sLanguage = sLanguage + "\r\nExcel UI Language: " + System.Threading.Thread.CurrentThread.CurrentCulture.EnglishName;
+
+                System.Globalization.CultureInfo nciExcelUI = new System.Globalization.CultureInfo(app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI));
+                sLanguage += "\r\nExcel UI Language: " + nciExcelUI.EnglishName;
+
+                try
+                {
+                    System.Globalization.CultureInfo nciInstall = new System.Globalization.CultureInfo(app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDInstall));
+                    sLanguage += "\r\nExcel Install Language: " + nciInstall.EnglishName;
+                }
+                catch { }
+
+                lblExcelUILanguage.Text = sLanguage;
 
                 System.Reflection.AssemblyFileVersionAttribute attrVersion = (System.Reflection.AssemblyFileVersionAttribute)typeof(MainForm).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), true)[0];
                 lblVersion.Text = "OLAP PivotTable Extensions v" + attrVersion.Version;
@@ -48,7 +65,6 @@ namespace OlapPivotTableExtensions
                 lblVersion.Text += " (32-bit)";
 #endif
 
-                application = app;
                 pvt = app.ActiveCell.PivotTable;
 
                 library = new CalculationsLibrary();
@@ -56,7 +72,18 @@ namespace OlapPivotTableExtensions
 
                 FillCalcsDropdown();
 
-                tabControl.SelectedTab = tabCalcs;
+                if (!bCachedSupportedLanguageConfig)
+                {
+                    MessageBox.Show("You are not running a supported language configuration!\r\n\r\nClick on the \"UNSUPPORTED LANGUAGE CONFIGURATION!\" link on the About tab for details on how to resolve this problem.", "OLAP PivotTable Extensions");
+                    tabControl.SelectedTab = tabAbout;
+                    linkUnsupportedLanguageConfiguration.Visible = true;
+                    tooltip.SetToolTip(linkUnsupportedLanguageConfiguration, "If you want to use OLAP PivotTable Extensions without errors, you must do one of the following:\r\n* Install the Office Language Pack for " + Connect.OriginalLanguage + "\r\n* Change the Windows Regional settings to a language for which you have an Office Language Pack installed\r\n* Check \"Retrieve data and errors in the Office display language when available\" on this PivotTable connection\r\n* Include LocaleIdentifier on the connection string\r\n\r\nClick for more instructions");
+                }
+                else
+                {
+                    tabControl.SelectedTab = tabCalcs;
+                    linkUnsupportedLanguageConfiguration.Visible = false;
+                }
 
                 chkShowCalcMembers.Checked = Connect.ShowCalcMembersByDefault;
                 chkRefreshDataWhenOpeningTheFile.Checked = Connect.RefreshDataByDefault;
@@ -65,14 +92,6 @@ namespace OlapPivotTableExtensions
                 chkFormatMDX.Checked = Connect.FormatMdx;
                 chkFormatMDX.Enabled = true;
 
-                try
-                {
-                    System.Globalization.CultureInfo nciInstall = new System.Globalization.CultureInfo(app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDInstall));
-                    sLanguage += "\r\nExcel Install Language: " + nciInstall.EnglishName;
-                }
-                catch { }
-
-                lblExcelUILanguage.Text = sLanguage;
 
                 lblPivotTableVersion.Text = "Version of This PivotTable: " + GetPivotTableVersion();
 
@@ -113,54 +132,202 @@ namespace OlapPivotTableExtensions
             }
         }
 
-        //fix for the "old format or invalid type library" error on non-english locales
-        private void SetCulture(Excel.Application app)
+        //be sure to set the culture back when the form is closed
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            ResetCulture(application);
+        }
+
+        private static bool _ShouldRunSetCulture = true;
+        private bool? _IsSupportedLanguageConfiguration = null;
+        private bool _RetrieveInOfficeUILang = true;
+        private bool IsSupportedLanguageConfiguration
+        {
+            get
+            {
+                if (_IsSupportedLanguageConfiguration != null) return (bool)_IsSupportedLanguageConfiguration;
+
+                bool bReceivedOldFormatError = false;
+                Excel.PivotTable pvtLocal = null;
+                try
+                {
+                    //try this without setting the culture... if their Windows regional settings language isn't a language for which they have an Office language pack, this should blow up with the "old format" error
+                    pvtLocal = application.ActiveCell.PivotTable;
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    bReceivedOldFormatError = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was an unexpected error checking your language configuration:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                    _IsSupportedLanguageConfiguration = true;
+                    return true;
+                }
+
+                bool bConnectionStringContainsLCID = false;
+                try
+                {
+                    //now get the pvt object using the Excel UI culture
+                    SetCulture(application);
+                    pvtLocal = application.ActiveCell.PivotTable;
+
+                    Microsoft.Office.Interop.Excel.PivotCache cache = pvtLocal.PivotCache();
+                    Excel.WorkbookConnection workbookConn = cache.WorkbookConnection;
+                    Excel.OLEDBConnection connOLEDB = workbookConn.OLEDBConnection;
+                    _RetrieveInOfficeUILang = connOLEDB.RetrieveInOfficeUILang;
+
+                    string sConnectionString = Convert.ToString(connOLEDB.Connection); //not the same as the connection string we use for AdomdClient since it won't contain the password, but it's good enough for this and doesn't require connecting
+
+                    if (sConnectionString.ToLower().Contains("language identifier=") 
+                        || sConnectionString.ToLower().Contains("localeidentifier=") 
+                        || sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up unless it's inside Extended Properties. So OLAP PivotTable Extensions can't use it... but it does work for Excel
+                    )
+                    {
+                        bConnectionStringContainsLCID = true;
+                    }
+                }
+                catch (Exception exInner)
+                {
+                    MessageBox.Show("ERROR FIGURING OUT WHETHER IT'S AN INVALID CONFIGURATION! " + exInner.Message + " - " + exInner.GetType().FullName + "\r\n" + exInner.StackTrace);
+                    _IsSupportedLanguageConfiguration = false;
+                    return false;
+                }
+                finally
+                {
+                    ResetCulture(application);
+                }
+
+                if (bReceivedOldFormatError) //don't have language pack installed
+                {
+                    if (!_RetrieveInOfficeUILang)
+                    {
+                        _ShouldRunSetCulture = true;
+                        if (!bConnectionStringContainsLCID)
+                        {
+                            _IsSupportedLanguageConfiguration = false;
+                            return false;
+                        }
+                        else
+                        {
+                            _IsSupportedLanguageConfiguration = true;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        _ShouldRunSetCulture = true;
+                        _IsSupportedLanguageConfiguration = true;
+                        return true;
+                    }
+                }
+                else //have language pack installed
+                {
+                    if (!_RetrieveInOfficeUILang)
+                    {
+                        _ShouldRunSetCulture = false;
+                        _IsSupportedLanguageConfiguration = true;
+                        return true;
+                    }
+                    else
+                    {
+                        _ShouldRunSetCulture = true;
+                        _IsSupportedLanguageConfiguration = true;
+                        return true;
+                    }
+                }
+
+
+            }
+        }
+
+        private static Dictionary<int, int> _dictSetCultureDepth = new Dictionary<int, int>();
+
+        //fix for the "old format or invalid type library" error on non-english locales
+        public static void SetCulture(Excel.Application app)
+        {
+            if (!_ShouldRunSetCulture) return;
+
             System.Globalization.CultureInfo nci =
             new System.Globalization.CultureInfo(
             app.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI));
+
             System.Threading.Thread.CurrentThread.CurrentCulture = nci;
+
+            //cache the set culture depth
+            if (_dictSetCultureDepth.ContainsKey(System.Threading.Thread.CurrentThread.ManagedThreadId))
+                _dictSetCultureDepth[System.Threading.Thread.CurrentThread.ManagedThreadId]++;
+            else
+                _dictSetCultureDepth.Add(System.Threading.Thread.CurrentThread.ManagedThreadId, 1);
+        }
+
+        //fix for the LocaleIdentifier error on drillthrough
+        public static void ResetCulture(Excel.Application app)
+        {
+            if (!_ShouldRunSetCulture) return;
+
+            //if two SetCulture calls are made before the first ResetCulture call is made, we should skip it until we get to the final ResetCulture call, otherwise it's reset to prematurely
+            if (_dictSetCultureDepth[System.Threading.Thread.CurrentThread.ManagedThreadId] <= 1)
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture = Connect.OriginalCultureInfo;
+            }
+
+            if (_dictSetCultureDepth[System.Threading.Thread.CurrentThread.ManagedThreadId] > 0) //ResetCulture should never be called when this = 0, but this is just to make sure
+            {
+                _dictSetCultureDepth[System.Threading.Thread.CurrentThread.ManagedThreadId]--;
+            }
         }
 
         private void SetMDX()
         {
-            StringBuilder sMdxQuery = new StringBuilder(pvt.MDX);
+            //if this isn't a supported language configuration, still try to help them be able to see the MDX by resetting the culture, grabbing the MDX, then setting it again
+            if (!IsSupportedLanguageConfiguration) ResetCulture(application);
 
-            //add (session) calculated members to the query so that you can run it from SSMS
-            if (pvt.CalculatedMembers.Count > 0)
+            try
             {
-                StringBuilder sCalcs = new StringBuilder();
-                foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
+                StringBuilder sMdxQuery = new StringBuilder(pvt.MDX);
+
+                //add (session) calculated members to the query so that you can run it from SSMS
+                if (pvt.CalculatedMembers.Count > 0)
                 {
-                    if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedSet)
-                        sCalcs.Append("SET ");
+                    StringBuilder sCalcs = new StringBuilder();
+                    foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
+                    {
+                        if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedSet)
+                            sCalcs.Append("SET ");
+                        else
+                            sCalcs.Append("MEMBER ");
+                        sCalcs.AppendFormat("{0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
+                    }
+                    if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sMdxQuery.Insert(5, sCalcs.ToString());
+                    }
                     else
-                        sCalcs.Append("MEMBER ");
-                    sCalcs.AppendFormat("{0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
+                    {
+                        sCalcs.Insert(0, "WITH\r\n");
+                        sMdxQuery.Insert(0, sCalcs.ToString());
+                    }
                 }
-                if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
+
+                richTextBoxMDX.Text = sMdxQuery.ToString();
+                richTextBoxMDX.SelectionStart = 0;
+                richTextBoxMDX.SelectionLength = sMdxQuery.Length;
+                richTextBoxMDX.Focus();
+                richTextBoxMDX.ScrollToCaret();
+
+                if (Connect.FormatMdx)
                 {
-                    sMdxQuery.Insert(5, sCalcs.ToString());
+                    InitiateFormatMDX(sMdxQuery.ToString());
                 }
-                else
-                {
-                    sCalcs.Insert(0, "WITH\r\n");
-                    sMdxQuery.Insert(0, sCalcs.ToString());
-                }
+
+                tooltip.SetToolTip(chkFormatMDX, "Checking this box will send your MDX query over the internet to this web service:\r\nhttp://formatmdx.msftlabs.com/formatter.asmx");
             }
-
-            richTextBoxMDX.Text = sMdxQuery.ToString();
-            richTextBoxMDX.SelectionStart = 0;
-            richTextBoxMDX.SelectionLength = sMdxQuery.Length;
-            richTextBoxMDX.Focus();
-            richTextBoxMDX.ScrollToCaret();
-
-            if (Connect.FormatMdx)
+            finally
             {
-                InitiateFormatMDX(sMdxQuery.ToString());
+                //if this isn't a supported language configuration, still try to help them be able to see the MDX by using a reset culture above, but a set culture here
+                if (!IsSupportedLanguageConfiguration) SetCulture(application);
             }
-
-            tooltip.SetToolTip(chkFormatMDX, "Checking this box will send your MDX query over the internet to this web service:\r\nhttp://formatmdx.msftlabs.com/formatter.asmx");
         }
 
         private void btnDeleteCalc_Click(object sender, EventArgs e)
@@ -424,8 +591,14 @@ namespace OlapPivotTableExtensions
             Excel.OLEDBConnection connOLEDB = cache.WorkbookConnection.OLEDBConnection;
 
             //figure out current locale
-            if (connOLEDB.RetrieveInOfficeUILang && !sConnectionString.ToLower().Contains("language identifier=") && !sConnectionString.ToLower().Contains("localeidentifier="))
+            if (connOLEDB.RetrieveInOfficeUILang
+                && !sConnectionString.ToLower().Contains("language identifier=")
+                && !sConnectionString.ToLower().Contains("localeidentifier=")
+                && !sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up. So OLAP PivotTable Extensions can't use it... but it does work for Excel
+            )
+            {
                 sConnectionString += ";LocaleIdentifier=" + this.application.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI);
+            }
 
             sConnectionString += ";Application Name=" + lblVersion.Text;
 
@@ -635,6 +808,11 @@ namespace OlapPivotTableExtensions
         private void linkUpgradePivotTable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://office.microsoft.com/en-us/excel-help/working-with-different-pivottable-formats-in-office-excel-HA010167298.aspx");
+        }
+
+        private void linkUnsupportedLanguageConfiguration_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://olappivottableextend.codeplex.com/wikipage?title=Unsupported%20Language%20Configuration");
         }
 
         private void radioExport_CheckedChanged(object sender, EventArgs e)
@@ -1010,10 +1188,10 @@ namespace OlapPivotTableExtensions
                                     //try to add to just this level... this works on unbalanced hierarchies
                                     field.AddMemberPropertyField(item.MemberProperty.UniqueName, System.Type.Missing);
                                 }
-                                catch
+                                catch (Exception exInner)
                                 {
                                     //if neither succeeded, then raise the error
-                                    throw ex;
+                                    throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + ex.Message + " and " + exInner.Message, ex);
                                 }
                             }
                         }
@@ -1099,10 +1277,10 @@ namespace OlapPivotTableExtensions
                                         //try to add to just this level... this works on unbalanced hierarchies
                                         field.AddMemberPropertyField(item.MemberProperty.UniqueName, System.Type.Missing);
                                     }
-                                    catch
+                                    catch (Exception exInner)
                                     {
                                         //if neither succeeded, then raise the error
-                                        throw ex;
+                                        throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + ex.Message + " and " + exInner.Message, ex);
                                     }
                                 }
                             }
@@ -1116,9 +1294,9 @@ namespace OlapPivotTableExtensions
             catch (Exception ex)
             {
                 if (string.IsNullOrEmpty(sSearchFor))
-                    MessageBox.Show("Problem adding to PivotTable: " + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("Problem adding to PivotTable: " + ex.Message + "\r\n\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
                 else
-                    MessageBox.Show("Problem adding " + sSearchFor + " to PivotTable: " + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("Problem adding " + sSearchFor + " to PivotTable: " + ex.Message + "\r\n\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
             finally
             {
@@ -1445,6 +1623,7 @@ namespace OlapPivotTableExtensions
             }
             finally
             {
+                ResetCulture(application);
                 AddInWorking = false;
             }
         }
@@ -1619,6 +1798,7 @@ namespace OlapPivotTableExtensions
             }
             finally
             {
+                ResetCulture(application);
                 AddInWorking = false;
             }
         }
@@ -1730,5 +1910,6 @@ namespace OlapPivotTableExtensions
                 MessageBox.Show(exInner.Message + "\r\n" + exInner.StackTrace);
             }
         }
+
     }
 }
