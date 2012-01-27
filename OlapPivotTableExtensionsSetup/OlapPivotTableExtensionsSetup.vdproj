@@ -687,14 +687,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{020E61E7-7F83-4CC0-9FF0-16A2AD4CC289}"
-        "PackageCode" = "8:{05AAC6C5-02EC-4678-A4AD-130634F142C5}"
+        "ProductCode" = "8:{11848E76-F221-4831-AB29-C0CB9CC2FBDE}"
+        "PackageCode" = "8:{C629B2C4-AA87-4DF0-B8E8-D3BC922F9B66}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.7.3"
+        "ProductVersion" = "8:0.7.4"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -1824,7 +1824,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17870CE30A894F80ACB4F97D72E9DF0A"
             {
-            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release\\ManagedAggregator.dll"
+            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Debug\\ManagedAggregator.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1852,7 +1852,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1880,7 +1880,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_248E4B09250F46C482D2F93017CFE488"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Release\\OlapPivotTableExtensionsShim.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Debug\\OlapPivotTableExtensionsShim.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1908,7 +1908,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9785DCBD01BF4F8285774D086AE1F928"
             {
-            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Release\\CustomInstallActions.dll"
+            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Debug\\CustomInstallActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"

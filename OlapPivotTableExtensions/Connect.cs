@@ -44,6 +44,7 @@ namespace OlapPivotTableExtensions
                 addInInstance = addInInst;
 
                 OriginalLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.EnglishName;
+                OriginalCultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
 
                 m_xlAppEvents = new xlEvents();
                 m_xlAppEvents.DisableEventsIfEmbedded = true;
@@ -125,6 +126,7 @@ namespace OlapPivotTableExtensions
         private xlEvents m_xlAppEvents;
 
         public static string OriginalLanguage = "";
+        public static System.Globalization.CultureInfo OriginalCultureInfo;
 
 
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
@@ -303,6 +305,16 @@ namespace OlapPivotTableExtensions
             {
                 if (Ctrl.Tag != cmdClearPivotTableCacheMenuItem.Tag || Ctrl.Caption != cmdClearPivotTableCacheMenuItem.Caption || Ctrl.FaceId != cmdClearPivotTableCacheMenuItem.FaceId)
                     return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                return;
+            }
+
+            try
+            {
+                MainForm.SetCulture(Application);
 
                 Excel.PivotTable pvt = Application.ActiveCell.PivotTable;
                 Microsoft.Office.Interop.Excel.PivotCache cache = pvt.PivotCache();
@@ -507,11 +519,15 @@ namespace OlapPivotTableExtensions
                         cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = bUseConnectionFile;
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
             }
         }
 
@@ -557,6 +573,8 @@ namespace OlapPivotTableExtensions
         {
             try
             {
+                MainForm.SetCulture(Application);
+
                 if (IsOlapPivotTable(Application.ActiveCell.PivotTable))
                 {
                     cmdMenuItem.Visible = true;
@@ -579,6 +597,10 @@ namespace OlapPivotTableExtensions
             catch
             {
                 cmdMenuItem.Visible = true;
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
             }
         }
 
@@ -642,6 +664,8 @@ namespace OlapPivotTableExtensions
         {
             try
             {
+                MainForm.SetCulture(Application);
+
                 Application.ActiveCell.PivotCell.PivotField.MemberPropertyCaption = Ctrl.Parameter;
                 Application.ActiveCell.PivotCell.PivotField.UseMemberPropertyAsCaption = true;
             }
@@ -649,25 +673,37 @@ namespace OlapPivotTableExtensions
             {
                 MessageBox.Show("Problem using member property as caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
         }
 
         void btnStopUsingMemberPropertyAsCaption_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             try
             {
+                MainForm.SetCulture(Application);
                 Application.ActiveCell.PivotCell.PivotField.UseMemberPropertyAsCaption = false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Problem using resetting caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
         }
 
         void m_xlAppEvents_xlSheetPivotTableUpdate(object Sh, Microsoft.Office.Interop.Excel.PivotTable Target)
         {
+            if (frm != null && frm.AddInWorking) return; //short circuit if we're in the middle of changing the PivotTable with the add-in
+
             try
             {
-                if (frm != null && frm.AddInWorking) return; //short circuit if we're in the middle of changing the PivotTable with the add-in
+                MainForm.SetCulture(Application);
+
                 if (!IsOlapPivotTable(Target)) return;
 
                 foreach (Excel.CubeField field in Target.CubeFields)
@@ -692,6 +728,10 @@ namespace OlapPivotTableExtensions
             catch (Exception ex)
             {
                 MessageBox.Show("Problem during update of OLAP PivotTable:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
             }
         }
 

@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Fri Sep 30 20:14:49 2011
+/* at Thu Jan 26 10:53:58 2012
  */
 /* Compiler settings for .\OlapPivotTableExtensionsShim.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
