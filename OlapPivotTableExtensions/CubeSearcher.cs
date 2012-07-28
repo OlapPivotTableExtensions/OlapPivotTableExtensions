@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.AnalysisServices.AdomdClient;
+
+using OlapPivotTableExtensions.AdomdClientWrappers;
+//using Microsoft.AnalysisServices.AdomdClient; //if you're adding this code to your own app, then just uncomment this line and comment out the above line
+using LevelTypeEnum = Microsoft.AnalysisServices.AdomdClient.LevelTypeEnum;
+using HierarchyOrigin = Microsoft.AnalysisServices.AdomdClient.HierarchyOrigin;
+
 using System.ComponentModel;
 
 namespace OlapPivotTableExtensions
@@ -219,6 +224,7 @@ namespace OlapPivotTableExtensions
 
                     foreach (Dimension d in _cube.Dimensions)
                     {
+                        if (d.UniqueName.ToLower().StartsWith("[measures]")) continue; //work item 23021
                         if (_exactMatch)
                         {
                             if (string.Compare(d.Caption, _searchString, true) == 0)
@@ -469,7 +475,10 @@ namespace OlapPivotTableExtensions
                     if (string.IsNullOrEmpty(_searchOnly))
                     {
                         foreach (Dimension d in _cube.Dimensions)
+                        {
+                            if (d.UniqueName.ToLower().StartsWith("[measures]")) continue; //work item 23021
                             listDimensions.Add(d);
+                        }
                         listDimensions.Sort(delegate(Dimension x, Dimension y) { return ((uint)x.Properties["DIMENSION_CARDINALITY"].Value).CompareTo((uint)y.Properties["DIMENSION_CARDINALITY"].Value); });
                     }
                     else

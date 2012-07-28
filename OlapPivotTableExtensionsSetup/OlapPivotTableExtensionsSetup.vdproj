@@ -81,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A266445AE02D258381DC9F3E8854E97B"
+        "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C75E8145304EEB902777F29CC5231922"
         "OwnerKey" = "8:_466D85672B2C8D0185984E57D6B24A25"
         "MsmSig" = "8:_UNDEFINED"
@@ -125,6 +131,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A266445AE02D258381DC9F3E8854E97B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -215,6 +227,11 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    {
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
                     "Name" = "8:Windows Installer 3.1"
@@ -481,7 +498,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.AnalysisServices.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A14D580B19B728050EB1B14B6920E886"
@@ -505,6 +522,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A266445AE02D258381DC9F3E8854E97B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Excel.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A266445AE02D258381DC9F3E8854E97B"
+                    {
+                    "Name" = "8:Microsoft.Excel.AdomdClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.Excel.AdomdClient.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -602,18 +650,25 @@
         }
         "LaunchCondition"
         {
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_3AFA69679F9F40B0952C98AA37629E8E"
+            {
+            "Name" = "8:Office 2013 PIA"
+            "Condition" = "8:(EXCEL2013X86=\"\" AND OFFICE2013BITNESS<>\"x64\") OR ((EXCEL2013X86<>\"\" OR OFFICE2013BITNESS=\"x64\") AND OFFICE2013PIA)"
+            "Message" = "8:You must first install the Office 2013 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
+            "InstallUrl" = "8:http://olappivottableextend.codeplex.com/wikipage?title=Office%202013%20Primary%20Interop%20Assemblies"
+            }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_8A97ED54112F430A9202EB715D35EC2D"
             {
             "Name" = "8:64-bit Office"
-            "Condition" = "8:(NOT INSTALLER64) OR OFFICE2010BITNESS=\"x64\""
-            "Message" = "8:This computer does not have Office 2010 64-bit. Please use the OLAP PivotTable Extensions for 32-bit Excel installer."
+            "Condition" = "8:(NOT INSTALLER64) OR OFFICE2010BITNESS=\"x64\" OR OFFICE2013BITNESS=\"x64\""
+            "Message" = "8:This computer does not have Office 2010 64-bit or Office 2013 64-bit. Please use the OLAP PivotTable Extensions for 32-bit Excel installer."
             "InstallUrl" = "8:"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_908FC0FA327D4159A604B2B769A0A154"
             {
-            "Name" = "8:32-bit Excel 2007 or 2010"
-            "Condition" = "8:INSTALLER64 OR EXCEL2007<>\"\" OR EXCEL2010X86<>\"\""
-            "Message" = "8:Either Excel 2007 or 32-bit Excel 2010 must be installed on this computer to install the 32-bit version of OLAP PivotTable Extensions."
+            "Name" = "8:32-bit Excel 2007 or 2010 or 2013"
+            "Condition" = "8:INSTALLER64 OR EXCEL2007<>\"\" OR EXCEL2010X86<>\"\" OR EXCEL2013X86<>\"\""
+            "Message" = "8:Either Excel 2007 or 32-bit Excel 2010 or 32-bit Excel 2013 must be installed on this computer to install the 32-bit version of OLAP PivotTable Extensions."
             "InstallUrl" = "8:"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_C0AB1BE26C5243D2B564584292D26032"
@@ -633,6 +688,14 @@
         }
         "Locator"
         {
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_0DAB02B9392945A5933E95095D3FB64B"
+            {
+            "Name" = "8:Excel 2013 32-bit"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\15.0\\Excel\\InstallRoot"
+            "Value" = "8:Path"
+            "Property" = "8:EXCEL2013X86"
+            }
             "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_1CDD732CC171470E883C69BF9A1FA382"
             {
             "Name" = "8:Excel 2010 64-bit"
@@ -646,6 +709,14 @@
             "Name" = "8:Office 2010 PIA"
             "ComponentId" = "8:{EA7564AC-C67D-4868-BE5C-26E4FC2223FF}"
             "Property" = "8:OFFICE2010PIA"
+            }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_345414F5AE134B1EA1A4C9E9388E49B1"
+            {
+            "Name" = "8:64-bit Office 2013"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\15.0\\Outlook"
+            "Value" = "8:Bitness"
+            "Property" = "8:OFFICE2013BITNESS"
             }
             "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_428191F15C5549CFAF689F48524AD7A8"
             {
@@ -663,6 +734,12 @@
             "Value" = "8:Bitness"
             "Property" = "8:OFFICE2010BITNESS"
             }
+            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_60A1FBE129DD4B7B9669E985DBFA9C06"
+            {
+            "Name" = "8:Office 2013 PIA"
+            "ComponentId" = "8:{C8A65ABE-3270-4FD7-B854-50C8082C8F39}"
+            "Property" = "8:OFFICE2013PIA"
+            }
             "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_A15E7994601E4A79AEFF8DBDB31E3B8C"
             {
             "Name" = "8:Excel 2010 32-bit"
@@ -677,6 +754,14 @@
             "ComponentId" = "8:{1ABEAF09-435F-47D6-9FEB-0AD05D4EF3EA}"
             "Property" = "8:OFFICE2007PIA"
             }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_EC2B5882D037429ABC13A2C74FBEFB05"
+            {
+            "Name" = "8:Excel 2013 64-bit"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\15.0\\Excel\\InstallRoot"
+            "Value" = "8:Path"
+            "Property" = "8:EXCEL2013X64"
+            }
         }
         "MsiBootstrapper"
         {
@@ -687,14 +772,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{11848E76-F221-4831-AB29-C0CB9CC2FBDE}"
-        "PackageCode" = "8:{C629B2C4-AA87-4DF0-B8E8-D3BC922F9B66}"
+        "ProductCode" = "8:{5A824198-A4C3-4618-B4F6-63B629647F34}"
+        "PackageCode" = "8:{5CDA14E4-8971-4FF9-B583-21670743B992}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.7.4"
+        "ProductVersion" = "8:0.8.0"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -1808,7 +1893,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:"
+                            "Value" = "8:Be sure to restart Excel if it is currently open. Thank you for installing OLAP PivotTable Extensions!"
                             "DefaultValue" = "8:#1258"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1824,7 +1909,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17870CE30A894F80ACB4F97D72E9DF0A"
             {
-            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Debug\\ManagedAggregator.dll"
+            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release\\ManagedAggregator.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1852,7 +1937,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1880,7 +1965,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_248E4B09250F46C482D2F93017CFE488"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Debug\\OlapPivotTableExtensionsShim.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Release\\OlapPivotTableExtensionsShim.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1908,7 +1993,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9785DCBD01BF4F8285774D086AE1F928"
             {
-            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Debug\\CustomInstallActions.dll"
+            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Release\\CustomInstallActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"

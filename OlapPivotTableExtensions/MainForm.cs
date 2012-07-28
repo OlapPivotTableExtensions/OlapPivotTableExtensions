@@ -7,7 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
-using Microsoft.AnalysisServices.AdomdClient;
+
+using OlapPivotTableExtensions.AdomdClientWrappers;
+using LevelTypeEnum = Microsoft.AnalysisServices.AdomdClient.LevelTypeEnum;
+
 
 namespace OlapPivotTableExtensions
 {
@@ -22,6 +25,9 @@ namespace OlapPivotTableExtensions
         public bool AddInWorking = false;
         private BackgroundWorker workerFilterList;
         private int xlPivotTableVersion14 = 4; //since we're using the Excel 2007 object model, we can't see the Excel 2010 version
+        private int xlPivotTableVersion15 = 5; //since we're using the Excel 2007 object model, we can't see the Excel 2013 version
+        private int xlConnectionTypeMODEL = 7; //since we're using the Excel 2007 object model, we can't see the Excel 2013 connection types
+        private int xlCalculatedMeasure = 2; //since we're using the Excel 2007 object model, we can't see the new Excel 2013 calc measure type
 
         private int _LibraryComboDividerItemIndex = int.MaxValue;
 
@@ -123,6 +129,14 @@ namespace OlapPivotTableExtensions
                         btnUpgradeOnRefresh.Visible = false;
                     }
                 }
+
+                if (!Connect.IsOledbConnection(application.ActiveCell.PivotTable))
+                {
+                    //MDX calcs don't appear to be supported on ExcelDataModel pivots
+                    tabControl.Controls.Remove(tabCalcs);
+                    tabControl.Controls.Remove(tabLibrary);
+                    tabControl_SelectedIndexChanged(null, null);
+                }
             }
             catch (Exception ex)
             {
@@ -174,17 +188,20 @@ namespace OlapPivotTableExtensions
 
                     Microsoft.Office.Interop.Excel.PivotCache cache = pvtLocal.PivotCache();
                     Excel.WorkbookConnection workbookConn = cache.WorkbookConnection;
-                    Excel.OLEDBConnection connOLEDB = workbookConn.OLEDBConnection;
-                    _RetrieveInOfficeUILang = connOLEDB.RetrieveInOfficeUILang;
-
-                    string sConnectionString = Convert.ToString(connOLEDB.Connection); //not the same as the connection string we use for AdomdClient since it won't contain the password, but it's good enough for this and doesn't require connecting
-
-                    if (sConnectionString.ToLower().Contains("language identifier=") 
-                        || sConnectionString.ToLower().Contains("localeidentifier=") 
-                        || sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up unless it's inside Extended Properties. So OLAP PivotTable Extensions can't use it... but it does work for Excel
-                    )
+                    if (Connect.IsOledbConnection(pvtLocal))
                     {
-                        bConnectionStringContainsLCID = true;
+                        Excel.OLEDBConnection connOLEDB = workbookConn.OLEDBConnection;
+                        _RetrieveInOfficeUILang = connOLEDB.RetrieveInOfficeUILang;
+
+                        string sConnectionString = Convert.ToString(connOLEDB.Connection); //not the same as the connection string we use for AdomdClient since it won't contain the password, but it's good enough for this and doesn't require connecting
+
+                        if (sConnectionString.ToLower().Contains("language identifier=")
+                            || sConnectionString.ToLower().Contains("localeidentifier=")
+                            || sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up unless it's inside Extended Properties. So OLAP PivotTable Extensions can't use it... but it does work for Excel
+                        )
+                        {
+                            bConnectionStringContainsLCID = true;
+                        }
                     }
                 }
                 catch (Exception exInner)
@@ -344,7 +361,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "OLAP PivotTable Extensions");
+                MessageBox.Show(AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
             }
         }
 
@@ -381,7 +398,12 @@ namespace OlapPivotTableExtensions
                 try
                 {
                     //replace the line breaks in the formula we save to the PivotTable to workaround a bug in Excel Services: http://www.codeplex.com/OlapPivotTableExtend/Thread/View.aspx?ThreadId=41697
-                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula.Replace("\r\n", "\r"), System.Reflection.Missing.Value, Excel.XlCalculatedMemberType.xlCalculatedMember);
+                    int iCalcType = (int)Excel.XlCalculatedMemberType.xlCalculatedMember;
+                    if (bMeasure && string.Compare(GetExcelVersion(), "2013") >= 0)
+                    {
+                        iCalcType = xlCalculatedMeasure;
+                    }
+                    oCalcMember = pvt.CalculatedMembers.Add(sName, sFormula.Replace("\r\n", "\r"), System.Reflection.Missing.Value, iCalcType);
                     if (bMeasure)
                     {
                         pvt.RefreshTable();
@@ -395,14 +417,14 @@ namespace OlapPivotTableExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("There was a problem creating the calculation:\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("There was a problem creating the calculation:\r\n" + AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
                 }
 
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("There was an unexpected error creating the calculation:\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                MessageBox.Show("There was an unexpected error creating the calculation:\r\n" + AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
             }
         }
 
@@ -412,7 +434,7 @@ namespace OlapPivotTableExtensions
             List<string> listCalcs = new List<string>();
             foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
             {
-                if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedMember)
+                if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedMember || (int)calc.Type == xlCalculatedMeasure)
                     listCalcs.Add(calc.Name);
             }
             listCalcs.Sort();
@@ -451,6 +473,27 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        private string AddOledbErrorToException(Exception ex, bool includeStackTrace)
+        {
+            string sErrors = string.Empty;
+            try
+            {
+                if (application.OLEDBErrors != null)
+                {
+                    foreach (Excel.OLEDBError err in application.OLEDBErrors)
+                    {
+                        if (sErrors.Length > 0) sErrors += "\r\n";
+                        sErrors += err.ErrorString;
+                    }
+                }
+            }
+            catch { }
+            if (sErrors.Length > 0) sErrors += "\r\n";
+            sErrors += ex.Message;
+            if (includeStackTrace) sErrors += "\r\n" + ex.StackTrace;
+            return sErrors;
+        }
+
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == tabMDX)
@@ -462,7 +505,7 @@ namespace OlapPivotTableExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("There was a problem capturing the MDX query for this PivotTable.\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("There was a problem capturing the MDX query for this PivotTable.\r\n" + AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
                 }
                 finally
                 {
@@ -478,7 +521,7 @@ namespace OlapPivotTableExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("There was a problem setting up the search tab.\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                    MessageBox.Show("There was a problem setting up the search tab.\r\n" + AddOledbErrorToException(ex, true), "OLAP PivotTable Extensions");
                 }
                 finally
                 {
@@ -494,7 +537,7 @@ namespace OlapPivotTableExtensions
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("There was a problem setting up the Filter List tab.\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                    MessageBox.Show("There was a problem setting up the Filter List tab.\r\n" + AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
                 }
                 finally
                 {
@@ -588,19 +631,28 @@ namespace OlapPivotTableExtensions
 
             string sConnectionString = connADO.ConnectionString;
 
-            Excel.OLEDBConnection connOLEDB = cache.WorkbookConnection.OLEDBConnection;
-
-            //figure out current locale
-            if (connOLEDB.RetrieveInOfficeUILang
-                && !sConnectionString.ToLower().Contains("language identifier=")
-                && !sConnectionString.ToLower().Contains("localeidentifier=")
-                && !sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up. So OLAP PivotTable Extensions can't use it... but it does work for Excel
-            )
+            bool bIsExcel15Model = false;
+            if (cache.WorkbookConnection.Type == Excel.XlConnectionType.xlConnectionTypeOLEDB)
             {
-                sConnectionString += ";LocaleIdentifier=" + this.application.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI);
+                Excel.OLEDBConnection connOLEDB = cache.WorkbookConnection.OLEDBConnection;
+
+                //figure out current locale
+                if (connOLEDB.RetrieveInOfficeUILang
+                    && !sConnectionString.ToLower().Contains("language identifier=")
+                    && !sConnectionString.ToLower().Contains("localeidentifier=")
+                    && !sConnectionString.ToLower().Contains("locale identifier=") //note, Locale Identifier doesn't often show up. So OLAP PivotTable Extensions can't use it... but it does work for Excel
+                )
+                {
+                    sConnectionString += ";LocaleIdentifier=" + this.application.LanguageSettings.get_LanguageID(Microsoft.Office.Core.MsoAppLanguageID.msoLanguageIDUI);
+                }
+            }
+            else if ((int)cache.WorkbookConnection.Type == xlConnectionTypeMODEL)
+            {
+                bIsExcel15Model = true;
             }
 
             sConnectionString += ";Application Name=" + lblVersion.Text;
+
 
             //look for impersonation info so we can mimic what Excel does
             bool bImpersonate = false;
@@ -638,7 +690,14 @@ namespace OlapPivotTableExtensions
             //support PowerPivot in-process cube
             if (connParser["Data Source"] != null && connParser["Data Source"].ToLower() == "$embedded$" && connParser["Location"] == null)
             {
+                //DISCLAIMER: The ability to connect to PowerPivot from OLAP PivotTable Extensions is using unsupported APIs and as such the behaviour may change or stop working without notice in future releases. This functionality is provided on an "as-is" basis.
                 sConnectionString += ";Location=" + this.application.ActiveWorkbook.FullName;
+            }
+
+            //remove the Data Source Version connection string parameter as it will cause an error in AdomdClient... work item 23022
+            if (connParser.ContainsKey("Data Source Version"))
+            {
+                sConnectionString = sConnectionString.Replace("Data Source Version=" + connParser["Data Source Version"], string.Empty);
             }
 
             if (connCube == null)
@@ -655,7 +714,7 @@ namespace OlapPivotTableExtensions
                     {
                         try
                         {
-                            connCube = new AdomdConnection(sConnectionString);
+                            connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
                             connCube.Open();
                         }
                         catch (ArgumentException ex)
@@ -664,7 +723,7 @@ namespace OlapPivotTableExtensions
                             if (sConnectionString.ToLower().IndexOf("data source=http") >= 0 && sConnectionString.ToLower().IndexOf("integrated security=sspi;") >= 0)
                             {
                                 sConnectionString = sConnectionString.Remove(sConnectionString.ToLower().IndexOf("integrated security=sspi;"), "integrated security=sspi;".Length);
-                                connCube = new AdomdConnection(sConnectionString);
+                                connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
                                 connCube.Open();
                             }
                             else
@@ -678,27 +737,41 @@ namespace OlapPivotTableExtensions
                 {
                     try
                     {
-                        connCube = new AdomdConnection(sConnectionString);
+                        if (!bIsExcel15Model)
+                        {
+                            connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
+                        }
+                        else
+                        {
+                            connCube = new AdomdConnection(sConnectionString, AdomdType.Excel);
+                        }
                         connCube.Open();
                     }
                     catch (ArgumentException ex)
                     {
                         //may be that you can't use Integrated Security=SSPI with an HTTP or HTTPS connection... try to workaround that
-                        if (sConnectionString.ToLower().IndexOf("data source=http") >= 0 && sConnectionString.ToLower().IndexOf("integrated security=sspi;") >= 0)
+                        if (!bIsExcel15Model && sConnectionString.ToLower().IndexOf("data source=http") >= 0 && sConnectionString.ToLower().IndexOf("integrated security=sspi;") >= 0)
                         {
                             sConnectionString = sConnectionString.Remove(sConnectionString.ToLower().IndexOf("integrated security=sspi;"), "integrated security=sspi;".Length);
-                            connCube = new AdomdConnection(sConnectionString);
+                            connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
                             connCube.Open();
                         }
                         else
                         {
-                            MessageBox.Show(ex.Message + "\r\n" + sConnectionString);
+                            MessageBox.Show(AddOledbErrorToException(ex, false) + "\r\n" + sConnectionString);
                             throw;
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + "\r\n" + sConnectionString + "\r\n" + connCube.ClientVersion + "\r\n" + connCube.GetType().Assembly.Location + "\r\n" + ex.StackTrace);
+                        if (connCube != null && connCube.UnderlyingConnection != null)
+                        {
+                            MessageBox.Show(AddOledbErrorToException(ex, false) + "\r\n" + sConnectionString + "\r\n" + connCube.ClientVersion + "\r\n" + connCube.UnderlyingConnection.GetType().Assembly.Location + "\r\n" + ex.StackTrace);
+                        }
+                        else
+                        {
+                            MessageBox.Show(AddOledbErrorToException(ex, false) + "\r\n" + sConnectionString + "\r\n" + ex.StackTrace);
+                        }
                         throw;
                     }
                 }
@@ -1023,7 +1096,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Problem during search: " + ex.Message, "OLAP PivotTable Extensions");
+                MessageBox.Show("Problem during search: " + AddOledbErrorToException(ex, false), "OLAP PivotTable Extensions");
             }
         }
 
@@ -1191,7 +1264,7 @@ namespace OlapPivotTableExtensions
                                 catch (Exception exInner)
                                 {
                                     //if neither succeeded, then raise the error
-                                    throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + ex.Message + " and " + exInner.Message, ex);
+                                    throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + AddOledbErrorToException(ex, false) + " and " + exInner.Message, ex);
                                 }
                             }
                         }
@@ -1280,7 +1353,7 @@ namespace OlapPivotTableExtensions
                                     catch (Exception exInner)
                                     {
                                         //if neither succeeded, then raise the error
-                                        throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + ex.Message + " and " + exInner.Message, ex);
+                                        throw new Exception("Failed adding member property " + item.MemberProperty.UniqueName + " to screen. Errors were " + AddOledbErrorToException(ex, false) + " and " + exInner.Message, ex);
                                     }
                                 }
                             }
@@ -1294,9 +1367,9 @@ namespace OlapPivotTableExtensions
             catch (Exception ex)
             {
                 if (string.IsNullOrEmpty(sSearchFor))
-                    MessageBox.Show("Problem adding to PivotTable: " + ex.Message + "\r\n\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                    MessageBox.Show("Problem adding to PivotTable: " + AddOledbErrorToException(ex, true), "OLAP PivotTable Extensions");
                 else
-                    MessageBox.Show("Problem adding " + sSearchFor + " to PivotTable: " + ex.Message + "\r\n\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                    MessageBox.Show("Problem adding " + sSearchFor + " to PivotTable: " + AddOledbErrorToException(ex, true), "OLAP PivotTable Extensions");
             }
             finally
             {
@@ -1426,6 +1499,8 @@ namespace OlapPivotTableExtensions
                 return "2007";
             else if ((int)pvt.Version == xlPivotTableVersion14) //since we're using the Excel 2007 object model, the Excel 2010 version isn't visible
                 return "2010";
+            else if ((int)pvt.Version == xlPivotTableVersion15) //since we're using the Excel 2007 object model, the Excel 2013 version isn't visible
+                return "2013";
             else
                 return pvt.Version.ToString();
         }
@@ -1437,6 +1512,8 @@ namespace OlapPivotTableExtensions
                 return "2007";
             else if (iVersion == 14)
                 return "2010";
+            else if (iVersion == 15)
+                return "2013";
             else
                 return "Unknown";
         }
@@ -1812,7 +1889,7 @@ namespace OlapPivotTableExtensions
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show(AddOledbErrorToException(ex, true), "OLAP PivotTable Extensions");
             }
         }
 

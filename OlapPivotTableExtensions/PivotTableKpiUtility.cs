@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
-using Microsoft.AnalysisServices.AdomdClient;
+using OlapPivotTableExtensions.AdomdClientWrappers;
 
 namespace OlapPivotTableExtensions
 {
@@ -39,6 +39,18 @@ namespace OlapPivotTableExtensions
             _dictIconSetLookup.Add("Cylinder", new IconSetDefinition(Excel.XlIconSet.xl3Signs, false, new double[] { -0.5, 0.5 }));
             _dictIconSetLookup.Add("Smiley Face", new IconSetDefinition(Excel.XlIconSet.xl3Signs, false, new double[] { -0.5, 0.5 }));
             _dictIconSetLookup.Add("Traffic Light", new IconSetDefinition(Excel.XlIconSet.xl3TrafficLights2, false, new double[] { -0.5, 0.5 }));
+
+            //new in PowerPivot and Tabular
+            _dictIconSetLookup.Add("Traffic Light - Single", new IconSetDefinition(Excel.XlIconSet.xl3TrafficLights2, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Circles Colored", new IconSetDefinition(Excel.XlIconSet.xl3TrafficLights2, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Flags Colored", new IconSetDefinition(Excel.XlIconSet.xl3Flags, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Stars Colored", new IconSetDefinition(Excel.XlIconSet.xl3TrafficLights2, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Signs Colored", new IconSetDefinition(Excel.XlIconSet.xl3Signs, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Traffic Lights Rimmed Colored", new IconSetDefinition(Excel.XlIconSet.xl3TrafficLights1, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Symbols UnCircled Colored", new IconSetDefinition(Excel.XlIconSet.xl3Symbols, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Three Symbols Circled Colored", new IconSetDefinition(Excel.XlIconSet.xl3Symbols, false, new double[] { -0.5, 0.5 }));
+            _dictIconSetLookup.Add("Five Boxes Colored", new IconSetDefinition(Excel.XlIconSet.xl5Quarters, false, new double[] { -0.5, -0.01, 0.01, 0.5 })); //is probably supposed to be a newer icon set from a newer version of Excel, but this will do
+            _dictIconSetLookup.Add("Five Bars Colored", new IconSetDefinition(Excel.XlIconSet.xl5Quarters, false, new double[] { -0.5, -0.01, 0.01, 0.5 })); //is probably supposed to be a newer icon set from a newer version of Excel, but this will do
         }
 
         public static void AddKpiToPivotTable(Kpi k, Excel.PivotTable pvt)
