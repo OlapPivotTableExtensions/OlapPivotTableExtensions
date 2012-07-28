@@ -104,7 +104,11 @@
       <HintPath>..\..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Visual Studio Tools for Office\PIA\Office12\adodb.dll</HintPath>
     </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Excel.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Aliases>ExcelAdomdClientReference</Aliases>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <Private>False</Private>
     </Reference>
@@ -129,6 +133,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdomdClientWrappers\AdomdConnection.cs" />
+    <Compile Include="AdomdClientWrappers\AdomdCommand.cs" />
+    <Compile Include="AdomdClientWrappers\AdomdRestriction.cs" />
+    <Compile Include="AdomdClientWrappers\CellSet.cs" />
+    <Compile Include="AdomdClientWrappers\Axis.cs" />
+    <Compile Include="AdomdClientWrappers\AdomdParameter.cs" />
+    <Compile Include="AdomdClientWrappers\Position.cs" />
+    <Compile Include="AdomdClientWrappers\Property.cs" />
+    <Compile Include="AdomdClientWrappers\NamedSet.cs" />
+    <Compile Include="AdomdClientWrappers\Kpi.cs" />
+    <Compile Include="AdomdClientWrappers\Hierarchy.cs" />
+    <Compile Include="AdomdClientWrappers\Dimension.cs" />
+    <Compile Include="AdomdClientWrappers\Level.cs" />
+    <Compile Include="AdomdClientWrappers\Measure.cs" />
+    <Compile Include="AdomdClientWrappers\MemberProperty.cs" />
+    <Compile Include="AdomdClientWrappers\Member.cs" />
+    <Compile Include="AdomdClientWrappers\CubeDef.cs" />
+    <Compile Include="AdomdClientWrappers\ExcelAdoMdConnections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -160,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DLLs\Microsoft.AnalysisServices.AdomdClient.dll" />
+    <Content Include="DLLs\Microsoft.Excel.AdomdClient.dll" />
     <Content Include="OlapPivotTableExtensions.ico" />
     <None Include="Web References\com.msftlabs.formatmdx\formatter.disco" />
     <None Include="Web References\com.msftlabs.formatmdx\formatter.wsdl" />

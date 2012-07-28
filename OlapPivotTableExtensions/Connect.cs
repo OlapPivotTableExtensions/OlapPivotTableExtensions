@@ -49,12 +49,72 @@ namespace OlapPivotTableExtensions
                 m_xlAppEvents = new xlEvents();
                 m_xlAppEvents.DisableEventsIfEmbedded = true;
                 m_xlAppEvents.SetupConnection(Application);
-                
+
+                //the following code works around an issue that is surfaced by typical event handling
+                //http://olappivottableextend.codeplex.com/discussions/271174
+                //typical event handling: Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
+                m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
+                m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
+
+                ExcelVersion = (int)decimal.Parse(Application.Version, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                if (ExcelVersion >= 15)
+                {
+                    IsSingleDocumentInterface = true;
+                }
+
+                if (IsSingleDocumentInterface)
+                {
+                    m_xlAppEvents.xlWindowActivate += new xlEvents.DWindowActivate(m_xlAppEvents_xlWindowActivate);
+                }
+
                 CreateOlapPivotTableExtensionsMenu();
+
+                AppDomain currentDomain = AppDomain.CurrentDomain;
+                currentDomain.AssemblyResolve += new ResolveEventHandler(currentDomain_AssemblyResolve);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+        }
+
+        private void m_xlAppEvents_xlWindowActivate(Excel._Workbook oWB, Excel.Window oWn)
+        {
+            try
+            {
+                MainForm.SetCulture(Application);
+                CreateOlapPivotTableExtensionsMenu();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during WindowActivate:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
+        }
+
+        //the Microsoft.Excel.AdomdClient.dll used for Excel Data Models in Excel 15 isn't in any of the paths .NET looks for assemblies in... so we have to catch the AssemblyResolve event and manually load that assembly
+        private static AdomdClientWrappers.ExcelAdoMdConnections _helper = new AdomdClientWrappers.ExcelAdoMdConnections();
+        System.Reflection.Assembly currentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("AssemblyResolve: " + args.Name);
+                if (args.Name.Contains("Microsoft.Excel.AdomdClient"))
+                {
+                    return _helper.ExcelAdomdClientAssembly;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem during AssemblyResolve in OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                return null;
             }
         }
 
@@ -118,7 +178,6 @@ namespace OlapPivotTableExtensions
             {
                 MessageBox.Show("Problem during close of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
-
         }
 		
 		private Excel.Application Application;
@@ -128,6 +187,8 @@ namespace OlapPivotTableExtensions
         public static string OriginalLanguage = "";
         public static System.Globalization.CultureInfo OriginalCultureInfo;
 
+        private int ExcelVersion;
+        private bool IsSingleDocumentInterface;
 
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
@@ -259,19 +320,19 @@ namespace OlapPivotTableExtensions
                 cmdMenuItem.Tag = MENU_TAG;
                 cmdMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
 
-                foreach (object btn in ptcon.Controls)
-                {
-                    if (btn is Office.CommandBarButton)
-                    {
-                        Office.CommandBarButton mybtn = (Office.CommandBarButton)btn;
-                        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
-                    }
-                    else if (btn is Office.CommandBarPopup)
-                    {
-                        Office.CommandBarPopup mybtn = (Office.CommandBarPopup)btn;
-                        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
-                    }
-                }
+                //foreach (object btn in ptcon.Controls)
+                //{
+                //    if (btn is Office.CommandBarButton)
+                //    {
+                //        Office.CommandBarButton mybtn = (Office.CommandBarButton)btn;
+                //        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
+                //    }
+                //    else if (btn is Office.CommandBarPopup)
+                //    {
+                //        Office.CommandBarPopup mybtn = (Office.CommandBarPopup)btn;
+                //        System.Diagnostics.Debug.WriteLine(mybtn.Caption + " - " + mybtn.Id);
+                //    }
+                //}
 
                 object popupAdditionalActionsIndex = System.Reflection.Missing.Value;
                 try
@@ -286,12 +347,6 @@ namespace OlapPivotTableExtensions
                 cmdShowPropertyAsCaptionMenuItem = (Office.CommandBarPopup)ptcon.Controls.Add(Office.MsoControlType.msoControlPopup, System.Reflection.Missing.Value, System.Reflection.Missing.Value, popupAdditionalActionsIndex, true);
                 cmdShowPropertyAsCaptionMenuItem.Caption = "Show Property as Caption";
                 cmdShowPropertyAsCaptionMenuItem.Tag = MENU_TAG;
-
-                //the following code works around an issue that is surfaced by typical event handling
-                //http://olappivottableextend.codeplex.com/discussions/271174
-                //typical event handling: Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
-                m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
-                m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
             }
             catch (Exception ex)
             {
@@ -318,6 +373,13 @@ namespace OlapPivotTableExtensions
 
                 Excel.PivotTable pvt = Application.ActiveCell.PivotTable;
                 Microsoft.Office.Interop.Excel.PivotCache cache = pvt.PivotCache();
+
+                if (!IsOledbConnection(pvt))
+                {
+                    MessageBox.Show("Clear PivotTable Cache is not supported on this connection!", "OLAP PivotTable Extensions");
+                    return;
+                }
+
                 cache.WorkbookConnection.OLEDBConnection.MaintainConnection = true;
                 if (!cache.IsConnected)
                     cache.MakeConnection();
@@ -546,6 +608,21 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        public static bool IsOledbConnection(Excel.PivotTable pvt)
+        {
+            try
+            {
+                if (pvt == null)
+                    return false;
+                Excel.PivotCache cache = pvt.PivotCache();
+                return (cache.WorkbookConnection.Type == Excel.XlConnectionType.xlConnectionTypeOLEDB);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static string GetOlapPivotTableHierarchy(Excel.PivotCell cell)
         {
             try
@@ -575,14 +652,18 @@ namespace OlapPivotTableExtensions
             {
                 MainForm.SetCulture(Application);
 
+                if (IsSingleDocumentInterface) //if it's Excel 2013, then delete and readd the menu items or else they will not properly show up and work in any window but the first document opened
+                {
+                    CreateOlapPivotTableExtensionsMenu();
+                }
+
                 if (IsOlapPivotTable(Application.ActiveCell.PivotTable))
                 {
                     cmdMenuItem.Visible = true;
                     string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
                     cmdSearchMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                     cmdFilterListMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
-                    cmdClearPivotTableCacheMenuItem.Visible = true;
-
+                    cmdClearPivotTableCacheMenuItem.Visible = IsOledbConnection(Application.ActiveCell.PivotTable);
                     SetupShowPropertyAsCaption();
                 }
                 else
@@ -720,7 +801,9 @@ namespace OlapPivotTableExtensions
                     Target.ViewCalculatedMembers = true;
                 }
 
-                if (RefreshDataByDefault && !Target.PivotCache().RefreshOnFileOpen)
+                if (RefreshDataByDefault
+                    && !Target.PivotCache().RefreshOnFileOpen 
+                    && IsOledbConnection(Target)) //don't cause the Excel data model pivots to refresh since that will reconnect to SQL
                 {
                     Target.PivotCache().RefreshOnFileOpen = true;
                 }
@@ -791,27 +874,46 @@ namespace OlapPivotTableExtensions
         {
             try
             {
+                if (cmdSearchMenuItem != null) cmdSearchMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdSearchMenuItem_Click);
+                if (cmdClearPivotTableCacheMenuItem != null) cmdClearPivotTableCacheMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdClearPivotTableCacheMenuItem_Click);
+                if (cmdFilterListMenuItem != null) cmdFilterListMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
+                if (cmdMenuItem != null) cmdMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error on unhook events: " + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+
+            try
+            {
+                if (Application.CommandBars == null) return;
+
                 Office.CommandBar ptcon = Application.CommandBars[PIVOTTABLE_CONTEXT_MENU];
                 foreach (Office.CommandBarControl btn in ptcon.Controls)
                 {
+                    if (btn is Office.CommandBarPopup)
+                    {
+                        try
+                        {
+                            foreach (Office.CommandBarControl btn2 in ((Office.CommandBarPopup)btn).Controls)
+                            {
+                                if (btn2.Tag == MENU_TAG || btn.Tag == MENU_TAG)
+                                {
+                                    btn2.Delete(System.Reflection.Missing.Value);
+                                }
+                            }
+                        }
+                        catch { }
+                    }
                     if (btn.Tag == MENU_TAG)
                     {
                         btn.Delete(System.Reflection.Missing.Value);
                     }
-                    if (btn is Office.CommandBarPopup)
-                    {
-                        foreach (Office.CommandBarControl btn2 in ((Office.CommandBarPopup)btn).Controls)
-                        {
-                            if (btn2.Tag == MENU_TAG || btn.Tag == MENU_TAG)
-                            {
-                                btn2.Delete(System.Reflection.Missing.Value);
-                            }
-                        }
-                    }
                 }
             }
             catch { }
-        }        
+        }
+
 
 	}
 }
