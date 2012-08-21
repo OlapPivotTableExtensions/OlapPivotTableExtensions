@@ -56,10 +56,19 @@ namespace OlapPivotTableExtensions
                 m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
                 m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
 
-                ExcelVersion = (int)decimal.Parse(Application.Version, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                if (ExcelVersion >= 15)
+                try
                 {
-                    IsSingleDocumentInterface = true;
+                    MainForm.SetCulture(Application);
+
+                    ExcelVersion = (int)decimal.Parse(Application.Version, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    if (ExcelVersion >= 15)
+                    {
+                        IsSingleDocumentInterface = true;
+                    }
+                }
+                finally
+                {
+                    MainForm.ResetCulture(Application);
                 }
 
                 if (IsSingleDocumentInterface)
