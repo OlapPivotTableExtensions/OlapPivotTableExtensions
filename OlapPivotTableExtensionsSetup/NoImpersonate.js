@@ -183,7 +183,7 @@ try {
     while (record) {
         if (record.StringData(1) == "SecureCustomProperties") {
             WScript.StdOut.WriteLine("SecureCustomProperties was set to: " + record.StringData(2));
-            record.StringData(2) = record.StringData(2) + ";EXCEL2007;EXCEL2010X86;EXCEL2010X64;EXCEL2013X86;EXCEL2013X64;OFFICE2007PIA;OFFICE2010PIA;OFFICE2013PIA;TARGETDIR;VSDNETURLMSG;VSDNETMSG;USERNAME;COMPANYNAME;SOURCEDIR;ROOTDRIVE";
+            record.StringData(2) = record.StringData(2) + ";EXCEL2007;EXCEL2010X86;EXCEL2010X64;EXCEL2013X86;EXCEL2013X64;OFFICE2007PIA;OFFICE2010PIA;OFFICE2013PIA;OFFICE2010BITNESS;OFFICE2013BITNESS;OFFICE2013BITNESSX64;TARGETDIR;VSDNETURLMSG;VSDNETMSG;USERNAME;COMPANYNAME;SOURCEDIR;ROOTDRIVE";
             WScript.StdOut.WriteLine("SecureCustomProperties changed to: " + record.StringData(2));
             view.Modify(msiViewModifyUpdate, record);
         }
