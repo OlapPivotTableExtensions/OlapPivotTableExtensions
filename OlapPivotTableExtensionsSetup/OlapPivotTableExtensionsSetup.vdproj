@@ -653,14 +653,14 @@
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_3AFA69679F9F40B0952C98AA37629E8E"
             {
             "Name" = "8:Office 2013 PIA"
-            "Condition" = "8:(EXCEL2013X86=\"\" AND OFFICE2013BITNESS<>\"x64\") OR ((EXCEL2013X86<>\"\" OR OFFICE2013BITNESS=\"x64\") AND OFFICE2013PIA)"
+            "Condition" = "8:(EXCEL2013X86=\"\" AND OFFICE2013BITNESS<>\"x64\" AND OFFICE2013BITNESSX64<>\"x64\") OR ((EXCEL2013X86<>\"\" OR OFFICE2013BITNESS=\"x64\" OR OFFICE2013BITNESSX64=\"x64\" OR EXCEL2013X64<>\"\") AND OFFICE2013PIA)"
             "Message" = "8:You must first install the Office 2013 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
             "InstallUrl" = "8:http://olappivottableextend.codeplex.com/wikipage?title=Office%202013%20Primary%20Interop%20Assemblies"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_8A97ED54112F430A9202EB715D35EC2D"
             {
             "Name" = "8:64-bit Office"
-            "Condition" = "8:(NOT INSTALLER64) OR OFFICE2010BITNESS=\"x64\" OR OFFICE2013BITNESS=\"x64\""
+            "Condition" = "8:(NOT INSTALLER64) OR OFFICE2010BITNESS=\"x64\" OR OFFICE2013BITNESS=\"x64\" OR OFFICE2013BITNESSX64=\"x64\" OR EXCEL2010X64<>\"\" OR EXCEL2013X64<>\"\""
             "Message" = "8:This computer does not have Office 2010 64-bit or Office 2013 64-bit. Please use the OLAP PivotTable Extensions for 32-bit Excel installer."
             "InstallUrl" = "8:"
             }
@@ -674,7 +674,7 @@
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_C0AB1BE26C5243D2B564584292D26032"
             {
             "Name" = "8:Office 2010 PIA"
-            "Condition" = "8:(EXCEL2010X86=\"\" AND OFFICE2010BITNESS<>\"x64\") OR ((EXCEL2010X86<>\"\" OR OFFICE2010BITNESS=\"x64\") AND OFFICE2010PIA)"
+            "Condition" = "8:(EXCEL2010X86=\"\" AND OFFICE2010BITNESS<>\"x64\") OR ((EXCEL2010X86<>\"\" OR OFFICE2010BITNESS=\"x64\" OR EXCEL2010X64<>\"\") AND OFFICE2010PIA)"
             "Message" = "8:You must first install the Office 2010 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
             "InstallUrl" = "8:http://download.microsoft.com/download/C/1/D/C1D6DBBB-700D-4669-98CF-820AC3AE8E55/PIARedist.exe"
             }
@@ -739,6 +739,14 @@
             "Name" = "8:Office 2013 PIA"
             "ComponentId" = "8:{C8A65ABE-3270-4FD7-B854-50C8082C8F39}"
             "Property" = "8:OFFICE2013PIA"
+            }
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_621246182C92437F8DD934AB9F1DB64F"
+            {
+            "Name" = "8:64-bit Office 2013 in 64-bit Hive"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\Office\\15.0\\Outlook"
+            "Value" = "8:Bitness"
+            "Property" = "8:OFFICE2013BITNESSX64"
             }
             "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_A15E7994601E4A79AEFF8DBDB31E3B8C"
             {
@@ -1909,7 +1917,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17870CE30A894F80ACB4F97D72E9DF0A"
             {
-            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release\\ManagedAggregator.dll"
+            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release64\\ManagedAggregator.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1937,7 +1945,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release64\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1965,7 +1973,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_248E4B09250F46C482D2F93017CFE488"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Release\\OlapPivotTableExtensionsShim.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\x64\\Release64\\OlapPivotTableExtensionsShim.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
