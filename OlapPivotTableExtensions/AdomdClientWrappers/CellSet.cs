@@ -51,5 +51,34 @@ namespace OlapPivotTableExtensions.AdomdClientWrappers
             }
         }
 
+        public List<Cell> Cells
+        {
+            get
+            {
+                if (_obj != null)
+                {
+                    List<Cell> list = new List<Cell>();
+                    foreach (AsAdomdClient.Cell level in _obj.Cells)
+                    {
+                        list.Add(new Cell(level));
+                    }
+                    return list;
+                }
+                else
+                {
+                    ExcelAdoMdConnections.ReturnDelegate<List<Cell>> f = delegate
+                    {
+                        List<Cell> list = new List<Cell>();
+                        foreach (ExcelAdomdClient.Cell level in _objExcel.Cells)
+                        {
+                            list.Add(new Cell(level));
+                        }
+                        return list;
+                    };
+                    return f();
+                }
+            }
+        }
+
     }
 }

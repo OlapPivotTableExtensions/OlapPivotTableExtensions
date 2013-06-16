@@ -653,7 +653,7 @@
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_3AFA69679F9F40B0952C98AA37629E8E"
             {
             "Name" = "8:Office 2013 PIA"
-            "Condition" = "8:(EXCEL2013X86=\"\" AND OFFICE2013BITNESS<>\"x64\" AND OFFICE2013BITNESSX64<>\"x64\") OR ((EXCEL2013X86<>\"\" OR OFFICE2013BITNESS=\"x64\" OR OFFICE2013BITNESSX64=\"x64\" OR EXCEL2013X64<>\"\") AND OFFICE2013PIA)"
+            "Condition" = "8:(EXCEL2013X86=\"\" AND EXCEL2013X64=\"\") OR ((EXCEL2013X86<>\"\" OR EXCEL2013X64<>\"\") AND OFFICE2013PIA)"
             "Message" = "8:You must first install the Office 2013 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
             "InstallUrl" = "8:http://olappivottableextend.codeplex.com/wikipage?title=Office%202013%20Primary%20Interop%20Assemblies"
             }
@@ -674,7 +674,7 @@
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_C0AB1BE26C5243D2B564584292D26032"
             {
             "Name" = "8:Office 2010 PIA"
-            "Condition" = "8:(EXCEL2010X86=\"\" AND OFFICE2010BITNESS<>\"x64\") OR ((EXCEL2010X86<>\"\" OR OFFICE2010BITNESS=\"x64\" OR EXCEL2010X64<>\"\") AND OFFICE2010PIA)"
+            "Condition" = "8:(EXCEL2010X86=\"\" AND EXCEL2010X64=\"\") OR ((EXCEL2010X86<>\"\" OR EXCEL2010X64<>\"\") AND OFFICE2010PIA)"
             "Message" = "8:You must first install the Office 2010 Primary Interop Assemblies (also known as .NET Programmability Support). Click Yes below, install the Primary Interop Assemblies, then rerun OLAP PivotTable Extensions setup."
             "InstallUrl" = "8:http://download.microsoft.com/download/C/1/D/C1D6DBBB-700D-4669-98CF-820AC3AE8E55/PIARedist.exe"
             }
@@ -780,14 +780,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OLAP PivotTable Extensions"
-        "ProductCode" = "8:{5A824198-A4C3-4618-B4F6-63B629647F34}"
-        "PackageCode" = "8:{5CDA14E4-8971-4FF9-B583-21670743B992}"
+        "ProductCode" = "8:{03E5167D-0974-44BA-9AB6-8142969456F6}"
+        "PackageCode" = "8:{6AE30817-E444-4079-911C-1E961C725308}"
         "UpgradeCode" = "8:{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.8.0"
+        "ProductVersion" = "8:0.8.1"
         "Manufacturer" = "8:OLAP PivotTable Extensions"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://codeplex.com/OlapPivotTableExtend"
@@ -1917,7 +1917,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17870CE30A894F80ACB4F97D72E9DF0A"
             {
-            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Release64\\ManagedAggregator.dll"
+            "SourcePath" = "8:..\\ManagedAggregator\\obj\\Debug\\ManagedAggregator.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1945,7 +1945,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_21C6CD5D8DBB4883B1DEE9F329BA84F7"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Release64\\OlapPivotTableExtensions.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensions\\obj\\Debug\\OlapPivotTableExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -1973,7 +1973,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_248E4B09250F46C482D2F93017CFE488"
             {
-            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\x64\\Release64\\OlapPivotTableExtensionsShim.dll"
+            "SourcePath" = "8:..\\OlapPivotTableExtensionsShim\\Debug\\OlapPivotTableExtensionsShim.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"
@@ -2001,7 +2001,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9785DCBD01BF4F8285774D086AE1F928"
             {
-            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Release\\CustomInstallActions.dll"
+            "SourcePath" = "8:..\\CustomInstallActions\\obj\\Debug\\CustomInstallActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_729FBA7E3E804B6699F949968E6C65B0"

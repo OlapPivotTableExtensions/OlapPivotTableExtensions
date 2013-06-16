@@ -285,10 +285,10 @@
   </wsdl:binding>
   <wsdl:service name="Formatter">
     <wsdl:port name="FormatterSoap" binding="tns:FormatterSoap">
-      <soap:address location="http://formatmdx.msftlabs.com/formatter.asmx" />
+      <soap:address location="http://formatmdx.azurewebsites.net/formatter.asmx" />
     </wsdl:port>
     <wsdl:port name="FormatterSoap12" binding="tns:FormatterSoap12">
-      <soap12:address location="http://formatmdx.msftlabs.com/formatter.asmx" />
+      <soap12:address location="http://formatmdx.azurewebsites.net/formatter.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

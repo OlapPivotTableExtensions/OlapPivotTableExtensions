@@ -213,6 +213,7 @@ namespace OlapPivotTableExtensions
         private Office.CommandBarButton cmdFilterListMenuItem = null;
         private Office.CommandBarPopup cmdShowPropertyAsCaptionMenuItem = null;
         private Office.CommandBarButton cmdClearPivotTableCacheMenuItem = null;
+        private Office.CommandBarButton cmdErrorMenuItem = null;
 
         private MainForm frm;
 
@@ -356,6 +357,12 @@ namespace OlapPivotTableExtensions
                 cmdShowPropertyAsCaptionMenuItem = (Office.CommandBarPopup)ptcon.Controls.Add(Office.MsoControlType.msoControlPopup, System.Reflection.Missing.Value, System.Reflection.Missing.Value, popupAdditionalActionsIndex, true);
                 cmdShowPropertyAsCaptionMenuItem.Caption = "Show Property as Caption";
                 cmdShowPropertyAsCaptionMenuItem.Tag = MENU_TAG;
+
+                cmdErrorMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                cmdErrorMenuItem.Caption = "View Error...";
+                cmdErrorMenuItem.FaceId = 463;
+                cmdErrorMenuItem.Tag = MENU_TAG;
+                cmdErrorMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
             }
             catch (Exception ex)
             {
@@ -547,6 +554,56 @@ namespace OlapPivotTableExtensions
                     {
                         fieldFallbackMeasure = field;
                     }
+                    else if (field.Orientation == Excel.XlPivotFieldOrientation.xlColumnField || field.Orientation == Excel.XlPivotFieldOrientation.xlRowField)
+                    {
+                        try
+                        {
+                            field.CreatePivotFields();
+                        }
+                        catch { }
+
+                        //accumulate the visible items from all levels in case some items from multiple levels are checked
+                        foreach (Excel.PivotField pf in field.PivotFields)
+                        {
+                            if (pf.IsMemberProperty) continue;
+                            
+                        }
+                    }
+                }
+
+                System.Collections.Generic.Dictionary<Excel.PivotField, int> dictPivotFieldSortOrder = new System.Collections.Generic.Dictionary<Excel.PivotField, int>();
+                if (fieldMeasure != null)
+                {
+                    foreach (Excel.CubeField field in pvt.CubeFields)
+                    {
+                        if (field.Orientation == Excel.XlPivotFieldOrientation.xlColumnField || field.Orientation == Excel.XlPivotFieldOrientation.xlRowField)
+                        {
+                            try
+                            {
+                                field.CreatePivotFields();
+                            }
+                            catch { }
+
+                            try
+                            {
+                                //accumulate the visible items from all levels in case some items from multiple levels are checked
+                                foreach (Excel.PivotField pf in field.PivotFields)
+                                {
+                                    if (pf.IsMemberProperty) continue;
+                                    if (pf.AutoSortField == fieldMeasure.Name)
+                                    {
+                                        //we are sorting by the field I'm about to remove... need to save the sort settings and recreate the sort
+                                        if (pf.AutoSortPivotLine.LineType != Excel.XlPivotLineType.xlPivotLineGrandTotal)
+                                        {
+                                            MessageBox.Show("Field " + pf.Name + " is sorting by measure " + pf.AutoSortField + " but not by the grand total. It will be sorted by the grand total after clearing the PivotTable cache since the other sort data won't exist.");
+                                        }
+                                        dictPivotFieldSortOrder.Add(pf, pf.AutoSortOrder);
+                                    }
+                                }
+                            }
+                            catch { } //if it fails, oh well... we'll only lose sorting
+                        }
+                    }
                 }
 
                 if (string.IsNullOrEmpty(sCubeInConnectionString))
@@ -573,6 +630,12 @@ namespace OlapPivotTableExtensions
 
                         fieldMeasure = pvt.CubeFields[sMeasureName];
                         fieldMeasure.Orientation = Excel.XlPivotFieldOrientation.xlDataField;
+
+                        //restore the sort order as best we can
+                        foreach (Excel.PivotField pf in dictPivotFieldSortOrder.Keys)
+                        {
+                            pf.AutoSort(dictPivotFieldSortOrder[pf], fieldMeasure.Name);
+                        }
                     }
                     else
                     {
@@ -609,7 +672,8 @@ namespace OlapPivotTableExtensions
                 if (pvt == null)
                     return false;
                 Excel.PivotCache cache = pvt.PivotCache();
-                return cache.OLAP;
+                return cache.OLAP 
+                    && cache.WorkbookConnection != null; //catches the situation when the connection for a PivotTable has been deleted
             }
             catch
             {
@@ -674,6 +738,7 @@ namespace OlapPivotTableExtensions
                     cmdFilterListMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                     cmdClearPivotTableCacheMenuItem.Visible = IsOledbConnection(Application.ActiveCell.PivotTable);
                     SetupShowPropertyAsCaption();
+                    SetupShowErrorMenu(Target);
                 }
                 else
                 {
@@ -682,11 +747,37 @@ namespace OlapPivotTableExtensions
                     cmdFilterListMenuItem.Visible = false;
                     cmdShowPropertyAsCaptionMenuItem.Visible = false;
                     cmdClearPivotTableCacheMenuItem.Visible = false;
+                    cmdErrorMenuItem.Visible = false;
                 }
             }
             catch
             {
                 cmdMenuItem.Visible = true;
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
+        }
+
+        void SetupShowErrorMenu(Microsoft.Office.Interop.Excel.Range Target)
+        {
+            try
+            {
+                MainForm.SetCulture(Application);
+
+                if (Target.Cells.Count == 1 && Convert.ToString(Target.Cells.Text) == "#VALUE!" && Target.PivotCell.PivotCellType == Excel.XlPivotCellType.xlPivotCellValue)
+                {
+                    cmdErrorMenuItem.Visible = true;
+                }
+                else
+                {
+                    cmdErrorMenuItem.Visible = false;
+                }
+            }
+            catch
+            {
+                cmdErrorMenuItem.Visible = false;
             }
             finally
             {
@@ -861,6 +952,219 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        void cmdErrorMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            //MainForm.SetCulture(Application); //don't need to call this here since it will be called in the MainForm constructor... but FormClosing won't be called since we never open the form... so we'll have to call it in the finally manually
+
+            System.Text.StringBuilder sMdxQuery = new System.Text.StringBuilder();
+            try
+            {
+                if (Ctrl.Tag != cmdErrorMenuItem.Tag || Ctrl.Caption != cmdErrorMenuItem.Caption || Ctrl.FaceId != cmdErrorMenuItem.FaceId)
+                    return;
+
+                frm = new MainForm(Application);
+                bool bIsExcel2007OrHigherPivotTable = frm.IsExcel2007OrHigherPivotTableVersion();
+
+                System.Text.StringBuilder sWhere = new System.Text.StringBuilder();
+                System.Text.StringBuilder sSubselect = new System.Text.StringBuilder();
+
+                //Excel 2010 only... much the easiest way for single-select filters... but for multi-select filters we'd have to parse the MDX... so go with the approach below which works on earlier versions of Excel
+                //sMDX = (string)Application.ActiveCell.PivotCell.GetType().InvokeMember("MDX", System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance, null, Application.ActiveCell.PivotCell, null); //PivotCell.MDX is an Excel 2010 feature
+
+                //get slicer filters
+                System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> dictFilters = GetSlicerFilters(Application.ActiveCell.PivotTable);
+
+                //accumulate the row/column items. If you are drilled down through a hierarchy, both the top level and next level will appear as ColumnItems, so we want the most granular
+                System.Collections.Generic.Dictionary<string, string> dictAxisItems = new System.Collections.Generic.Dictionary<string, string>();
+                foreach (Excel.PivotItem pi in Application.ActiveCell.PivotCell.ColumnItems)
+                {
+                    if (dictAxisItems.ContainsKey(pi.Parent.CubeField.Name))
+                        dictAxisItems[pi.Parent.CubeField.Name] = pi.Value;
+                    else
+                        dictAxisItems.Add(pi.Parent.CubeField.Name, pi.Value);
+                }
+
+                foreach (Excel.PivotItem pi in Application.ActiveCell.PivotCell.RowItems)
+                {
+                    if (dictAxisItems.ContainsKey(pi.Parent.CubeField.Name))
+                        dictAxisItems[pi.Parent.CubeField.Name] = pi.Value;
+                    else
+                        dictAxisItems.Add(pi.Parent.CubeField.Name, pi.Value);
+                }
+
+                foreach (string sKey in dictAxisItems.Keys)
+                {
+                    string sValue = dictAxisItems[sKey];
+                    if (dictFilters.ContainsKey(sKey))
+                    {
+                        dictFilters.Remove(sKey);
+                    }
+                    if (sWhere.Length > 0) sWhere.Append(",");
+                    sWhere.Append(sValue).AppendLine();
+                }                
+                
+                //find all PivotTable filter fields
+                foreach (Excel.CubeField cf in Application.ActiveCell.PivotTable.CubeFields)
+                {
+                    if (cf.Orientation == Excel.XlPivotFieldOrientation.xlPageField)
+                    {
+                        try
+                        {
+                            cf.CreatePivotFields();
+                        }
+                        catch { }
+
+                        if (dictFilters.ContainsKey(cf.Name))
+                        {
+                            dictFilters.Remove(cf.Name);
+                        }
+
+                        System.Collections.Generic.List<string> listVisibleItems = new System.Collections.Generic.List<string>();
+                        if (!cf.EnableMultiplePageItems)
+                        {
+                            listVisibleItems.Add(cf.CurrentPageName);
+                        }
+                        else
+                        {
+                            //accumulate the visible items from all levels in case some items from multiple levels are checked
+                            foreach (Excel.PivotField pf in cf.PivotFields)
+                            {
+                                if (pf.IsMemberProperty) continue;
+                                System.Array arrVisibleItems;
+                                if (bIsExcel2007OrHigherPivotTable)
+                                    arrVisibleItems = (System.Array)pf.VisibleItemsList; //new to Excel 2007, so use CurrentPageList instead for older version PivotTables?
+                                else
+                                    arrVisibleItems = (System.Array)pf.CurrentPageList;
+
+                                foreach (string s in arrVisibleItems)
+                                {
+                                    if (string.IsNullOrEmpty(s)) continue;
+                                    listVisibleItems.Add(s);
+                                }
+                            }
+                        }
+
+                        dictFilters.Add(cf.Name, listVisibleItems);
+                    }
+                }
+
+                //add the filters to the where or subselect
+                foreach (System.Collections.Generic.List<string> listVisibleItems in dictFilters.Values)
+                {
+                    if (listVisibleItems.Count == 1)
+                    {
+                        foreach (string s in listVisibleItems)
+                        {
+                            if (sWhere.Length > 0) sWhere.Append(",");
+                            sWhere.Append(s).AppendLine();
+                        }
+                    }
+                    else
+                    {
+                        if (sSubselect.Length > 0) sSubselect.Append("*");
+                        sSubselect.Append(" {");
+                        for (int i = 0; i < listVisibleItems.Count; i++)
+                        {
+                            if (i > 0) sSubselect.Append(",");
+                            sSubselect.Append(listVisibleItems[i]);
+                        }
+                        sSubselect.Append("}").AppendLine();
+                    }
+                }
+
+
+                //get the current measure
+                if (sWhere.Length > 0) sWhere.Append(",");
+                sWhere.Append(Application.ActiveCell.PivotCell.DataField.Value).AppendLine();
+
+
+
+                frm.ConnectAdomdClientCube();
+                AdomdClientWrappers.AdomdCommand cmd = new AdomdClientWrappers.AdomdCommand();
+                cmd.Connection = frm.connCube;
+
+                sMdxQuery.Append("select (" + sWhere.ToString() + ") on 0 from ");
+                if (sSubselect.Length == 0)
+                {
+                    sMdxQuery.Append("[" + frm.cubeName + "] CELL PROPERTIES VALUE");
+                }
+                else
+                {
+                    sMdxQuery.Append("(select ").Append(sSubselect.ToString()).Append(" on 0 from [" + frm.cubeName + "]) CELL PROPERTIES VALUE");
+                }
+
+                frm.AddCalculatedMembersToMdxQuery(sMdxQuery);
+
+                cmd.CommandText = sMdxQuery.ToString();
+
+                AdomdClientWrappers.CellSet cellset = cmd.ExecuteCellSet();
+
+                try
+                {
+                    object val = cellset.Cells[0].Value;
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().Name == "AdomdErrorResponseException")
+                    {
+                        MessageBox.Show("The error message behind #VALUE! is:\r\n\r\n" + ex.Message, "OLAP PivotTable Extensions");
+                        return;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                throw new Exception("Unable to reproduce the #VALUE! error for this cell with MDX query:\r\n\r\n" + sMdxQuery.ToString());
+            }
+            catch (Exception ex)
+            {
+                if (sMdxQuery.Length > 0)
+                {
+                    MessageBox.Show("Problem determining the error message behind this cell. MDX query for this cell was:\r\n\r\n" + sMdxQuery.ToString() + "\r\n\r\nError was: \r\n\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                }
+                else
+                {
+                    MessageBox.Show("Unable to determine the error message behind this cell. Error was: \r\n\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (frm != null) frm.connCube.Close();
+                }
+                catch { }
+                MainForm.ResetCulture(Application);
+            }
+        }
+
+        System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> GetSlicerFilters(Excel.PivotTable pivot)
+        {
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> dict = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>();
+            if (ExcelVersion >= 14)
+            {
+                //do all of this with InvokeMember since we're still using the Excel 2007 object model
+                object oSlicers = pivot.GetType().InvokeMember("Slicers", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, pivot, null);
+                System.Collections.IEnumerable slicers = (System.Collections.IEnumerable)oSlicers;
+                foreach (object oSlicer in slicers)
+                {
+                    object oSlicerCache = oSlicer.GetType().InvokeMember("SlicerCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicer, null);
+                    string sSourceName = (string)oSlicerCache.GetType().InvokeMember("SourceName", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicerCache, null);
+                    if (dict.ContainsKey(sSourceName)) continue; //if a hierarchy, the same SlicerCache will be seen multiple times
+                    System.Array arrVisible = (System.Array)oSlicerCache.GetType().InvokeMember("VisibleSlicerItemsList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicerCache, null);
+                    System.Collections.Generic.List<string> list = new System.Collections.Generic.List<string>();
+                    foreach (string sItem in arrVisible)
+                    {
+                        list.Add(sItem);
+                    }
+                    dict.Add(sSourceName, list);
+                }
+            }
+            return dict;
+        }
+
         void cmdFilterListMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             try
@@ -887,6 +1191,7 @@ namespace OlapPivotTableExtensions
                 if (cmdClearPivotTableCacheMenuItem != null) cmdClearPivotTableCacheMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdClearPivotTableCacheMenuItem_Click);
                 if (cmdFilterListMenuItem != null) cmdFilterListMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
                 if (cmdMenuItem != null) cmdMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
+                if (cmdErrorMenuItem != null) cmdErrorMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
             }
             catch (Exception ex)
             {
