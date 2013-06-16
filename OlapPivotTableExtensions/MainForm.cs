@@ -19,8 +19,9 @@ namespace OlapPivotTableExtensions
         private Excel.PivotTable pvt;
         private Excel.Application application;
         private CalculationsLibrary library;
-        private AdomdConnection connCube;
+        internal AdomdConnection connCube;
         private CubeDef cube;
+        internal string cubeName;
         private CubeSearcher searcher;
         public bool AddInWorking = false;
         private BackgroundWorker workerFilterList;
@@ -304,28 +305,7 @@ namespace OlapPivotTableExtensions
             {
                 StringBuilder sMdxQuery = new StringBuilder(pvt.MDX);
 
-                //add (session) calculated members to the query so that you can run it from SSMS
-                if (pvt.CalculatedMembers.Count > 0)
-                {
-                    StringBuilder sCalcs = new StringBuilder();
-                    foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
-                    {
-                        if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedSet)
-                            sCalcs.Append("SET ");
-                        else
-                            sCalcs.Append("MEMBER ");
-                        sCalcs.AppendFormat("{0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
-                    }
-                    if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        sMdxQuery.Insert(5, sCalcs.ToString());
-                    }
-                    else
-                    {
-                        sCalcs.Insert(0, "WITH\r\n");
-                        sMdxQuery.Insert(0, sCalcs.ToString());
-                    }
-                }
+                AddCalculatedMembersToMdxQuery(sMdxQuery);
 
                 richTextBoxMDX.Text = sMdxQuery.ToString();
                 richTextBoxMDX.SelectionStart = 0;
@@ -338,12 +318,38 @@ namespace OlapPivotTableExtensions
                     InitiateFormatMDX(sMdxQuery.ToString());
                 }
 
-                tooltip.SetToolTip(chkFormatMDX, "Checking this box will send your MDX query over the internet to this web service:\r\nhttp://formatmdx.msftlabs.com/formatter.asmx");
+                tooltip.SetToolTip(chkFormatMDX, "Checking this box will send your MDX query over the internet to this web service:\r\nhttp://formatmdx.azurewebsites.net/formatter.asmx");
             }
             finally
             {
                 //if this isn't a supported language configuration, still try to help them be able to see the MDX by using a reset culture above, but a set culture here
                 if (!IsSupportedLanguageConfiguration) SetCulture(application);
+            }
+        }
+
+        internal void AddCalculatedMembersToMdxQuery(StringBuilder sMdxQuery)
+        {
+            //add (session) calculated members to the query so that you can run it from SSMS
+            if (pvt.CalculatedMembers.Count > 0)
+            {
+                StringBuilder sCalcs = new StringBuilder();
+                foreach (Excel.CalculatedMember calc in pvt.CalculatedMembers)
+                {
+                    if (calc.Type == Excel.XlCalculatedMemberType.xlCalculatedSet)
+                        sCalcs.Append("SET ");
+                    else
+                        sCalcs.Append("MEMBER ");
+                    sCalcs.AppendFormat("{0} as {1}\r\n", calc.Name, calc.Formula.Replace("\r\n", "\r").Replace("\r", "\r\n")); //normalize the line breaks which have been turned into \r to workaround an Excel Services bug
+                }
+                if (sMdxQuery.ToString().StartsWith("with", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    sMdxQuery.Insert(5, sCalcs.ToString());
+                }
+                else
+                {
+                    sCalcs.Insert(0, "WITH\r\n");
+                    sMdxQuery.Insert(0, sCalcs.ToString());
+                }
             }
         }
 
@@ -620,7 +626,7 @@ namespace OlapPivotTableExtensions
             ConnectAdomdClientCube();
         }
 
-        private void ConnectAdomdClientCube()
+        internal void ConnectAdomdClientCube()
         {
             Microsoft.Office.Interop.Excel.PivotCache cache = pvt.PivotCache();
             if (!cache.IsConnected)
@@ -776,7 +782,8 @@ namespace OlapPivotTableExtensions
                     }
                 }
 
-                cube = connCube.Cubes.Find(Convert.ToString(cache.CommandText));
+                cubeName = Convert.ToString(cache.CommandText);
+                cube = connCube.Cubes.Find(cubeName);
                 if (cube == null)
                 {
                     throw new Exception("Could not find cube [" + Convert.ToString(cache.CommandText) + "]");
@@ -1482,7 +1489,7 @@ namespace OlapPivotTableExtensions
             catch { }
         }
 
-        private bool IsExcel2007OrHigherPivotTableVersion()
+        internal bool IsExcel2007OrHigherPivotTableVersion()
         {
             return ((int)pvt.Version >= (int)Excel.XlPivotTableVersionList.xlPivotTableVersion12);
         }
