@@ -214,6 +214,7 @@ namespace OlapPivotTableExtensions
         private Office.CommandBarPopup cmdShowPropertyAsCaptionMenuItem = null;
         private Office.CommandBarButton cmdClearPivotTableCacheMenuItem = null;
         private Office.CommandBarButton cmdErrorMenuItem = null;
+        private Office.CommandBarButton cmdDisableAutoRefresh = null;
 
         private MainForm frm;
 
@@ -287,6 +288,7 @@ namespace OlapPivotTableExtensions
         {
             try
             {
+
                 DeleteOlapPivotTableExtensionsMenu();
 
                 Office.CommandBar ptcon = Application.CommandBars[PIVOTTABLE_CONTEXT_MENU];
@@ -323,6 +325,12 @@ namespace OlapPivotTableExtensions
                 cmdFilterListMenuItem.BeginGroup = true;
                 cmdFilterListMenuItem.Visible = false;
                 cmdFilterListMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
+
+                cmdDisableAutoRefresh = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                cmdDisableAutoRefresh.Caption = "Disable Auto Refresh";
+                cmdDisableAutoRefresh.FaceId = 1919;
+                cmdDisableAutoRefresh.Tag = MENU_TAG;
+                cmdDisableAutoRefresh.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdDisableAutoRefresh_Click);
 
                 cmdMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
                 cmdMenuItem.Caption = "OLAP PivotTable Extensions...";
@@ -363,6 +371,7 @@ namespace OlapPivotTableExtensions
                 cmdErrorMenuItem.FaceId = 463;
                 cmdErrorMenuItem.Tag = MENU_TAG;
                 cmdErrorMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
+                
             }
             catch (Exception ex)
             {
@@ -383,6 +392,8 @@ namespace OlapPivotTableExtensions
                 return;
             }
 
+            string sErrorLocation = "";
+
             try
             {
                 MainForm.SetCulture(Application);
@@ -396,6 +407,7 @@ namespace OlapPivotTableExtensions
                     return;
                 }
 
+                sErrorLocation = "Initial MakeConnection";
                 cache.WorkbookConnection.OLEDBConnection.MaintainConnection = true;
                 if (!cache.IsConnected)
                     cache.MakeConnection();
@@ -403,6 +415,7 @@ namespace OlapPivotTableExtensions
                 ADODB.Connection connADO = cache.ADOConnection as ADODB.Connection;
                 if (connADO == null) throw new Exception("Could not cast PivotCache.ADOConnection to ADODB.Connection.");
 
+                sErrorLocation = "Caching old connection string info";
                 string sConnectionFile = cache.WorkbookConnection.OLEDBConnection.SourceConnectionFile;
                 bool bUseConnectionFile = cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile;
                 string sConnectionString = connADO.ConnectionString;
@@ -411,6 +424,7 @@ namespace OlapPivotTableExtensions
                 if (cache.WorkbookConnection.OLEDBConnection.CommandType != Excel.XlCmdType.xlCmdCube)
                     throw new Exception("Connection command type is not Cube. This functionality is not supported in this scenario.");
 
+                sErrorLocation = "Determining number of PivotTables sharing connection";
                 int iPivotTablesSharingConnection = 0;
                 foreach (Excel.PivotCache otherCache in Application.ActiveWorkbook.PivotCaches())
                 {
@@ -521,6 +535,7 @@ namespace OlapPivotTableExtensions
                     }
                 }
 
+                sErrorLocation = "Capturing Cube property in connection string";
                 string sCubeInConnectionString = null;
                 try
                 {
@@ -537,6 +552,7 @@ namespace OlapPivotTableExtensions
                 }
 
                 //find the last measure in the PivotTable. This will be the field we remove then add back to cause the PivotTable to requery the cube without calling Refresh which recreates the connection
+                sErrorLocation = "Finding last measure in PivotTable";
                 int iMaxPos = -1;
                 Excel.CubeField fieldMeasure = null;
                 Excel.CubeField fieldFallbackMeasure = null;
@@ -574,6 +590,7 @@ namespace OlapPivotTableExtensions
                 System.Collections.Generic.Dictionary<Excel.PivotField, int> dictPivotFieldSortOrder = new System.Collections.Generic.Dictionary<Excel.PivotField, int>();
                 if (fieldMeasure != null)
                 {
+                    sErrorLocation = "Finding sort order for pivot fields";
                     foreach (Excel.CubeField field in pvt.CubeFields)
                     {
                         if (field.Orientation == Excel.XlPivotFieldOrientation.xlColumnField || field.Orientation == Excel.XlPivotFieldOrientation.xlRowField)
@@ -608,7 +625,9 @@ namespace OlapPivotTableExtensions
 
                 if (string.IsNullOrEmpty(sCubeInConnectionString))
                 {
+                    sErrorLocation = "Setting connection string";
                     cache.WorkbookConnection.OLEDBConnection.Connection = "OLEDB;" + sConnectionString + ";Cube=" + cache.WorkbookConnection.OLEDBConnection.CommandText;
+                    sErrorLocation = "Setting OLEDBConnection.AlwaysUseConnectionFile";
                     cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = false;
                     cache.MakeConnection();
 
@@ -618,6 +637,7 @@ namespace OlapPivotTableExtensions
 
                 try
                 {
+                    sErrorLocation = "Setting AllMembers = null";
                     object iRecords = null;
 
                     connADO.Execute("[Measures].AllMembers = null;", out iRecords, (int)ADODB.CommandTypeEnum.adCmdText);
@@ -646,23 +666,65 @@ namespace OlapPivotTableExtensions
                 }
                 finally
                 {
-                    if (string.IsNullOrEmpty(sCubeInConnectionString))
+                    try
                     {
-                        cache.WorkbookConnection.OLEDBConnection.Connection = "OLEDB;" + sConnectionString;
-                        cache.WorkbookConnection.OLEDBConnection.SourceConnectionFile = sConnectionFile;
-                        cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = bUseConnectionFile;
+                        if (string.IsNullOrEmpty(sCubeInConnectionString))
+                        {
+                            cache.WorkbookConnection.OLEDBConnection.Connection = "OLEDB;" + sConnectionString;
+                            cache.WorkbookConnection.OLEDBConnection.SourceConnectionFile = sConnectionFile;
+                            cache.WorkbookConnection.OLEDBConnection.AlwaysUseConnectionFile = bUseConnectionFile;
+                        }
                     }
+                    catch { }
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                string sDebugObjectInfo = "";
+                try
+                {
+                    sDebugObjectInfo += GetPropertiesFromObject(typeof(Excel.OLEDBConnection), Application.ActiveCell.PivotTable.PivotCache().WorkbookConnection.OLEDBConnection);
+                }
+                catch { }
+
+                try
+                {
+                    sDebugObjectInfo += GetPropertiesFromObject(typeof(Excel.PivotTable), Application.ActiveCell.PivotTable);
+                }
+                catch { }
+
+                try
+                {
+                    sDebugObjectInfo += GetPropertiesFromObject(typeof(Excel.PivotCache), Application.ActiveCell.PivotTable.PivotCache());
+                }
+                catch { }
+
+                MessageBox.Show("Problem during Clear PivotTable Cache:\r\n" + ex.Message + "\r\n" + ex.StackTrace + "\r\n\r\nAt task: " + sErrorLocation + "\r\n" + sDebugObjectInfo, "OLAP PivotTable Extensions");
             }
             finally
             {
                 MainForm.ResetCulture(Application);
             }
+        }
+
+        private static string GetPropertiesFromObject(Type t, object o)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine().AppendLine().Append(t.FullName).AppendLine(" properties:");
+            try
+            {
+                foreach (var prop in t.GetProperties())
+                {
+                    try
+                    {
+                        sb.AppendFormat("{0}={1}", prop.Name, prop.GetValue(o, null)).AppendLine();
+                    }
+                    catch { }
+                }
+            }
+            catch { }
+            return sb.ToString();
         }
 
         public static bool IsOlapPivotTable(Excel.PivotTable pvt)
@@ -739,6 +801,7 @@ namespace OlapPivotTableExtensions
                     cmdClearPivotTableCacheMenuItem.Visible = IsOledbConnection(Application.ActiveCell.PivotTable);
                     SetupShowPropertyAsCaption();
                     SetupShowErrorMenu(Target);
+                    SetupShowDisableAutoRefreshMenu();
                 }
                 else
                 {
@@ -748,6 +811,7 @@ namespace OlapPivotTableExtensions
                     cmdShowPropertyAsCaptionMenuItem.Visible = false;
                     cmdClearPivotTableCacheMenuItem.Visible = false;
                     cmdErrorMenuItem.Visible = false;
+                    cmdDisableAutoRefresh.Visible = false;
                 }
             }
             catch
@@ -778,6 +842,40 @@ namespace OlapPivotTableExtensions
             catch
             {
                 cmdErrorMenuItem.Visible = false;
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
+        }
+
+        void SetupShowDisableAutoRefreshMenu()
+        {
+            try
+            {
+                MainForm.SetCulture(Application);
+
+                Excel.PivotCache pc = Application.ActiveCell.PivotTable.PivotCache();
+                if (!PivotCacheIsDataModel(pc))
+                {
+                    cmdDisableAutoRefresh.Visible = false;
+                }
+                else if (pc.EnableRefresh)
+                {
+                    cmdDisableAutoRefresh.Caption = "Disable Auto Refresh";
+                    cmdDisableAutoRefresh.Visible = true;
+                    cmdDisableAutoRefresh.FaceId = 1919;
+                }
+                else
+                {
+                    cmdDisableAutoRefresh.Caption = "Enable Auto Refresh";
+                    cmdDisableAutoRefresh.Visible = true;
+                    cmdDisableAutoRefresh.FaceId = 1759;
+                }
+            }
+            catch
+            {
+                cmdDisableAutoRefresh.Visible = false;
             }
             finally
             {
@@ -1165,6 +1263,48 @@ namespace OlapPivotTableExtensions
             return dict;
         }
 
+        void cmdDisableAutoRefresh_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            MainForm.SetCulture(Application); //don't need to call this here since it will be called in the MainForm constructor... but FormClosing won't be called since we never open the form... so we'll have to call it in the finally manually
+
+            System.Text.StringBuilder sMdxQuery = new System.Text.StringBuilder();
+            try
+            {
+                if (Ctrl.Tag != cmdDisableAutoRefresh.Tag || Ctrl.Caption != cmdDisableAutoRefresh.Caption || Ctrl.FaceId != this.cmdDisableAutoRefresh.FaceId)
+                    return;
+
+                bool bEnableRefresh = Application.ActiveCell.PivotTable.PivotCache().EnableRefresh;
+                foreach (Excel.PivotCache pc in Application.ActiveWorkbook.PivotCaches())
+                {
+                    if (PivotCacheIsDataModel(pc))
+                    {
+                        if (bEnableRefresh)
+                        {
+                            pc.EnableRefresh = false;
+                        }
+                        else
+                        {
+                            pc.EnableRefresh = true;
+                            pc.Refresh();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem enabling or disabling auto refresh. Error was: \r\n\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+            }
+            finally
+            {
+                MainForm.ResetCulture(Application);
+            }
+        }
+
+        private bool PivotCacheIsDataModel(Excel.PivotCache pc)
+        {
+            return pc.WorkbookConnection != null && (int)pc.WorkbookConnection.Type == MainForm.xlConnectionTypeMODEL;
+        }
+
         void cmdFilterListMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             try
@@ -1192,6 +1332,7 @@ namespace OlapPivotTableExtensions
                 if (cmdFilterListMenuItem != null) cmdFilterListMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
                 if (cmdMenuItem != null) cmdMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
                 if (cmdErrorMenuItem != null) cmdErrorMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
+                if (cmdDisableAutoRefresh != null) cmdDisableAutoRefresh.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdDisableAutoRefresh_Click);
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ namespace OlapPivotTableExtensions
         private BackgroundWorker workerFilterList;
         private int xlPivotTableVersion14 = 4; //since we're using the Excel 2007 object model, we can't see the Excel 2010 version
         private int xlPivotTableVersion15 = 5; //since we're using the Excel 2007 object model, we can't see the Excel 2013 version
-        private int xlConnectionTypeMODEL = 7; //since we're using the Excel 2007 object model, we can't see the Excel 2013 connection types
+        internal static int xlConnectionTypeMODEL = 7; //since we're using the Excel 2007 object model, we can't see the Excel 2013 connection types
         private int xlCalculatedMeasure = 2; //since we're using the Excel 2007 object model, we can't see the new Excel 2013 calc measure type
 
         private int _LibraryComboDividerItemIndex = int.MaxValue;
