@@ -1263,17 +1263,41 @@ namespace OlapPivotTableExtensions
             return dict;
         }
 
+        private const string TEMP_MODEL_FLAT_FILE_CONNECTION_NAME = "OLAP PivotTable Extensions Temp Connection";
+
         void cmdDisableAutoRefresh_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             MainForm.SetCulture(Application); //don't need to call this here since it will be called in the MainForm constructor... but FormClosing won't be called since we never open the form... so we'll have to call it in the finally manually
 
-            System.Text.StringBuilder sMdxQuery = new System.Text.StringBuilder();
             try
             {
                 if (Ctrl.Tag != cmdDisableAutoRefresh.Tag || Ctrl.Caption != cmdDisableAutoRefresh.Caption || Ctrl.FaceId != this.cmdDisableAutoRefresh.FaceId)
                     return;
 
                 bool bEnableRefresh = Application.ActiveCell.PivotTable.PivotCache().EnableRefresh;
+                Excel.WorkbookConnection connTemp = null;
+                if (!bEnableRefresh)
+                {
+                    //if we are about to re-enable refresh, make a quick model change (adding a simple flat file connection which we will delete in a second... deleting it will cause the pivots to refresh)
+                    string sTempDir = System.IO.Path.GetTempPath();
+                    string sPath = sTempDir + @"\" + TEMP_MODEL_FLAT_FILE_CONNECTION_NAME + ".txt";
+                    System.IO.File.WriteAllText(sPath, "col1\r\n1"); //just some sample contents to load
+                    Excel.Connections conns = Application.ActiveWorkbook.Connections;
+                    foreach (Excel.WorkbookConnection conn in conns)
+                    {
+                        if (conn.Name == TEMP_MODEL_FLAT_FILE_CONNECTION_NAME)
+                        {
+                            connTemp = conn;
+                            break;
+                        }
+                    }
+                    if (connTemp == null)
+                    {
+                        //because we're using the Excel 2007 object model, use reflection to call this Excel 2013 method
+                        //conns.Add2 TEMP_MODEL_FLAT_FILE_CONNECTION_NAME,"","OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=C:\Users\ggalloway\AppData\Local\Temp\;Persist Security Info=false;Extended Properties=""Text;HDR=Yes;FMT=CSVDelimited"";", "OLAP PivotTable Extensions Temp Connection#txt", xlCmdTable, True, False
+                        connTemp = (Excel.WorkbookConnection)conns.GetType().InvokeMember("Add2", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, conns, new object[] { TEMP_MODEL_FLAT_FILE_CONNECTION_NAME, "This is a temporary connection used by OLAP PivotTable Extensions to trigger a quick refresh of the PivotTable field list. Feel free to delete.", "OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=" + sTempDir + ";Persist Security Info=false;Extended Properties=\"Text;HDR=Yes;FMT=CSVDelimited\";", "OLAP PivotTable Extensions Temp Connection#txt", Excel.XlCmdType.xlCmdTable, true, false });
+                    }
+                }
                 foreach (Excel.PivotCache pc in Application.ActiveWorkbook.PivotCaches())
                 {
                     if (PivotCacheIsDataModel(pc))
@@ -1285,9 +1309,12 @@ namespace OlapPivotTableExtensions
                         else
                         {
                             pc.EnableRefresh = true;
-                            pc.Refresh();
                         }
                     }
+                }
+                if (!bEnableRefresh)
+                {
+                    connTemp.Delete(); //delete the temporary flat file connection to trigger a refresh of the field list in the PivotTables without refreshing the SQL data sources
                 }
             }
             catch (Exception ex)
