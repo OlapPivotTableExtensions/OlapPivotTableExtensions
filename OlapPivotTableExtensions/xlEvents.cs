@@ -276,7 +276,7 @@ namespace OlapPivotTableExtensions
 			}
 		}
 
-		private void ComRelease(object o)
+		public void ComRelease(object o)
 		{
 			try
 			{
@@ -289,7 +289,7 @@ namespace OlapPivotTableExtensions
 			}
 		}
 
-		private bool IsEmbedded(ref Excel._Workbook oWB)
+		public bool IsEmbedded(ref Excel._Workbook oWB)
 		{
 			try
 			{
@@ -315,8 +315,8 @@ namespace OlapPivotTableExtensions
 				//event such as the NewWorkbook event
 				//where the Path would be expected to be
 				//an empty string
-				if(oWB.Path == "")
-					return true;
+                //if(oWB.Path == "")
+                //    return true;
 
 				//Lastly check the Container property
 				//of the workbook.  If the property is

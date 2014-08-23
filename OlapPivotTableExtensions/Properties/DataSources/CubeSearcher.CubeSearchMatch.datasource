@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="CubeSearcher+CubeSearchMatch" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>OlapPivotTableExtensions.CubeSearcher+CubeSearchMatch, OlapPivotTableExtensions, Version=0.6.0.0, Culture=neutral, PublicKeyToken=9805f7e30acd4f18</TypeInfo>
+   <TypeInfo>OlapPivotTableExtensions.CubeSearcher+CubeSearchMatch, OlapPivotTableExtensions, Version=0.8.4.0, Culture=neutral, PublicKeyToken=9805f7e30acd4f18</TypeInfo>
 </GenericObjectDataSource>

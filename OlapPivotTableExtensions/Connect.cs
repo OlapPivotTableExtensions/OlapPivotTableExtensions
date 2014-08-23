@@ -198,10 +198,12 @@ namespace OlapPivotTableExtensions
 
         private int ExcelVersion;
         private bool IsSingleDocumentInterface;
+        private bool IsEmbedded = false;
 
         private const string REGISTRY_BASE_PATH = "SOFTWARE\\OLAP PivotTable Extensions";
         private const string REGISTRY_PATH_SHOW_CALC_MEMBERS_BY_DEFAULT = "ShowCalcMembersByDefault";
         private const string REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT = "RefreshDataByDefault";
+        private const string REGISTRY_PATH_SEARCH_MEASURES_ONLY_DEFAULT = "SearchMeasuresOnlyByDefault";
         private const string REGISTRY_PATH_FORMAT_MDX = "FormatMDX";
         private global::System.Object missing = global::System.Type.Missing;
 
@@ -211,6 +213,7 @@ namespace OlapPivotTableExtensions
         private Office.CommandBarButton cmdMenuItem = null;
         private Office.CommandBarButton cmdSearchMenuItem = null;
         private Office.CommandBarButton cmdFilterListMenuItem = null;
+        private Office.CommandBarButton cmdChooseFieldsMenuItem = null;
         private Office.CommandBarPopup cmdShowPropertyAsCaptionMenuItem = null;
         private Office.CommandBarButton cmdClearPivotTableCacheMenuItem = null;
         private Office.CommandBarButton cmdErrorMenuItem = null;
@@ -284,12 +287,45 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        private static bool? _SearchMeasuresOnlyDefault = null;
+        public static bool SearchMeasuresOnlyDefault
+        {
+            get
+            {
+                if (_SearchMeasuresOnlyDefault == null)
+                {
+                    Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                    _SearchMeasuresOnlyDefault = ((int)regKey.GetValue(REGISTRY_PATH_SEARCH_MEASURES_ONLY_DEFAULT, 0) == 1) ? true : false;
+                    regKey.Close();
+                }
+                return (bool)_SearchMeasuresOnlyDefault;
+            }
+            set
+            {
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REGISTRY_BASE_PATH);
+                regKey.SetValue(REGISTRY_PATH_SEARCH_MEASURES_ONLY_DEFAULT, value, Microsoft.Win32.RegistryValueKind.DWord);
+                regKey.Close();
+                _SearchMeasuresOnlyDefault = value;
+            }
+        }
+
         private void CreateOlapPivotTableExtensionsMenu()
         {
             try
             {
 
                 DeleteOlapPivotTableExtensionsMenu();
+
+                //if this is an embedded Excel document in a Word or PowerPoint document, then detect this and don't create menus
+                try
+                {
+                    Excel._Workbook wb = (Excel._Workbook)Application.ActiveWorkbook;
+                    IsEmbedded = this.m_xlAppEvents.IsEmbedded(ref wb);
+                    this.m_xlAppEvents.ComRelease(wb);
+                }
+                catch { }
+
+                if (IsEmbedded) return;
 
                 Office.CommandBar ptcon = Application.CommandBars[PIVOTTABLE_CONTEXT_MENU];
 
@@ -325,6 +361,27 @@ namespace OlapPivotTableExtensions
                 cmdFilterListMenuItem.BeginGroup = true;
                 cmdFilterListMenuItem.Visible = false;
                 cmdFilterListMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdFilterListMenuItem_Click);
+
+
+                Office.CommandBarPopup popupShowHideFields = null;
+                try
+                {
+                    //find the Show/Hide Fields sub-menu under the PivotTable context menu by ID 31406
+                    popupShowHideFields = (Office.CommandBarPopup)Application.CommandBars.FindControl(Office.MsoControlType.msoControlPopup, 31406, missing, missing);
+                }
+                catch { }
+                if (popupShowHideFields != null)
+                    cmdChooseFieldsMenuItem = (Office.CommandBarButton)popupShowHideFields.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+                else
+                    cmdChooseFieldsMenuItem = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
+
+                cmdChooseFieldsMenuItem.Caption = "Choose Fields to Show...";
+                cmdChooseFieldsMenuItem.FaceId = 222;
+                cmdChooseFieldsMenuItem.Tag = MENU_TAG;
+                cmdChooseFieldsMenuItem.BeginGroup = true;
+                cmdChooseFieldsMenuItem.Visible = false;
+                cmdChooseFieldsMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdChooseFieldsMenuItem_Click);
+
 
                 cmdDisableAutoRefresh = (Office.CommandBarButton)ptcon.Controls.Add(Office.MsoControlType.msoControlButton, System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, true);
                 cmdDisableAutoRefresh.Caption = "Disable Auto Refresh";
@@ -371,12 +428,32 @@ namespace OlapPivotTableExtensions
                 cmdErrorMenuItem.FaceId = 463;
                 cmdErrorMenuItem.Tag = MENU_TAG;
                 cmdErrorMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
-                
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
+        }
+
+        void cmdChooseFieldsMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            try
+            {
+                if (Ctrl.Tag != cmdChooseFieldsMenuItem.Tag || Ctrl.Caption != cmdChooseFieldsMenuItem.Caption || Ctrl.FaceId != cmdChooseFieldsMenuItem.FaceId)
+                    return;
+
+                Excel.CubeField cf = Application.ActiveCell.PivotCell.PivotField.CubeField;
+
+                LevelChooserForm frm = new LevelChooserForm(cf, Application.ActiveCell.PivotTable);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problem showing Level Chooser:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                return;
+            }
+
         }
 
         void cmdClearPivotTableCacheMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
@@ -798,6 +875,7 @@ namespace OlapPivotTableExtensions
                     string sSelectedHierarchy = GetOlapPivotTableHierarchy(Application.ActiveCell.PivotCell);
                     cmdSearchMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                     cmdFilterListMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
+                    cmdChooseFieldsMenuItem.Visible = !string.IsNullOrEmpty(sSelectedHierarchy);
                     cmdClearPivotTableCacheMenuItem.Visible = IsOledbConnection(Application.ActiveCell.PivotTable);
                     SetupShowPropertyAsCaption();
                     SetupShowErrorMenu(Target);
@@ -808,6 +886,7 @@ namespace OlapPivotTableExtensions
                     cmdMenuItem.Visible = false;
                     cmdSearchMenuItem.Visible = false;
                     cmdFilterListMenuItem.Visible = false;
+                    cmdChooseFieldsMenuItem.Visible = false;
                     cmdShowPropertyAsCaptionMenuItem.Visible = false;
                     cmdClearPivotTableCacheMenuItem.Visible = false;
                     cmdErrorMenuItem.Visible = false;
@@ -933,9 +1012,9 @@ namespace OlapPivotTableExtensions
                     cmdShowPropertyAsCaptionMenuItem.Visible = false;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Problem setting up Show Property as Caption:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
+                //swallow this error since if you have Defer Layout Update checked and right click on a hierarchy, it will give an error... but there's no way to detect that Defer Layout Update (PivotTable.ManualUpdate) is checked?!???
             }
         }
 
@@ -1264,6 +1343,7 @@ namespace OlapPivotTableExtensions
         }
 
         private const string TEMP_MODEL_FLAT_FILE_CONNECTION_NAME = "OLAP PivotTable Extensions Temp Connection";
+        private Excel.XlCalculation _OriginalCalculationMode = Excel.XlCalculation.xlCalculationAutomatic;
 
         void cmdDisableAutoRefresh_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
@@ -1298,6 +1378,8 @@ namespace OlapPivotTableExtensions
                         connTemp = (Excel.WorkbookConnection)conns.GetType().InvokeMember("Add2", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, conns, new object[] { TEMP_MODEL_FLAT_FILE_CONNECTION_NAME, "This is a temporary connection used by OLAP PivotTable Extensions to trigger a quick refresh of the PivotTable field list. Feel free to delete.", "OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=" + sTempDir + ";Persist Security Info=false;Extended Properties=\"Text;HDR=Yes;FMT=CSVDelimited\";", "OLAP PivotTable Extensions Temp Connection#txt", Excel.XlCmdType.xlCmdTable, true, false });
                     }
                 }
+
+                //enable/disable PivotCaches
                 foreach (Excel.PivotCache pc in Application.ActiveWorkbook.PivotCaches())
                 {
                     if (PivotCacheIsDataModel(pc))
@@ -1312,6 +1394,28 @@ namespace OlapPivotTableExtensions
                         }
                     }
                 }
+
+                //enable/disable DAX query tables
+                foreach (Excel.WorkbookConnection conn in Application.ActiveWorkbook.Connections)
+                {
+                    if ((int)conn.Type == MainForm.xlConnectionTypeMODEL)
+                    {
+                        try
+                        {
+                            conn.OLEDBConnection.EnableRefresh = !bEnableRefresh; //this statement will fail for the ThisWorkbookDataModel connection but will succeed for DAX query tables... if we want to avoid this error in the future, we may have to check whether ModelConnection.CommandType = xlCmdCube (which means it's ThisWorkbookDataModel) or ModelConnection.CommandType = xlCmdDAX (or maybe xlCmdTable, too?) which means it's a DAX query table
+                        }
+                        catch { }
+                    }
+                }
+
+                //set the calculation mode to manual when disabling auto refresh so that CUBEVALUE formulas don't refresh
+                if (bEnableRefresh)
+                {
+                    //save the current calculation mode before setting it to manual
+                    _OriginalCalculationMode = Application.Calculation;
+                }
+                Application.Calculation = (!bEnableRefresh ? Excel.XlCalculation.xlCalculationAutomatic : Excel.XlCalculation.xlCalculationManual);
+
                 if (!bEnableRefresh)
                 {
                     connTemp.Delete(); //delete the temporary flat file connection to trigger a refresh of the field list in the PivotTables without refreshing the SQL data sources
@@ -1329,7 +1433,7 @@ namespace OlapPivotTableExtensions
 
         private bool PivotCacheIsDataModel(Excel.PivotCache pc)
         {
-            return pc.WorkbookConnection != null && (int)pc.WorkbookConnection.Type == MainForm.xlConnectionTypeMODEL;
+            return pc.OLAP && pc.WorkbookConnection != null && (int)pc.WorkbookConnection.Type == MainForm.xlConnectionTypeMODEL;
         }
 
         void cmdFilterListMenuItem_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
@@ -1360,6 +1464,7 @@ namespace OlapPivotTableExtensions
                 if (cmdMenuItem != null) cmdMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdMenuItem_Click);
                 if (cmdErrorMenuItem != null) cmdErrorMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
                 if (cmdDisableAutoRefresh != null) cmdDisableAutoRefresh.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdDisableAutoRefresh_Click);
+                if (cmdChooseFieldsMenuItem != null) cmdChooseFieldsMenuItem.Click -= new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdChooseFieldsMenuItem_Click);
             }
             catch (Exception ex)
             {
