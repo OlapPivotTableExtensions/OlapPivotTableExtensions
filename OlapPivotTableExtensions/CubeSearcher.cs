@@ -18,29 +18,216 @@ namespace OlapPivotTableExtensions
     {
         private CubeSearchScope _scope;
         private CubeDef _cube;
-        private string _searchString;
+        private string _searchStringOrStrings;
+        private int _searchTermCount;
         private bool _exactMatch;
         private bool _searchMemberProperties = false;
         private string _searchOnly;
+        private bool _searchOnlyIsLevel = false;
         private int _totalTaskCount;
         private int _completedTaskCount;
         private BackgroundWorker _thread;
         private Exception _error;
         private SortableList<CubeSearchMatch> _listMatches;
+        private System.Collections.Hashtable _hashMatchedUniqueNames = new System.Collections.Hashtable();
         private AdomdCommand cmd;
         private bool _Complete = false;
         private System.Windows.Forms.Control _checkInvokeRequired;
         private static Dictionary<string, string> _measureGroupCaptions;
+        private List<string> _listMatchedSearchTerms = new List<string>();
+        
+        private bool _impersonate;
+        private string _username;
+        private string _domain;
+        private string _password;
 
-        public CubeSearcher(CubeDef Cube, CubeSearchScope Scope, string SearchString, bool ExactMatch, bool SearchMemberProperties, string SearchOnly, System.Windows.Forms.Control ConsumingControl)
+        //private static int _processorCount = Environment.ProcessorCount;
+
+        private static CubeSearcher _searchOptimizationsCubeSearcher;
+        private static bool _caseInsensitive = true;
+        private static string _lcaseMDX = "LCase";
+        private static float _searchOnServerVsClientRatio = 0.8f;
+
+        /// <summary>
+        /// Call this static function as soon as you know what cube you're searching
+        /// It will asynchronously run a few test queries to check for case insensitivity and compare searching on the server vs. searching on the client (i.e. copying the members to the client and searching in .NET)
+        /// </summary>
+        /// <param name="Cube"></param>
+        public static void SetupSearchOptimizationsAsync(CubeDef Cube, bool bImpersonate, string sUsername, string sDomain, string sPassword)
+        {
+            _searchOptimizationsCubeSearcher = new CubeSearcher(Cube, bImpersonate, sUsername, sDomain, sPassword);
+
+            _searchOptimizationsCubeSearcher._thread = new BackgroundWorker();
+            _searchOptimizationsCubeSearcher._thread.WorkerSupportsCancellation = true;
+            _searchOptimizationsCubeSearcher._thread.DoWork += new DoWorkEventHandler(_searchOptimizationsCubeSearcher._thread_DoSearchOptimizationsWork);
+            _searchOptimizationsCubeSearcher._thread.RunWorkerAsync();
+        }
+
+        private CubeSearcher(CubeDef Cube, bool bImpersonate, string sUsername, string sDomain, string sPassword)
+        {
+            _cube = Cube;
+            _impersonate = bImpersonate;
+            _username = sUsername;
+            _domain = sDomain;
+            _password = sPassword;
+        }
+
+        private void _thread_DoSearchOptimizationsWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                cmd = new AdomdCommand();
+                cmd.Connection = _cube.ParentConnection;
+
+                string cubeName = _cube.Name;
+
+                //apparently the collation on the cube itself controls whether all string comparisons done in MDX queries against that cube are case sensitive or not... apparently it doesn't matter about the individual collation of dimensions or column bindings... at least that's what my research observed
+                cmd.CommandText = "with member [Measures].[IsCaseInsensitive] as \"X\"=\"x\" select [Measures].[IsCaseInsensitive] on 0 from [" + cubeName + "]";
+                CellSet cs = cmd.ExecuteCellSet();
+                _caseInsensitive = Convert.ToBoolean(cs.Cells[0].Value);
+
+                if (_caseInsensitive)
+                    _lcaseMDX = string.Empty;
+                else
+                    _lcaseMDX = "LCase";
+
+                _searchOnServerVsClientRatio = 0.8f; //default
+
+                if (_thread.CancellationPending) return;
+
+                //sort dimensions based on cardinality
+                List<Dimension> listDimensions = GetCardinalitySortedDimensions();
+
+                //find the first dimension that's over 20000 members which should give us a good idea of search performance
+                Dimension dimensionToTest = null;
+                Level levelToTest = null;
+                foreach (Dimension d in listDimensions)
+                {
+                    if (((uint)d.Properties["DIMENSION_CARDINALITY"].Value) > 20000)
+                    {
+                        dimensionToTest = d;
+                        break;
+                    }
+                }
+                if (dimensionToTest == null)
+                {
+                    //if there's not a large enough dimension then pick the largest
+                    dimensionToTest = listDimensions[listDimensions.Count - 1];
+                }
+                foreach (Hierarchy h in dimensionToTest.Hierarchies)
+                {
+                    if (((uint)h.Properties["HIERARCHY_CARDINALITY"].Value) > 20000)
+                    {
+                        levelToTest = h.Levels[h.Levels.Count - 1];
+                        break;
+                    }
+                }
+                if (levelToTest == null)
+                {
+                    levelToTest = dimensionToTest.Hierarchies[0].Levels[dimensionToTest.Hierarchies[0].Levels.Count - 1];
+                }
+
+                System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+                timer.Start();
+
+                string sSearchStringTest = "OlapPivotTableExtensionsSearchOptimizationTest";
+                cmd.CommandText = "select {} on 0, Filter(" + levelToTest.UniqueName + ".AllMembers, InStr(" + _lcaseMDX + "(" + levelToTest.ParentHierarchy.UniqueName + ".CurrentMember.Member_Caption), @SearchString) > 0) properties MEMBER_TYPE on 1 from [" + cubeName + "]";
+                cmd.Parameters.Clear();
+                cmd.Parameters.Add(new AdomdParameter("SearchString", sSearchStringTest));
+
+                if (_thread.CancellationPending) return;
+
+                cs = cmd.ExecuteCellSet();
+
+                if (_thread.CancellationPending) return;
+
+                timer.Stop();
+                long lngSearchOnServerTicks = timer.ElapsedTicks;
+                timer.Reset();
+
+
+                //test downloading all members to the client and doing the searching on the client
+                timer.Start();
+                cmd.CommandText = "with member [Measures].[OlapPivotTableExtensionsNull] as null select {[Measures].[OlapPivotTableExtensionsNull]} on 0, " + levelToTest.UniqueName + ".AllMembers dimension properties " + levelToTest.UniqueName + ".[MEMBER_UNIQUE_NAME], " + levelToTest.UniqueName + ".[MEMBER_CAPTION] on 1 from [" + _cube.Name + "]";
+                cmd.Parameters.Clear();
+                AdomdDataReader reader = cmd.ExecuteReader();
+                int iCnt = 0;
+                while (reader.Read())
+                {
+                    if (_thread.CancellationPending)
+                    {
+                        reader.Close();
+                        return;
+                    }
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string sValue = Convert.ToString(reader[i]);
+                        if (sValue != null && sValue.IndexOf(sSearchStringTest, 0, StringComparison.CurrentCultureIgnoreCase) > 0)
+                        {
+                            iCnt++;
+                        }
+                    }
+                }
+                reader.Close();
+
+                timer.Stop();
+                long lngSearchOnClientTicks = timer.ElapsedTicks;
+
+                _searchOnServerVsClientRatio = ((float)lngSearchOnServerTicks) / ((float)lngSearchOnClientTicks);
+
+            }
+            catch (Exception ex)
+            {
+                if (!_thread.CancellationPending)
+                {
+                    _error = ex;
+                }
+            }
+            finally
+            {
+                _Complete = true;
+            }
+        }
+
+
+
+
+
+
+        public CubeSearcher(CubeDef Cube, CubeSearchScope Scope, string SearchString, bool ExactMatch, bool SearchMemberProperties, string SearchOnly, System.Windows.Forms.Control ConsumingControl, bool bImpersonate, string sUsername, string sDomain, string sPassword)
         {
             _cube = Cube;
             _scope = Scope;
-            _searchString = SearchString;
+            _searchStringOrStrings = SearchString;
             _exactMatch = ExactMatch;
             _searchMemberProperties = SearchMemberProperties;
             _searchOnly = SearchOnly;
             _checkInvokeRequired = ConsumingControl;
+            _impersonate = bImpersonate;
+            _username = sUsername;
+            _domain = sDomain;
+            _password = sPassword;
+
+            if (_searchOnly != null)
+            {
+                _searchOnly = _searchOnly.Trim();
+                if (_searchOnly.Split(new string[] { "].[" }, StringSplitOptions.None).Length == 3)
+                {
+                    _searchOnlyIsLevel = true;
+                }
+            }
+        }
+
+        private List<Dimension> GetCardinalitySortedDimensions()
+        {
+            List<Dimension> listDimensions = new List<Dimension>(_cube.Dimensions.Count);
+            foreach (Dimension d in _cube.Dimensions)
+            {
+                if (d.UniqueName.ToLower().StartsWith("[measures]")) continue;
+                listDimensions.Add(d);
+            }
+            listDimensions.Sort(delegate(Dimension x, Dimension y) { return ((uint)x.Properties["DIMENSION_CARDINALITY"].Value).CompareTo((uint)y.Properties["DIMENSION_CARDINALITY"].Value); });
+            return listDimensions;
         }
 
         public SortableList<CubeSearchMatch> Matches
@@ -50,6 +237,21 @@ namespace OlapPivotTableExtensions
 
         public void SearchAsync()
         {
+            _thread = new BackgroundWorker();
+            _thread.WorkerSupportsCancellation = true;
+
+            try
+            {
+                _searchOptimizationsCubeSearcher.Cancel(); //just in case it's still running, cancel it
+                //TODO: test this further
+                while (!_searchOptimizationsCubeSearcher.Complete)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    if (_thread.CancellationPending) return;
+                }
+            }
+            catch { }
+
             _listMatches = new SortableList<CubeSearchMatch>();
 
             _error = null;
@@ -57,8 +259,6 @@ namespace OlapPivotTableExtensions
             _totalTaskCount = 1;
             _measureGroupCaptions = new Dictionary<string, string>();
 
-            _thread = new BackgroundWorker();
-            _thread.WorkerSupportsCancellation = true;
             _thread.DoWork += new DoWorkEventHandler(_thread_DoWork);
             _thread.RunWorkerAsync();
         }
@@ -68,8 +268,25 @@ namespace OlapPivotTableExtensions
             try
             {
                 _thread.CancelAsync();
+            }
+            catch { }
+
+            try
+            {
                 if (cmd != null)
-                    cmd.Cancel();
+                {
+                    if (_impersonate)
+                    {
+                        using (new Impersonator(_username, _domain, _password))
+                        {
+                            cmd.Cancel(); //cancel opens a new connection so must be done under impersonation
+                        }
+                    }
+                    else
+                    {
+                        cmd.Cancel();
+                    }
+                }
             }
             catch { }
         }
@@ -90,20 +307,38 @@ namespace OlapPivotTableExtensions
             get { return _Complete; }
         }
 
+        public string[] MatchedSearchTerms
+        {
+            get { return _listMatchedSearchTerms.ToArray(); }
+        }
+
+        public int SearchTermCount
+        {
+            get { return _searchTermCount; }
+        }
+
         private delegate void AddMatch_Delegate(CubeSearchMatch match);
         private void AddMatch(CubeSearchMatch match)
         {
             try
             {
+                bool bExistsInHashtable = _hashMatchedUniqueNames.ContainsKey(match.UniqueName);
+                if (bExistsInHashtable //searching hashtable for the unique name should quickly eliminate most new matches and short circuit
+                && _listMatches.Contains(match))
+                {
+                    return; //don't add duplicates which can happen with multiple search terms that find the same match
+                }
                 if (_checkInvokeRequired != null && _checkInvokeRequired.InvokeRequired)
                 {
                     //avoid the "cross-thread operation not valid" error message
                     //since a control is using this list as a BindingSource, we have to update the list this way
-                    _checkInvokeRequired.BeginInvoke(new AddMatch_Delegate(AddMatch), new object[] { match });
+                    _checkInvokeRequired.Invoke(new AddMatch_Delegate(AddMatch), new object[] { match });
                 }
                 else
                 {
                     _listMatches.Add(match);
+                    if (!bExistsInHashtable)
+                        _hashMatchedUniqueNames.Add(match.UniqueName, null);
                 }
             }
             catch (Exception ex)
@@ -127,6 +362,42 @@ namespace OlapPivotTableExtensions
             return null;
         }
 
+        private bool IsExactMatch(string str, string[] searchTerms)
+        {
+            bool bMatch = false;
+            foreach (string searchTerm in searchTerms)
+            {
+                if (string.Compare(str, searchTerm, true) == 0)
+                {
+                    AddSearchTermMatch(searchTerm);
+                    bMatch = true;
+                    //don't break as we want to see if other search terms also match this item so that we will report they match on the results screen
+                }
+            }
+            return bMatch;
+        }
+
+        private bool IsPartialMatch(string str, string[] searchTerms)
+        {
+            bool bMatch = false;
+            foreach (string searchTerm in searchTerms)
+            {
+                if (str.IndexOf(searchTerm, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    AddSearchTermMatch(searchTerm);
+                    bMatch = true;
+                    //don't break as we want to see if other search terms also match this item so that we will report they match on the results screen
+                }
+            }
+            return bMatch;
+        }
+
+        private void AddSearchTermMatch(string searchTerm)
+        {
+            if (!_listMatchedSearchTerms.Contains(searchTerm))
+                _listMatchedSearchTerms.Add(searchTerm);
+        }
+
         public event ProgressChangedEventHandler ProgressChanged;
 
         private void _thread_DoWork(object sender, DoWorkEventArgs e)
@@ -137,7 +408,19 @@ namespace OlapPivotTableExtensions
                 _totalTaskCount = 0;
 
                 if (_cube.ParentConnection.State != System.Data.ConnectionState.Open)
-                    _cube.ParentConnection.Open();
+                {
+                    if (_impersonate)
+                    {
+                        using (new Impersonator(_username, _domain, _password))
+                        {
+                            _cube.ParentConnection.Open();
+                        }
+                    }
+                    else
+                    {
+                        _cube.ParentConnection.Open();
+                    }
+                }
 
                 if (string.IsNullOrEmpty(_searchOnly))
                 {
@@ -148,6 +431,11 @@ namespace OlapPivotTableExtensions
                 {
                     _totalTaskCount = 1;
                 }
+
+                string _searchStrings = this._searchStringOrStrings;
+                _searchStrings = _searchStrings.Replace("\r\n", "\n").Replace('\r', '\n');
+                string[] _searchStringArray = _searchStrings.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                _searchTermCount = _searchStringArray.Length;
 
                 System.Data.DataTable tblProperties = new System.Data.DataTable();
                 if (_searchMemberProperties)
@@ -160,13 +448,15 @@ namespace OlapPivotTableExtensions
                     tblProperties = _cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_PROPERTIES", restrictions).Tables[0];
                 }
 
-                if (_scope == CubeSearchScope.FieldList)
+                List<string> listFoundMemberUniqueNames = new List<string>();
+
+                if (_scope == CubeSearchScope.FieldList || _scope == CubeSearchScope.MeasuresCaptionOnly)
                 {
                     ////////////////////////////////////////////////////////////////////
                     // SEARCH FIELD LIST
                     ////////////////////////////////////////////////////////////////////
 
-                    if (GetSSASServerVersion() >= 2005)
+                    if (GetSSASServerVersion() >= 2005 && _scope != CubeSearchScope.MeasuresCaptionOnly)
                     {
                         //build a list of measure groups and their captions so the "Folder" property of a match will be correctly translated
                         AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
@@ -184,26 +474,26 @@ namespace OlapPivotTableExtensions
                         if (_thread.CancellationPending) return;
                         if (_exactMatch)
                         {
-                            if (string.Compare(m.Caption, _searchString, true) == 0)
+                            if (IsExactMatch(m.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(m));
                             }
                         }
                         else
                         {
-                            if (m.Caption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            if (IsPartialMatch(m.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(m));
                             }
-                            else if (m.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (_scope != CubeSearchScope.MeasuresCaptionOnly && IsPartialMatch(m.Description, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(m));
                             }
-                            else if (m.DisplayFolder.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (_scope != CubeSearchScope.MeasuresCaptionOnly && IsPartialMatch(m.DisplayFolder, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(m));
                             }
-                            else
+                            else if (_scope != CubeSearchScope.MeasuresCaptionOnly)
                             {
                                 //search the measure group caption
                                 string sMeasureGroup = Convert.ToString(m.Properties["MEASUREGROUP_NAME"].Value);
@@ -211,7 +501,7 @@ namespace OlapPivotTableExtensions
                                 {
                                     string sMeasureGroupCaption = CubeSearcher.GetMeasureGroupCaption(m.ParentCube.ParentConnection.Database, m.ParentCube.Name, sMeasureGroup);
                                     sMeasureGroup = (sMeasureGroupCaption != null ? sMeasureGroupCaption : sMeasureGroup);
-                                    if (sMeasureGroup.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                    if (IsPartialMatch(sMeasureGroup, _searchStringArray))
                                     {
                                         AddMatch(new CubeSearchMatch(m));
                                     }
@@ -220,25 +510,30 @@ namespace OlapPivotTableExtensions
                         }
                     }
                     _completedTaskCount++;
-                    ProgressChanged.Invoke(this, new ProgressChangedEventArgs((int)(100 * _completedTaskCount / ((double)_totalTaskCount)), null));
+                    ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(100 * _completedTaskCount / ((double)_totalTaskCount)), 100), null));
+
+                    if (_scope == CubeSearchScope.MeasuresCaptionOnly)
+                    {
+                        return;
+                    }
 
                     foreach (Dimension d in _cube.Dimensions)
                     {
                         if (d.UniqueName.ToLower().StartsWith("[measures]")) continue; //work item 23021
                         if (_exactMatch)
                         {
-                            if (string.Compare(d.Caption, _searchString, true) == 0)
+                            if (IsExactMatch(d.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(d));
                             }
                         }
                         else
                         {
-                            if (d.Caption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            if (IsPartialMatch(d.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(d));
                             }
-                            else if (d.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (IsPartialMatch(d.Description, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(d));
                             }
@@ -248,22 +543,22 @@ namespace OlapPivotTableExtensions
                             if (_thread.CancellationPending) return;
                             if (_exactMatch)
                             {
-                                if (string.Compare(h.Caption, _searchString, true) == 0)
+                                if (IsExactMatch(h.Caption, _searchStringArray))
                                 {
                                     AddMatch(new CubeSearchMatch(h));
                                 }
                             }
                             else
                             {
-                                if (h.Caption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                if (IsPartialMatch(h.Caption, _searchStringArray))
                                 {
                                     AddMatch(new CubeSearchMatch(h));
                                 }
-                                else if (h.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                else if (IsPartialMatch(h.Description, _searchStringArray))
                                 {
                                     AddMatch(new CubeSearchMatch(h));
                                 }
-                                else if (h.DisplayFolder.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                else if (IsPartialMatch(h.DisplayFolder, _searchStringArray))
                                 {
                                     AddMatch(new CubeSearchMatch(h));
                                 }
@@ -274,18 +569,18 @@ namespace OlapPivotTableExtensions
                                 {
                                     if (_exactMatch)
                                     {
-                                        if (string.Compare(l.Caption, _searchString, true) == 0)
+                                        if (IsExactMatch(l.Caption, _searchStringArray))
                                         {
                                             AddMatch(new CubeSearchMatch(l));
                                         }
                                     }
                                     else
                                     {
-                                        if (l.Caption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                        if (IsPartialMatch(l.Caption, _searchStringArray))
                                         {
                                             AddMatch(new CubeSearchMatch(l));
                                         }
-                                        else if (l.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                        else if (IsPartialMatch(l.Description, _searchStringArray))
                                         {
                                             AddMatch(new CubeSearchMatch(l));
                                         }
@@ -306,18 +601,18 @@ namespace OlapPivotTableExtensions
                                         bool bIsMatch = false;
                                         if (_exactMatch)
                                         {
-                                            if (string.Compare(sPropertyCaption, _searchString, true) == 0)
+                                            if (IsExactMatch(sPropertyCaption, _searchStringArray))
                                             {
                                                 bIsMatch = true;
                                             }
                                         }
                                         else
                                         {
-                                            if (sPropertyCaption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                            if (IsPartialMatch(sPropertyCaption, _searchStringArray))
                                             {
                                                 bIsMatch = true;
                                             }
-                                            else if (sDescription.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                            else if (IsPartialMatch(sDescription, _searchStringArray))
                                             {
                                                 bIsMatch = true;
                                             }
@@ -335,7 +630,7 @@ namespace OlapPivotTableExtensions
                             }
 
                             _completedTaskCount++;
-                            ProgressChanged.Invoke(this, new ProgressChangedEventArgs((int)(100 * _completedTaskCount / ((double)_totalTaskCount)), null));
+                            ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(100 * _completedTaskCount / ((double)_totalTaskCount)), 100), null));
                         }
                     }
 
@@ -344,22 +639,22 @@ namespace OlapPivotTableExtensions
                     {
                         if (_exactMatch)
                         {
-                            if (string.Compare(k.Caption, _searchString, true) == 0)
+                            if (IsExactMatch(k.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(k));
                             }
                         }
                         else
                         {
-                            if (k.Caption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            if (IsPartialMatch(k.Caption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(k));
                             }
-                            else if (k.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (IsPartialMatch(k.Description, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(k));
                             }
-                            else if (k.DisplayFolder.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (IsPartialMatch(k.DisplayFolder, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(k));
                             }
@@ -379,22 +674,22 @@ namespace OlapPivotTableExtensions
 
                         if (_exactMatch)
                         {
-                            if (string.Compare(sSetCaption, _searchString, true) == 0)
+                            if (IsExactMatch(sSetCaption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(s));
                             }
                         }
                         else
                         {
-                            if (sSetCaption.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            if (IsPartialMatch(sSetCaption, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(s));
                             }
-                            else if (s.Description.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (IsPartialMatch(s.Description, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(s));
                             }
-                            else if (sDisplayFolder.IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            else if (IsPartialMatch(sDisplayFolder, _searchStringArray))
                             {
                                 AddMatch(new CubeSearchMatch(s));
                             }
@@ -409,62 +704,15 @@ namespace OlapPivotTableExtensions
                     cmd = new AdomdCommand();
                     cmd.Connection = _cube.ParentConnection;
 
-                    if (_thread.CancellationPending) return;
-
-                    //do quick full cube search for exact match in any dimension... this code uses the name hash index and is very fast (except for ROLAP dimensions)
-                    //even if not looking for an exact match, run this code every time because it is so much faster than Filter(AllMembers) function
-                    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-                    restrictions.Add(new AdomdRestriction("CATALOG_NAME", _cube.ParentConnection.Database));
-                    restrictions.Add(new AdomdRestriction("CUBE_NAME", _cube.Name));
-                    if (!string.IsNullOrEmpty(_searchOnly))
-                        restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", _searchOnly));
-                    restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", _searchString));
-                    System.Data.DataTable tblExactMatchMembers = _cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
-
-                    List<string> listFoundMemberUniqueNames = new List<string>();
-                    Dictionary<Hierarchy, List<Member>> dictFoundHierarchyMembers = new Dictionary<Hierarchy,List<Member>>();
-                    Dictionary<string, string> dictFoundHierarchyMembersString = new Dictionary<string,string>();
-                    foreach (System.Data.DataRow row in tblExactMatchMembers.Rows)
+                    bool bSearchOnServer = true;
+                    if (_searchOnServerVsClientRatio * _searchStringArray.Length > 1.2)
                     {
-                        string sHier = Convert.ToString(row["HIERARCHY_UNIQUE_NAME"]);
-                        if (sHier.ToLower().StartsWith("[measures]")) continue;
-                        string sMemb = Convert.ToString(row["MEMBER_UNIQUE_NAME"]);
-                        if (!dictFoundHierarchyMembersString.ContainsKey(sHier))
-                            dictFoundHierarchyMembersString.Add(sHier, sMemb);
-                        else if (dictFoundHierarchyMembersString[sHier].StartsWith("{"))
-                            dictFoundHierarchyMembersString[sHier].Insert(dictFoundHierarchyMembersString[sHier].Length - 1, sMemb);
-                        else
-                            dictFoundHierarchyMembersString[sHier] = "{" + dictFoundHierarchyMembersString[sHier] + "," + sMemb + "}";
+                        bSearchOnServer = false;
                     }
-
-                    CellSet cs = null;
-                    foreach (string sSet in dictFoundHierarchyMembersString.Values)
+                    else
                     {
-                        cmd.CommandText = "select {} on 0, " + sSet + " dimension properties Member_Type on 1 from [" + _cube.Name + "]";
-
-                        if (_thread.CancellationPending) return;
-
-                        cs = cmd.ExecuteCellSet();
-
-                        if (_thread.CancellationPending) return;
-                        
-                        foreach (Position p in cs.Axes[1].Positions)
-                        {
-                            foreach (Member m in p.Members)
-                            {
-                                if (dictFoundHierarchyMembers.ContainsKey(m.ParentLevel.ParentHierarchy))
-                                    dictFoundHierarchyMembers[m.ParentLevel.ParentHierarchy].Add(m);
-                                else
-                                    dictFoundHierarchyMembers.Add(m.ParentLevel.ParentHierarchy, new List<Member>(new Member[] { m }));
-                                listFoundMemberUniqueNames.Add(m.UniqueName);
-                                AddMatch(new CubeSearchMatch(m));
-                            }
-                        }
-                        ProgressChanged.Invoke(this, new ProgressChangedEventArgs(1, null));
+                        _totalTaskCount = _totalTaskCount * _searchTermCount;
                     }
-
-                    if (_thread.CancellationPending) return;
-                    ProgressChanged.Invoke(this, new ProgressChangedEventArgs(1, null));
 
                     Hierarchy hierSearchOnly = null;
 
@@ -474,12 +722,7 @@ namespace OlapPivotTableExtensions
                     List<Dimension> listDimensions = new List<Dimension>(_cube.Dimensions.Count);
                     if (string.IsNullOrEmpty(_searchOnly))
                     {
-                        foreach (Dimension d in _cube.Dimensions)
-                        {
-                            if (d.UniqueName.ToLower().StartsWith("[measures]")) continue; //work item 23021
-                            listDimensions.Add(d);
-                        }
-                        listDimensions.Sort(delegate(Dimension x, Dimension y) { return ((uint)x.Properties["DIMENSION_CARDINALITY"].Value).CompareTo((uint)y.Properties["DIMENSION_CARDINALITY"].Value); });
+                        listDimensions = GetCardinalitySortedDimensions();
                     }
                     else
                     {
@@ -487,7 +730,7 @@ namespace OlapPivotTableExtensions
                         {
                             foreach (Hierarchy h in d.Hierarchies)
                             {
-                                if (string.Compare(h.UniqueName, _searchOnly, true) == 0)
+                                if (string.Compare(h.UniqueName, _searchOnly, true) == 0 || (_searchOnlyIsLevel && _searchOnly.ToLower().StartsWith(h.UniqueName.ToLower())))
                                 {
                                     hierSearchOnly = h;
                                     listDimensions.Add(d);
@@ -497,55 +740,190 @@ namespace OlapPivotTableExtensions
                         }
                     }
 
-                    ProgressChanged.Invoke(this, new ProgressChangedEventArgs(2, null));
-
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.Add(new AdomdParameter("SearchString", _searchString.ToLower())); //prevent "SQL-injection"
-
-                    if (!_exactMatch || _searchMemberProperties)
+                    foreach (string _searchString in _searchStringArray)
                     {
-                        //search each hierarchy... start with the smallest dimensions
-                        foreach (Dimension d in listDimensions)
+                        if (_thread.CancellationPending) return;
+
+                        if (!bSearchOnServer && _searchStringArray.Length > 1 && (!_exactMatch || _searchMemberProperties)) continue; //because we're searching multiple search terms, each MDSCHEMA_MEMBERS call takes some time so may not be worth it if we're searching on the client anyway... don't want to double the total search time by doing this quick exact match search
+
+                        //do quick full cube search for exact match in any dimension... this code uses the name hash index and is very fast (except for ROLAP dimensions)
+                        //even if not looking for an exact match, run this code every time because it is so much faster than Filter(AllMembers) function
+                        AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                        restrictions.Add(new AdomdRestriction("CATALOG_NAME", _cube.ParentConnection.Database));
+                        restrictions.Add(new AdomdRestriction("CUBE_NAME", _cube.Name));
+                        if (!string.IsNullOrEmpty(_searchOnly))
                         {
-                            foreach (Hierarchy h in d.Hierarchies)
+                            if (_searchOnlyIsLevel)
                             {
-                                if (_thread.CancellationPending) return;
-                                if (hierSearchOnly != null && h != hierSearchOnly) continue;
+                                restrictions.Add(new AdomdRestriction("LEVEL_UNIQUE_NAME", _searchOnly));
+                            }
+                            else
+                            {
+                                restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", _searchOnly));
+                            }
+                        }
+                        restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", _searchString));
+                        System.Data.DataTable tblExactMatchMembers = _cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
 
-                                //TODO: future... test a named set with a bracket in the name... currently Excel 2007 doesn't support them because it doesn't escape the name right
-                                if (_searchMemberProperties)
+                        Dictionary<Hierarchy, List<Member>> dictFoundHierarchyMembers = new Dictionary<Hierarchy, List<Member>>();
+                        Dictionary<string, string> dictFoundHierarchyMembersString = new Dictionary<string, string>();
+                        foreach (System.Data.DataRow row in tblExactMatchMembers.Rows)
+                        {
+                            string sHier = Convert.ToString(row["HIERARCHY_UNIQUE_NAME"]);
+                            if (sHier.ToLower().StartsWith("[measures]")) continue;
+                            string sMemb = Convert.ToString(row["MEMBER_UNIQUE_NAME"]);
+                            if (!dictFoundHierarchyMembersString.ContainsKey(sHier))
+                                dictFoundHierarchyMembersString.Add(sHier, sMemb);
+                            else if (dictFoundHierarchyMembersString[sHier].StartsWith("{"))
+                                dictFoundHierarchyMembersString[sHier].Insert(dictFoundHierarchyMembersString[sHier].Length - 1, sMemb);
+                            else
+                                dictFoundHierarchyMembersString[sHier] = "{" + dictFoundHierarchyMembersString[sHier] + "," + sMemb + "}";
+                        }
+
+                        CellSet cs = null;
+                        foreach (string sSet in dictFoundHierarchyMembersString.Values)
+                        {
+                            cmd.CommandText = "select {} on 0, " + sSet + " dimension properties Member_Type on 1 from [" + _cube.Name + "]";
+
+                            if (_thread.CancellationPending) return;
+
+                            cs = cmd.ExecuteCellSet();
+
+                            if (_thread.CancellationPending) return;
+
+                            foreach (Position p in cs.Axes[1].Positions)
+                            {
+                                foreach (Member m in p.Members)
                                 {
-                                    foreach (Level l in h.Levels)
+                                    if (dictFoundHierarchyMembers.ContainsKey(m.ParentLevel.ParentHierarchy))
+                                        dictFoundHierarchyMembers[m.ParentLevel.ParentHierarchy].Add(m);
+                                    else
+                                        dictFoundHierarchyMembers.Add(m.ParentLevel.ParentHierarchy, new List<Member>(new Member[] { m }));
+                                    listFoundMemberUniqueNames.Add(m.UniqueName);
+                                    AddSearchTermMatch(_searchString);
+                                    AddMatch(new CubeSearchMatch(m));
+                                }
+                            }
+                            ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(100 * _completedTaskCount / ((double)_totalTaskCount)) + 1, 100), null));
+                        }
+
+                        if (_thread.CancellationPending) return;
+                        ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(100 * _completedTaskCount / ((double)_totalTaskCount)) + 1, 100), null));
+
+                        if (!bSearchOnServer) continue; //will search on client below
+
+                        ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(100 * _completedTaskCount / ((double)_totalTaskCount)) + 2, 100), null));
+
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add(new AdomdParameter("SearchString", _searchString.ToLower())); //prevent "SQL-injection"
+
+                        if (!_exactMatch || _searchMemberProperties)
+                        {
+                            //search each hierarchy... start with the smallest dimensions
+                            foreach (Dimension d in listDimensions)
+                            {
+                                foreach (Hierarchy h in d.Hierarchies)
+                                {
+                                    if (_thread.CancellationPending) return;
+                                    if (hierSearchOnly != null && h != hierSearchOnly) continue;
+
+                                    //TODO: future... test a named set with a bracket in the name... currently Excel 2007 doesn't support them because it doesn't escape the name right
+                                    if (_searchMemberProperties)
                                     {
-                                        string sLevelMembers = l.UniqueName + ".AllMembers";
-
-                                        List<string> listProperties = new List<string>();
-                                        string sFilterPropertiesMDX = string.Empty;
-                                        string sDimensionPropertiesClause = "Member_Type";
-                                        foreach (System.Data.DataRow row in tblProperties.Rows)
+                                        foreach (Level l in h.Levels)
                                         {
-                                            string sLevelUniqueName = Convert.ToString(row["LEVEL_UNIQUE_NAME"]);
-                                            if (sLevelUniqueName != l.UniqueName) continue;
+                                            if (_searchOnlyIsLevel && string.Compare(l.UniqueName, _searchOnly, true) != 0) continue;
 
-                                            string sPropertyName = Convert.ToString(row["PROPERTY_NAME"]);
-                                            if (sDimensionPropertiesClause.Length > 0) sDimensionPropertiesClause += ", ";
-                                            sDimensionPropertiesClause += sLevelUniqueName + ".[" + sPropertyName + "]";
-                                            if (!listProperties.Contains(sPropertyName))
+                                            string sLevelMembers = l.UniqueName + ".AllMembers";
+
+                                            List<string> listProperties = new List<string>();
+                                            string sFilterPropertiesMDX = string.Empty;
+                                            string sDimensionPropertiesClause = l.UniqueName + ".[Member_Type]";
+                                            foreach (System.Data.DataRow row in tblProperties.Rows)
                                             {
-                                                if (_exactMatch)
-                                                    sFilterPropertiesMDX += " or LCase(" + h.UniqueName + ".CurrentMember.Properties(\"" + sPropertyName + "\")) = @SearchString";
-                                                else
-                                                    sFilterPropertiesMDX += " or InStr(LCase(" + h.UniqueName + ".CurrentMember.Properties(\"" + sPropertyName + "\")), @SearchString) > 0";
-                                                listProperties.Add(sPropertyName);
+                                                string sLevelUniqueName = Convert.ToString(row["LEVEL_UNIQUE_NAME"]);
+                                                if (sLevelUniqueName != l.UniqueName) continue;
+
+                                                string sPropertyName = Convert.ToString(row["PROPERTY_NAME"]);
+                                                if (sDimensionPropertiesClause.Length > 0) sDimensionPropertiesClause += ", ";
+                                                sDimensionPropertiesClause += sLevelUniqueName + ".[" + sPropertyName + "]";
+                                                if (!listProperties.Contains(sPropertyName))
+                                                {
+                                                    if (_exactMatch)
+                                                        sFilterPropertiesMDX += " or " + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Properties(\"" + sPropertyName + "\")) = @SearchString";
+                                                    else
+                                                        sFilterPropertiesMDX += " or InStr(" + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Properties(\"" + sPropertyName + "\")), @SearchString) > 0";
+                                                    listProperties.Add(sPropertyName);
+                                                }
+                                            }
+                                            if (sDimensionPropertiesClause.Length > 0)
+                                                sDimensionPropertiesClause = "dimension properties " + sDimensionPropertiesClause;
+
+                                            if (_exactMatch)
+                                                cmd.CommandText = "select {} on 0, Filter(" + sLevelMembers + ", " + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Member_Caption) = @SearchString" + sFilterPropertiesMDX + ") " + sDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+                                            else
+                                                cmd.CommandText = "select {} on 0, Filter(" + sLevelMembers + ", InStr(" + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Member_Caption), @SearchString) > 0" + sFilterPropertiesMDX + ") " + sDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+
+                                            if (_thread.CancellationPending) return;
+
+                                            cs = cmd.ExecuteCellSet();
+
+                                            if (_thread.CancellationPending) return;
+
+                                            if (cs != null && cs.Axes.Count > 1)
+                                            {
+                                                foreach (Position p in cs.Axes[1].Positions)
+                                                {
+                                                    foreach (Member m in p.Members)
+                                                    {
+                                                        if (_thread.CancellationPending) return;
+                                                        AddSearchTermMatch(_searchString); //mark it as a match even if we've already found this member so that you'll get credit if multiple search terms find the same match
+                                                        if (!listFoundMemberUniqueNames.Contains(m.UniqueName))
+                                                        {
+                                                            //the quick full cube search above didn't find this member
+                                                            bool bFound = false;
+                                                            foreach (MemberProperty mp in m.MemberProperties)
+                                                            {
+                                                                if (mp.Name == "MEMBER_TYPE") continue;
+                                                                if (_exactMatch)
+                                                                {
+                                                                    if (string.Compare(Convert.ToString(mp.Value), _searchString, true) == 0)
+                                                                    {
+                                                                        AddMatch(new CubeSearchMatch(m, mp));
+                                                                        bFound = true;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Convert.ToString(mp.Value).IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                                                    {
+                                                                        AddMatch(new CubeSearchMatch(m, mp));
+                                                                        bFound = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (!bFound)
+                                                            {
+                                                                AddMatch(new CubeSearchMatch(m));
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
-                                        if (sDimensionPropertiesClause.Length > 0)
-                                            sDimensionPropertiesClause = "dimension properties " + sDimensionPropertiesClause;
+                                    }
+                                    else
+                                    {
+                                        string sHierarchyMembers = h.UniqueName + ".AllMembers";
+                                        if (_searchOnlyIsLevel)
+                                        {
+                                            sHierarchyMembers = _searchOnly + ".AllMembers";
+                                        }
 
                                         if (_exactMatch)
-                                            cmd.CommandText = "select {} on 0, Filter(" + sLevelMembers + ", LCase(" + h.UniqueName + ".CurrentMember.Member_Caption) = @SearchString" + sFilterPropertiesMDX + ") " + sDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+                                            cmd.CommandText = "select {} on 0, Filter(" + sHierarchyMembers + ", " + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Member_Caption) = @SearchString) dimension properties Member_Type on 1 from [" + _cube.Name + "]";
                                         else
-                                            cmd.CommandText = "select {} on 0, Filter(" + sLevelMembers + ", InStr(LCase(" + h.UniqueName + ".CurrentMember.Member_Caption), @SearchString) > 0" + sFilterPropertiesMDX + ") " + sDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+                                            cmd.CommandText = "select {} on 0, Filter(" + sHierarchyMembers + ", InStr(" + _lcaseMDX + "(" + h.UniqueName + ".CurrentMember.Member_Caption), @SearchString) > 0) dimension properties Member_Type on 1 from [" + _cube.Name + "]";
 
                                         if (_thread.CancellationPending) return;
 
@@ -559,73 +937,187 @@ namespace OlapPivotTableExtensions
                                             {
                                                 foreach (Member m in p.Members)
                                                 {
+                                                    if (_thread.CancellationPending) return;
+                                                    AddSearchTermMatch(_searchString);
                                                     if (!listFoundMemberUniqueNames.Contains(m.UniqueName))
                                                     {
                                                         //the quick full cube search above didn't find this member
-                                                        bool bFound = false;
-                                                        foreach (MemberProperty mp in m.MemberProperties)
-                                                        {
-                                                            if (mp.Name == "MEMBER_TYPE") continue;
-                                                            if (_exactMatch)
-                                                            {
-                                                                if (string.Compare(Convert.ToString(mp.Value), _searchString, true) == 0)
-                                                                {
-                                                                    AddMatch(new CubeSearchMatch(m, mp));
-                                                                    bFound = true;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (Convert.ToString(mp.Value).IndexOf(_searchString, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                                                                {
-                                                                    AddMatch(new CubeSearchMatch(m, mp));
-                                                                    bFound = true;
-                                                                }
-                                                            }
-                                                        }
-                                                        if (!bFound)
-                                                            AddMatch(new CubeSearchMatch(m));
+                                                        AddMatch(new CubeSearchMatch(m));
                                                     }
                                                 }
                                             }
                                         }
                                     }
+
+                                    _completedTaskCount++;
+                                    ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(97 * _completedTaskCount / ((double)_totalTaskCount)) + 2, 100), null));
                                 }
-                                else
+                            }
+                        }
+                    }
+
+
+                    //////////////////////////////
+                    //SEARCH FOR MEMBERS ON CLIENT
+                    //////////////////////////////
+                    if (!bSearchOnServer && (!_exactMatch || _searchMemberProperties))
+                    {
+
+                        //search each hierarchy... start with the smallest dimensions
+                        foreach (Dimension d in listDimensions)
+                        {
+                            foreach (Hierarchy h in d.Hierarchies)
+                            {
+                                if (_thread.CancellationPending) return;
+                                if (hierSearchOnly != null && h != hierSearchOnly) continue;
+
+                                uint iHierarchyMemberCount = ((uint)h.Properties["HIERARCHY_CARDINALITY"].Value);
+                                uint iHierarchyMemberCountComplete = 0;
+                                List<string> listFoundMembers = new List<string>();
+                                Dictionary<string, string> dictFoundMembersViaMemberProperty = new Dictionary<string, string>();
+                                string sAllDimensionPropertiesClause = string.Empty;
+                                foreach (Level l in h.Levels)
                                 {
-                                    string sHierarchyMembers = h.UniqueName + ".AllMembers";
+                                    if (_searchOnlyIsLevel && string.Compare(l.UniqueName, _searchOnly, true) != 0) continue;
+                                    if (l.LevelType == LevelTypeEnum.All) continue;
 
-                                    if (_exactMatch)
-                                        cmd.CommandText = "select {} on 0, Filter(" + sHierarchyMembers + ", LCase(" + h.UniqueName + ".CurrentMember.Member_Caption) = @SearchString) dimension properties Member_Type on 1 from [" + _cube.Name + "]";
-                                    else
-                                        cmd.CommandText = "select {} on 0, Filter(" + sHierarchyMembers + ", InStr(LCase(" + h.UniqueName + ".CurrentMember.Member_Caption), @SearchString) > 0) dimension properties Member_Type on 1 from [" + _cube.Name + "]";
+                                    string sLevelMembers = l.UniqueName + ".AllMembers";
 
-                                    if (_thread.CancellationPending) return;
-
-                                    cs = cmd.ExecuteCellSet();
-
-                                    if (_thread.CancellationPending) return;
-
-                                    if (cs != null && cs.Axes.Count > 1)
+                                    List<string> listProperties = new List<string>();
+                                    string sFilterPropertiesMDX = string.Empty;
+                                    string sDimensionPropertiesClause = l.UniqueName + ".[MEMBER_UNIQUE_NAME]";
+                                    sDimensionPropertiesClause += ", " + l.UniqueName + ".[MEMBER_CAPTION]";
+                                    foreach (System.Data.DataRow row in tblProperties.Rows)
                                     {
-                                        foreach (Position p in cs.Axes[1].Positions)
+                                        string sLevelUniqueName = Convert.ToString(row["LEVEL_UNIQUE_NAME"]);
+                                        if (sLevelUniqueName != l.UniqueName) continue;
+
+                                        string sPropertyName = Convert.ToString(row["PROPERTY_NAME"]);
+                                        if (sDimensionPropertiesClause.Length > 0) sDimensionPropertiesClause += ", ";
+                                        sDimensionPropertiesClause += sLevelUniqueName + ".[" + sPropertyName + "]";
+                                        if (!listProperties.Contains(sPropertyName))
                                         {
-                                            foreach (Member m in p.Members)
+                                            listProperties.Add(sPropertyName);
+                                        }
+                                    }
+                                    if (sDimensionPropertiesClause.Length > 0)
+                                    {
+                                        if (sAllDimensionPropertiesClause.Length > 0) sAllDimensionPropertiesClause += ", ";
+                                        sAllDimensionPropertiesClause += sDimensionPropertiesClause;
+
+                                        sDimensionPropertiesClause = "dimension properties " + sDimensionPropertiesClause;
+                                    }
+
+                                    cmd.CommandText = "with member [Measures].[OlapPivotTableExtensionsNull] as null select {[Measures].[OlapPivotTableExtensionsNull]} on 0, " + sLevelMembers + " " + sDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+
+                                    if (_thread.CancellationPending) return;
+
+                                    AdomdDataReader reader = cmd.ExecuteReader();
+
+                                    if (_thread.CancellationPending)
+                                    {
+                                        reader.Close();
+                                        return;
+                                    }
+
+                                    int iMemberCaptionColumn = 1;
+                                    int iUniqueNameColumn = 0;
+                                    List<int> listColumnIndexes = new List<int>();
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        if (string.Compare(reader.GetName(i), l.UniqueName + ".[MEMBER_UNIQUE_NAME]", true) == 0)
+                                        {
+                                            iUniqueNameColumn = i;
+                                        }
+                                        else if (reader.GetName(i).StartsWith(l.UniqueName))
+                                        {
+                                            listColumnIndexes.Add(i);
+                                        }
+                                        if (string.Compare(reader.GetName(i), l.UniqueName + ".[MEMBER_CAPTION]", true) == 0)
+                                        {
+                                            iMemberCaptionColumn = i;
+                                        }
+                                    }
+
+                                    while (reader.Read())
+                                    {
+                                        if (_thread.CancellationPending)
+                                        {
+                                            reader.Close();
+                                            return;
+                                        }
+
+                                        foreach (int i in listColumnIndexes)
+                                        {
+                                            if (_exactMatch)
                                             {
-                                                if (!listFoundMemberUniqueNames.Contains(m.UniqueName))
+                                                if (IsExactMatch(Convert.ToString(reader[i]), _searchStringArray))
                                                 {
-                                                    //the quick full cube search above didn't find this member
-                                                    AddMatch(new CubeSearchMatch(m));
+                                                    listFoundMembers.Add(Convert.ToString(reader[iUniqueNameColumn]));
+                                                    if (i != iMemberCaptionColumn)
+                                                    {
+                                                        string sProperty = reader.GetName(i).Substring(l.UniqueName.Length + 2).Replace("]", "");
+                                                        dictFoundMembersViaMemberProperty.Add(Convert.ToString(reader[iUniqueNameColumn]), sProperty);
+                                                    }
+                                                    break;
                                                 }
+                                            }
+                                            else
+                                            {
+                                                if (IsPartialMatch(Convert.ToString(reader[i]), _searchStringArray))
+                                                {
+                                                    listFoundMembers.Add(Convert.ToString(reader[iUniqueNameColumn]));
+                                                    if (i != iMemberCaptionColumn)
+                                                    {
+                                                        string sProperty = reader.GetName(i).Substring(l.UniqueName.Length + 2).Replace("]", "");
+                                                        dictFoundMembersViaMemberProperty.Add(Convert.ToString(reader[iUniqueNameColumn]), sProperty);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        iHierarchyMemberCountComplete++;
+                                        if (iHierarchyMemberCountComplete % 5000 == 0) //record progress every 5,000 members
+                                        {
+                                            ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(97 * (_completedTaskCount + Math.Min(1.0 * iHierarchyMemberCountComplete / iHierarchyMemberCount, 1)) / ((double)_totalTaskCount)) + 2, 100), null));
+                                        }
+                                    }
+                                    reader.Close();
+                                }
+
+                                if (listFoundMembers.Count > 0)
+                                {
+                                    cmd.CommandText = "select {} on 0, {" + string.Join(", ", listFoundMembers.ToArray()) + "} dimension properties Member_Type, " + sAllDimensionPropertiesClause + " on 1 from [" + _cube.Name + "]";
+
+                                    if (_thread.CancellationPending) return;
+
+                                    CellSet cs = cmd.ExecuteCellSet();
+
+                                    if (_thread.CancellationPending) return;
+
+                                    foreach (Position p in cs.Axes[1].Positions)
+                                    {
+                                        foreach (Member m in p.Members)
+                                        {
+                                            if (dictFoundMembersViaMemberProperty.ContainsKey(m.UniqueName))
+                                            {
+                                                MemberProperty mp = m.MemberProperties[dictFoundMembersViaMemberProperty[m.UniqueName]];
+                                                AddMatch(new CubeSearchMatch(m, mp));
+                                            }
+                                            else
+                                            {
+                                                AddMatch(new CubeSearchMatch(m));
                                             }
                                         }
                                     }
                                 }
 
                                 _completedTaskCount++;
-                                ProgressChanged.Invoke(this, new ProgressChangedEventArgs((int)(97 * _completedTaskCount / ((double)_totalTaskCount)) + 2, null));
+                                ProgressChanged.Invoke(this, new ProgressChangedEventArgs(Math.Min((int)(97 * _completedTaskCount / ((double)_totalTaskCount)) + 2, 100), null));
                             }
                         }
+
                     }
                 }
                 //TODO: future: don't search ROLAP dimensions?
@@ -644,7 +1136,9 @@ namespace OlapPivotTableExtensions
                 {
                     ProgressChanged.Invoke(this, new ProgressChangedEventArgs(100, null));
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
 
@@ -667,6 +1161,7 @@ namespace OlapPivotTableExtensions
         public enum CubeSearchScope
         {
             FieldList,
+            MeasuresCaptionOnly,
             DimensionData
         }
 
@@ -679,7 +1174,8 @@ namespace OlapPivotTableExtensions
             MDMEMBER_TYPE_UNKNOWN = 0
         }
 
-        public class CubeSearchMatch
+        public class CubeSearchMatch 
+            : IEquatable<CubeSearchMatch>
         {
             private object _InnerObject;
             private MemberProperty _MemberProperty;
@@ -733,6 +1229,7 @@ namespace OlapPivotTableExtensions
                 if (!string.IsNullOrEmpty(m.ParentLevel.ParentHierarchy.DisplayFolder) && m.ParentLevel.ParentHierarchy.DisplayFolder != "\\" && m.ParentLevel.ParentHierarchy.DisplayFolder != "/")
                     _Folder += "\\" + m.ParentLevel.ParentHierarchy.DisplayFolder;
                 _Folder += "\\" + m.ParentLevel.ParentHierarchy.Caption;
+                _Folder += "\\" + m.ParentLevel.Caption;
             }
 
             public CubeSearchMatch(Member m, MemberProperty mp)
@@ -849,6 +1346,34 @@ namespace OlapPivotTableExtensions
                 _Folder = d.Caption + " \\ " + sDisplayFolder;
                 _Description = s.Description;
             }
+
+            //allows for List.Contains to function properly
+            public bool Equals(CubeSearchMatch other)
+            {
+                if (other == null)
+                    return false;
+
+                if (this.Name == other.Name
+                    && this.Type == other.Type
+                    && this.Folder == other.Folder
+                    && this.Description == other.Description
+                    && this.UniqueName == this.UniqueName)
+                    return true;
+                else
+                    return false;
+            }
+
+            public override bool Equals(Object obj)
+            {
+                if (obj == null)
+                    return false;
+
+                CubeSearchMatch other = obj as CubeSearchMatch;
+                if (other == null)
+                    return false;
+                else
+                    return Equals(other);
+            }   
 
             public bool Checked
             {

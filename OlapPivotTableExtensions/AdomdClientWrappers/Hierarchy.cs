@@ -122,6 +122,35 @@ namespace OlapPivotTableExtensions.AdomdClientWrappers
             }
         }
 
+        public PropertyCollection Properties
+        {
+            get
+            {
+                if (_obj != null)
+                {
+                    PropertyCollection coll = new PropertyCollection();
+                    foreach (AsAdomdClient.Property prop in _obj.Properties)
+                    {
+                        coll.Add(prop.Name, new Property(prop.Name, prop.Value, prop.Type));
+                    }
+                    return coll;
+                }
+                else
+                {
+                    ExcelAdoMdConnections.ReturnDelegate<PropertyCollection> f = delegate
+                    {
+                        PropertyCollection coll = new PropertyCollection();
+                        foreach (ExcelAdomdClient.Property prop in _objExcel.Properties)
+                        {
+                            coll.Add(prop.Name, new Property(prop.Name, prop.Value, prop.Type));
+                        }
+                        return coll;
+                    };
+                    return f();
+                }
+            }
+        }
+
         public Dimension ParentDimension
         {
             get

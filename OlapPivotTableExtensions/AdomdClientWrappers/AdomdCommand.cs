@@ -147,6 +147,32 @@ namespace OlapPivotTableExtensions.AdomdClientWrappers
                 return f();
             }
         }
+
+        public AdomdDataReader ExecuteReader()
+        {
+            if (_obj != null)
+            {
+                _obj.Parameters.Clear();
+                foreach (AdomdParameter param in _parameters)
+                {
+                    _obj.Parameters.Add(new AsAdomdClient.AdomdParameter(param.Name, param.Value));
+                }
+                return new AdomdDataReader(_obj.ExecuteReader());
+            }
+            else
+            {
+                ExcelAdoMdConnections.ReturnDelegate<AdomdDataReader> f = delegate
+                {
+                    _objExcel.Parameters.Clear();
+                    foreach (AdomdParameter param in _parameters)
+                    {
+                        _objExcel.Parameters.Add(new ExcelAdomdClient.AdomdParameter(param.Name, param.Value));
+                    }
+                    return new AdomdDataReader(_objExcel.ExecuteReader());
+                };
+                return f();
+            }
+        }
     }
 
 }

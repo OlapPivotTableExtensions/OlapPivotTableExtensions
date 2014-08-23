@@ -34,6 +34,14 @@ namespace OlapPivotTableExtensions
 
         private BackgroundWorker workerFormatMDX;
 
+        private DataGridViewCheckBoxColumnHeaderCell colHeaderSearchCheckAll;
+        private bool _SearchLookInShowAllHierarchies = false;
+        private bool SearchWasCancelled = false;
+
+        private bool bImpersonate = false;
+        private string sUsername = null;
+        private string sDomain = null;
+        private string sPassword = null;
 
         public MainForm(Excel.Application app)
         {
@@ -614,16 +622,42 @@ namespace OlapPivotTableExtensions
         {
             if (cmbLookIn.SelectedItem == null)
             {
-                cmbLookIn.SelectedIndex = 0;
+                if (Connect.SearchMeasuresOnlyDefault)
+                {
+                    cmbLookIn.SelectedIndex = 1;
+                }
+                else
+                {
+                    cmbLookIn.SelectedIndex = 0;
+                }
                 cmbLookIn_SelectedIndexChanged(null, null);
             }
 
-            txtSearch.Focus();
-            txtSearch.SelectAll();
+            if (_IsSingleSearch)
+            {
+                txtSearch.Focus();
+                txtSearch.SelectAll();
+            }
+            else
+            {
+                richTextBoxSearch.Focus();
+                richTextBoxSearch.SelectAll();
+            }
+
+            //setup the check all header
+            if (colHeaderSearchCheckAll == null)
+            {
+                colHeaderSearchCheckAll = new DataGridViewCheckBoxColumnHeaderCell();
+                colHeaderSearchCheckAll.Value = string.Empty;
+                colCheck.HeaderCell = colHeaderSearchCheckAll;
+                colCheck.HeaderCell.ToolTipText = "Check the box to add this search result to your PivotTable.";
+            }
 
             Application.DoEvents();
 
             ConnectAdomdClientCube();
+
+            CubeSearcher.SetupSearchOptimizationsAsync(cube, bImpersonate, sUsername, sDomain, sPassword);
         }
 
         internal void ConnectAdomdClientCube()
@@ -661,10 +695,10 @@ namespace OlapPivotTableExtensions
 
 
             //look for impersonation info so we can mimic what Excel does
-            bool bImpersonate = false;
-            string sUsername = null;
-            string sDomain = null;
-            string sPassword = null;
+            bImpersonate = false;
+            sUsername = null;
+            sDomain = null;
+            sPassword = null;
             ConnectionStringParser connParser = new ConnectionStringParser(sConnectionString);
             if ((connParser.ContainsKey("User Id") || connParser.ContainsKey("Uid")) && connParser.ContainsKey("Password"))
             {
@@ -789,21 +823,7 @@ namespace OlapPivotTableExtensions
                     throw new Exception("Could not find cube [" + Convert.ToString(cache.CommandText) + "]");
                 }
 
-                //fill in the "Look in" dropdown with the dimension hierarchies in the PivotTable
-                cmbLookIn.SuspendLayout();
-                while (cmbLookIn.Items.Count > 2)
-                    cmbLookIn.Items.RemoveAt(2);
-                foreach (Excel.CubeField f in pvt.CubeFields)
-                {
-                    if (f.CubeFieldType == Excel.XlCubeFieldType.xlHierarchy) //not named sets since you can't filter them, and not measures since they are returned in the field list search
-                    {
-                        if (f.Orientation != Excel.XlPivotFieldOrientation.xlHidden)
-                        {
-                            cmbLookIn.Items.Add(f.Name);
-                        }
-                    }
-                }
-                cmbLookIn.ResumeLayout();
+                FillSearchLookInDropdown();
             }
             else
             {
@@ -842,6 +862,93 @@ namespace OlapPivotTableExtensions
                 }
             }
 
+        }
+
+        private const string LOOK_IN_SHOW_ALL_HIERARCHIES = "+ Show All Hierarchies";
+        private void FillSearchLookInDropdown()
+        {
+            //fill in the "Look in" dropdown with the dimension hierarchies in the PivotTable
+            cmbLookIn.SuspendLayout();
+            while (cmbLookIn.Items.Count > 3)
+                cmbLookIn.Items.RemoveAt(3);
+
+            if (!_SearchLookInShowAllHierarchies)
+            {
+                List<Excel.CubeField> listHierarchies = new List<Excel.CubeField>();
+                foreach (Excel.CubeField f in pvt.CubeFields)
+                {
+                    if (f.CubeFieldType == Excel.XlCubeFieldType.xlHierarchy) //not named sets since you can't filter them, and not measures since they are returned in the field list search
+                    {
+                        if (f.Orientation != Excel.XlPivotFieldOrientation.xlHidden)
+                        {
+                            listHierarchies.Add(f);
+                        }
+                    }
+                }
+
+                listHierarchies.Sort(delegate(Excel.CubeField x, Excel.CubeField y) { return x.Name.CompareTo(y.Name); });
+
+                foreach (Excel.CubeField f in listHierarchies)
+                {
+                    cmbLookIn.Items.Add(f.Name);
+                    Excel.PivotFields pfs = null;
+                    try
+                    {
+                        pfs = f.PivotFields;
+                    }
+                    catch
+                    {
+                        f.CreatePivotFields(); //this connects to SSAS, so avoid it if not necessary
+                        pfs = f.PivotFields;
+                    }
+                    List<string> listLevels = new List<string>();
+                    foreach (Excel.PivotField pf in pfs)
+                    {
+                        if (!pf.IsMemberProperty)
+                        {
+                            listLevels.Add("  " + pf.Name);
+                        }
+                    }
+                    if (listLevels.Count > 1)
+                    {
+                        cmbLookIn.Items.AddRange(listLevels.ToArray());
+                    }
+
+                }
+
+                cmbLookIn.Items.Add(LOOK_IN_SHOW_ALL_HIERARCHIES);
+            }
+            else
+            {
+                //we're showing all fields, so we have to use ADOMD.NET to get the list of hierarchies because looping through CubeFields will show fields that are hidden: http://support.microsoft.com/kb/931386
+                List<Hierarchy> listHierarchies = new List<Hierarchy>();
+                foreach (Dimension d in cube.Dimensions)
+                {
+                    foreach (Hierarchy h in d.Hierarchies)
+                    {
+                        if (h.UniqueName == "[Measures]") continue;
+                        listHierarchies.Add(h);
+                    }
+                }
+                listHierarchies.Sort(delegate(Hierarchy x, Hierarchy y) { return x.UniqueName.CompareTo(y.UniqueName); });
+                foreach (Hierarchy f in listHierarchies)
+                {
+                    cmbLookIn.Items.Add(f.UniqueName);
+                    List<string> listLevels = new List<string>();
+                    foreach (Level l in f.Levels)
+                    {
+                        if (l.LevelType == LevelTypeEnum.All) continue;
+                        listLevels.Add("  " + l.UniqueName);
+                    }
+                    if (listLevels.Count > 1)
+                    {
+                        cmbLookIn.Items.AddRange(listLevels.ToArray());
+                    }
+
+                }
+            }
+
+            cmbLookIn.ResumeLayout();
         }
 
         private void comboCalcName_TextChanged(object sender, EventArgs e)
@@ -1057,11 +1164,44 @@ namespace OlapPivotTableExtensions
             }
         }
 
+        private string SearchText
+        {
+            get
+            {
+                if (_IsSingleSearch)
+                    return txtSearch.Text.Trim();
+                else
+                    return richTextBoxSearch.Text.Trim();
+            }
+        }
+
+        private void RemoveBlankLinesAndTrimLinesAndRemoveDuplicates(List<string> lines)
+        {
+            List<string> listNew = new List<string>();
+            
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string sLineTrimmed = lines[i].Trim();
+                bool bAlreadyInList = (listNew.FindIndex(x => x.Equals(sLineTrimmed, StringComparison.CurrentCultureIgnoreCase)) != -1); //case insensitive Contains
+
+                if (lines[i].Trim().Length == 0 || bAlreadyInList)
+                {
+                    lines.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    lines[i] = sLineTrimmed;
+                    listNew.Add(sLineTrimmed);
+                }
+            }
+        }
+
         private void btnFind_Click(object sender, EventArgs e)
         {
             try
             {
-                if (txtSearch.Text == string.Empty && !chkExactMatch.Checked && cmbLookIn.SelectedIndex == 1)
+                if (SearchText == string.Empty && !chkExactMatch.Checked && cmbLookIn.SelectedIndex == 2)
                 {
                     MessageBox.Show("Please enter a search term", "OLAP PivotTable Extensions");
                     return;
@@ -1073,29 +1213,53 @@ namespace OlapPivotTableExtensions
                 colFolder.SortMode = DataGridViewColumnSortMode.NotSortable;
                 colDesc.SortMode = DataGridViewColumnSortMode.NotSortable;
 
+                colHeaderSearchCheckAll.CheckAll = false;
+
                 lblNoSearchMatches.Visible = false;
                 lblSearchError.Visible = false;
+                lblSearchTermsHighlighted.Visible = false;
+
+                //if the find button which we're about to disable has focus, then switch focus to the search box
+                if (btnFind.Focused)
+                {
+                    if (_IsSingleSearch)
+                        txtSearch.Focus();
+                    else
+                        richTextBoxSearch.Focus();
+                }
 
                 btnFind.Enabled = false;
                 btnCancelSearch.Visible = true;
                 btnSearchAdd.Enabled = false;
+                btnMultiSearch.Enabled = false;
+                SearchWasCancelled = false;
+
+                //remove formatting by assigning to .Text
+                //remove blank lines as they will cause extra matches in the search
+                List<string> listSearchTermLines = new List<string>(richTextBoxSearch.Text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                RemoveBlankLinesAndTrimLinesAndRemoveDuplicates(listSearchTermLines);
+                richTextBoxSearch.Text = string.Join("\r\n", listSearchTermLines.ToArray());
 
                 Application.DoEvents();
 
                 prgSearch.Value = 0;
                 prgSearch.Visible = true;
 
+                lblSearchMatchesCount.Visible = false;
+
                 CubeSearcher.CubeSearchScope scope = CubeSearcher.CubeSearchScope.FieldList;
-                if (cmbLookIn.SelectedIndex >= 1)
+                if (cmbLookIn.SelectedIndex == 1)
+                    scope = CubeSearcher.CubeSearchScope.MeasuresCaptionOnly;
+                else if (cmbLookIn.SelectedIndex >= 2)
                     scope = CubeSearcher.CubeSearchScope.DimensionData;
 
                 string sSearchOnlyDimension = null;
-                if (cmbLookIn.SelectedIndex > 1)
+                if (cmbLookIn.SelectedIndex > 2)
                     sSearchOnlyDimension = Convert.ToString(cmbLookIn.SelectedItem);
 
                 //TODO: bold any search results which are already in the PivotTable... may need to pass in a delegate to update the CubeSearchMatch object to have a reference to the parent class
 
-                searcher = new CubeSearcher(cube, scope, txtSearch.Text, chkExactMatch.Checked, chkMemberProperties.Checked, sSearchOnlyDimension, dataGridSearchResults);
+                searcher = new CubeSearcher(cube, scope, SearchText, chkExactMatch.Checked, chkMemberProperties.Checked, sSearchOnlyDimension, dataGridSearchResults, bImpersonate, sUsername, sDomain, sPassword);
                 searcher.ProgressChanged += new ProgressChangedEventHandler(searcher_ProgressChanged);
                 searcher.SearchAsync();
 
@@ -1111,12 +1275,26 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (e.ColumnIndex == 0 && e.RowIndex >= 0 && searcher != null && !searcher.Complete)
+                if (e.ColumnIndex == 0 && searcher != null)
                 {
-                    //the control doesn't do too well while we're constantly setting a new DataSource... this code worksaround that problem so you can check/uncheck while the search is still going on
-                    searcher.Matches[e.RowIndex].Checked = !searcher.Matches[e.RowIndex].Checked;
-                    dataGridSearchResults.InvalidateCell(e.ColumnIndex, e.RowIndex);
-                    dataGridSearchResults.Refresh();
+                    if (e.RowIndex >= 0 && !searcher.Complete)
+                    {
+                        //the control doesn't do too well while we're constantly setting a new DataSource... this code worksaround that problem so you can check/uncheck while the search is still going on
+                        searcher.Matches[e.RowIndex].Checked = !searcher.Matches[e.RowIndex].Checked;
+                        dataGridSearchResults.InvalidateCell(e.ColumnIndex, e.RowIndex);
+                        //dataGridSearchResults.Refresh();
+                    }
+                    else if (e.RowIndex < 0) //it's the header cell so check all
+                    {
+                        DataGridViewCheckBoxColumnHeaderCell header = (DataGridViewCheckBoxColumnHeaderCell)colCheck.HeaderCell;
+                        for (int iRow = 0; iRow < searcher.Matches.Count; iRow++)
+                        {
+                            dataGridSearchResults.Rows[iRow].Cells[e.ColumnIndex].Value = !header.CheckAll;
+                            //searcher.Matches[iRow].Checked = header.CheckAll;
+                            dataGridSearchResults.InvalidateCell(e.ColumnIndex, iRow);
+                        }
+                        //dataGridSearchResults.Refresh();
+                    }
                 }
             }
             catch { }
@@ -1130,17 +1308,42 @@ namespace OlapPivotTableExtensions
                 if (prgSearch.InvokeRequired)
                 {
                     //avoid the "cross-thread operation not valid" error message
-                    prgSearch.BeginInvoke(new searcher_ProgressChanged_Delegate(searcher_ProgressChanged), new object[] { sender, e });
+                    prgSearch.Invoke(new searcher_ProgressChanged_Delegate(searcher_ProgressChanged), new object[] { sender, e });
                 }
                 else
                 {
                     prgSearch.Value = e.ProgressPercentage;
+
+                    if (searcher.Matches.Count > 0)
+                    {
+                        string sMatchCount = "";
+                        if (_IsSingleSearch)
+                        {
+                            if (searcher.Matches.Count == 1)
+                                sMatchCount = searcher.Matches.Count.ToString("N0") + " match";
+                            else
+                                sMatchCount = searcher.Matches.Count.ToString("N0") + " matches";
+                        }
+                        else
+                        {
+                            sMatchCount = searcher.SearchTermCount.ToString("N0") + " search term";
+                            if (searcher.SearchTermCount > 1) sMatchCount += "s";
+
+                            if (searcher.Matches.Count == 1)
+                                sMatchCount += " and " + searcher.Matches.Count.ToString("N0") + " match";
+                            else
+                                sMatchCount += " and " + searcher.Matches.Count.ToString("N0") + " matches";
+                        }
+                        lblSearchMatchesCount.Text = sMatchCount;
+                        lblSearchMatchesCount.Visible = true;
+                    }
 
                     if (searcher.Complete)
                     {
                         lblNoSearchMatches.Visible = (searcher.Matches.Count == 0);
                         btnSearchAdd.Enabled = (searcher.Matches.Count > 0);
                         btnFind.Enabled = true;
+                        btnMultiSearch.Enabled = true;
 
                         prgSearch.Visible = false;
                         btnCancelSearch.Visible = false;
@@ -1155,6 +1358,73 @@ namespace OlapPivotTableExtensions
                             lblSearchError.Text = searcher.Error;
                             lblSearchError.Visible = true;
                         }
+
+                        if (!_IsSingleSearch && !SearchWasCancelled)
+                        {
+                            //highlight which search terms were found
+
+                            //remove formatting by assigning to .Text
+                            //remove blank lines as they will cause it to think there's a search term not matching
+                            List<string> listSearchTermLines = new List<string>(richTextBoxSearch.Text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                            RemoveBlankLinesAndTrimLinesAndRemoveDuplicates(listSearchTermLines);
+                            richTextBoxSearch.Text = string.Join("\r\n", listSearchTermLines.ToArray());
+                            
+                            //split Rtf into lines
+                            string sRtf = richTextBoxSearch.Rtf.Replace("\r\n","\n").Replace("\r","\n").Replace("\n","\r\n");
+                            List<string> listRtfLines = new List<string>(sRtf.Split(new string[] { "\r\n" }, StringSplitOptions.None));
+                            
+                            //add the font color table to line 2
+                            //first color (cf1) is default or black... second color (cf2) is red
+                            listRtfLines.Insert(1, @"{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}");
+
+
+                            int iLines = richTextBoxSearch.Lines.Length;
+                            int iRtfLine = 0;
+                            int iLine = 0;
+                            StringBuilder sb = new StringBuilder(richTextBoxSearch.Rtf.Length + 10);
+                            foreach (string sRtfLine in listRtfLines)
+                            {
+                                if (sRtfLine.StartsWith("{") || (sRtfLine.StartsWith(@"\") && !sRtfLine.StartsWith(@"\\") && sRtfLine != @"\par" && sRtfLine.Split(new char[] { ' ', '\t' }).Length == 1))
+                                {
+                                    //this line doesn't have any content so don't count it
+                                }
+                                else if (iLine < iLines)
+                                {
+                                    string sLine = richTextBoxSearch.Lines[iLine].Trim();
+                                    bool bFound = false;
+                                    foreach (string sSearchTermMatch in searcher.MatchedSearchTerms)
+                                    {
+                                        if (sSearchTermMatch.Trim() == sLine)
+                                        {
+                                            bFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if (bFound)
+                                    {
+                                        sb.AppendLine(@"\cf1"); //default color
+                                    }
+                                    else
+                                    {
+                                        sb.AppendLine(@"\cf2"); //red color
+                                        lblSearchTermsHighlighted.Visible = true;
+                                    }
+                                    iRtfLine++;
+                                    iLine++;
+                                }
+
+                                sb.AppendLine(sRtfLine);
+
+                                if (iLine == iLines) //if we just inserted the last line of text...
+                                {
+                                    sb.AppendLine(@"\cf1\par"); //if they type in a new line, it should be black
+                                    iLine++; //make sure this block doesn't run again
+                                }
+                            }
+
+                            richTextBoxSearch.Rtf = sb.ToString();
+
+                        }
                     }
                 }
             }
@@ -1168,7 +1438,14 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                this.AcceptButton = btnFind;
+                if (_IsSingleSearch)
+                {
+                    this.AcceptButton = btnFind;
+                }
+                else
+                {
+                    this.AcceptButton = null;
+                }
             }
             catch { }
         }
@@ -1188,7 +1465,26 @@ namespace OlapPivotTableExtensions
             string sSearchFor = null;
             try
             {
+                bool bMatchChecked = false;
+                foreach (CubeSearcher.CubeSearchMatch item in searcher.Matches)
+                {
+                    if (item.Checked)
+                    {
+                        bMatchChecked = true;
+                        break;
+                    }
+                }
+                if (!bMatchChecked)
+                {
+                    MessageBox.Show("Please check any matches you wish to add to the PivotTable first.", "OLAP PivotTable Extensions");
+                    return;
+                }
+
                 AddInWorking = true;
+
+                pvt.ManualUpdate = true; //TODO... this doesn't appear to be working
+
+                //TODO: handle if they have searched and found the All member (using the server side search or exact match search)... currently not working
 
                 Dictionary<string, NamedSet> hierarchiesInPivotTableAsNamedSet = new Dictionary<string, NamedSet>(StringComparer.CurrentCultureIgnoreCase);
                 foreach (Excel.CubeField cf in pvt.CubeFields)
@@ -1202,6 +1498,10 @@ namespace OlapPivotTableExtensions
                         }
                     }
                 }
+
+                Dictionary<string, int> dictMatchedCubeFields = new Dictionary<string, int>();
+                Dictionary<string, bool> dictMatchedCubeFieldsIsMemberProperty = new Dictionary<string, bool>();
+                Dictionary<string, List<object>> dictLevelsOfFoundMembers = new Dictionary<string, List<object>>();
 
                 foreach (CubeSearcher.CubeSearchMatch item in searcher.Matches)
                 {
@@ -1284,17 +1584,174 @@ namespace OlapPivotTableExtensions
                             pvt.ViewCalculatedMembers = true;
                         }
 
+
+                        Member m = (Member)item.InnerObject;
+
+                        if (hierarchiesInPivotTableAsNamedSet.ContainsKey(m.ParentLevel.ParentHierarchy.UniqueName))
+                        {
+                            NamedSet ns = hierarchiesInPivotTableAsNamedSet[m.ParentLevel.ParentHierarchy.UniqueName];
+                            if (string.Compare("[" + ns.Name + "]", Convert.ToString(cmbLookIn.SelectedItem)) != 0)
+                            {
+                                continue;
+                            }
+                        }
+                        
+                        if (dictMatchedCubeFields.ContainsKey(m.ParentLevel.ParentHierarchy.UniqueName))
+                        {
+                            dictMatchedCubeFields[m.ParentLevel.ParentHierarchy.UniqueName]++;
+                        }
+                        else
+                        {
+                            dictMatchedCubeFields.Add(m.ParentLevel.ParentHierarchy.UniqueName, 1);
+                            dictMatchedCubeFieldsIsMemberProperty.Add(m.ParentLevel.ParentHierarchy.UniqueName, false);
+                        }
+                        if (item.MemberProperty != null)
+                            dictMatchedCubeFieldsIsMemberProperty[m.ParentLevel.ParentHierarchy.UniqueName] = true;
+
+                        if (!dictLevelsOfFoundMembers.ContainsKey(m.ParentLevel.UniqueName))
+                            dictLevelsOfFoundMembers.Add(m.ParentLevel.UniqueName, new List<object>());
+                        dictLevelsOfFoundMembers[m.ParentLevel.UniqueName].Add(m.UniqueName);
+
+                    }
+                }
+
+                foreach (string sCubeField in dictMatchedCubeFields.Keys)
+                {
+                    Excel.CubeField field;
+                    if (hierarchiesInPivotTableAsNamedSet.ContainsKey(sCubeField))
+                    {
+                        NamedSet ns = hierarchiesInPivotTableAsNamedSet[sCubeField];
+                        field = pvt.CubeFields.get_Item("[" + ns.Name + "]");
+                        if (string.Compare("[" + ns.Name + "]", Convert.ToString(cmbLookIn.SelectedItem)) != 0)
+                        {
+                            //TODO: future... see if it's in that set so you don't have to prompt
+                            MessageBox.Show("The named set [" + Convert.ToString(ns.Properties["SET_CAPTION"].Value) + "] containing " + sCubeField + " is in the PivotTable, so members will not show up in the PivotTable unless they are in that set.", "OLAP PivotTable Extensions");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        field = pvt.CubeFields.get_Item(sCubeField);
+                    }
+
+
+                    try
+                    {
+                        field.CreatePivotFields(); //Excel apparently doesn't always have the levels loaded, so this loads them
+                    }
+                    catch { } 
+                    
+                    if (field.Orientation == Excel.XlPivotFieldOrientation.xlHidden)
+                    {
+                        if (dictMatchedCubeFieldsIsMemberProperty[sCubeField])
+                            field.Orientation = Excel.XlPivotFieldOrientation.xlRowField;
+                        else
+                            field.Orientation = Excel.XlPivotFieldOrientation.xlPageField;
+                    }
+
+                    pvt.ManualUpdate = true;
+
+
+                    field.IncludeNewItemsInFilter = false; //if this is set to true, they essentially wanted to show everything but what was specifically unchecked. With Filter List, we're doing the reverse... showing only what's spefically checked
+
+                    int iLevel = 0;
+                    int iMaxLevelWithMembers = 0;
+                    Excel.PivotField firstPivotField = null;
+                    foreach (Excel.PivotField pivotField in field.PivotFields)
+                    {
+                        if (pivotField.IsMemberProperty) continue;
+                        if (firstPivotField == null) firstPivotField = pivotField;
+                        iLevel++;
+                        if (dictLevelsOfFoundMembers.ContainsKey(pivotField.Name))
+                        {
+                            iMaxLevelWithMembers = iLevel;
+
+                            if (field.Orientation == Excel.XlPivotFieldOrientation.xlPageField)
+                            {
+                                pvt.ManualUpdate = true;
+                                field.EnableMultiplePageItems = true;
+                            }
+
+                            List<object> listVisibleItems = new List<object>();
+                            List<object> listExistingVisibleItems = new List<object>();
+                            foreach (object o in (System.Array)pivotField.VisibleItemsList)
+                            {
+                                if (chkAddToCurrentFilters.Checked)
+                                    listExistingVisibleItems.Add(o);
+                            }
+
+                            foreach (object oNew in dictLevelsOfFoundMembers[pivotField.Name])
+                            {
+                                listVisibleItems.Add(oNew);
+
+                                for (int i = 0; i < listExistingVisibleItems.Count; i++)
+                                {
+                                    if (Convert.ToString(listExistingVisibleItems[i]) == Convert.ToString(oNew))
+                                    {
+                                        listExistingVisibleItems.RemoveAt(i);
+                                        i--;
+                                    }
+                                }
+                            }
+
+                            listVisibleItems.AddRange(listExistingVisibleItems);
+
+                            System.Array arrNewVisibleItems = listVisibleItems.ToArray();
+                            pivotField.VisibleItemsList = arrNewVisibleItems;
+                        }
+                        else
+                        {
+                            if (((System.Array)pivotField.VisibleItemsList).Length > 1
+                                || (((System.Array)pivotField.VisibleItemsList).Length == 1 && !string.IsNullOrEmpty(Convert.ToString(((System.Array)pivotField.VisibleItemsList).GetValue(1)))))
+                            {
+                                //pivotField.ClearManualFilter(); //got an error trying to do this, so guess I have to set VisibleItemsList
+                                List<object> listVisibleItems = new List<object>();
+                                listVisibleItems.Add(string.Empty);
+                                System.Array arrNewVisibleItems = listVisibleItems.ToArray();
+                                pivotField.VisibleItemsList = arrNewVisibleItems;
+                            }
+                        }
+                        if (pivotField.PivotFilters.Count > 0)
+                        {
+                            pivotField.ClearValueFilters();
+                            pivotField.ClearLabelFilters();
+                        }
+                    }
+
+                    if (field.Orientation != Excel.XlPivotFieldOrientation.xlPageField)
+                    {
+                        //now expand any levels above the lowest level we have
+                        //this works now because we're filtering what's on rows to the search results
+                        int iCounter = 0;
+                        foreach (Excel.PivotField pivotField in field.PivotFields)
+                        {
+                            if (pivotField.IsMemberProperty) continue;
+                            iCounter++;
+                            if (iCounter < iMaxLevelWithMembers
+                            && !pivotField.Hidden //don't drilldown a level that's already hidden
+                            && iCounter < iLevel) //don't drill down the last level
+                            {
+                                pvt.ManualUpdate = true;
+                                pivotField.DrilledDown = true;
+                            }
+                        }
+                    }
+                }
+
+
+                foreach (CubeSearcher.CubeSearchMatch item in searcher.Matches)
+                {
+                    if (!item.Checked) continue;
+                    if (!item.IsFieldListField) 
+                    {
                         Member m = (Member)item.InnerObject;
                         Excel.CubeField field;
-                        sSearchFor = m.Caption + " (" + m.UniqueName + ")";
                         if (hierarchiesInPivotTableAsNamedSet.ContainsKey(m.ParentLevel.ParentHierarchy.UniqueName))
                         {
                             NamedSet ns = hierarchiesInPivotTableAsNamedSet[m.ParentLevel.ParentHierarchy.UniqueName];
                             field = pvt.CubeFields.get_Item("[" + ns.Name + "]");
                             if (string.Compare("[" + ns.Name + "]", Convert.ToString(cmbLookIn.SelectedItem)) != 0)
                             {
-                                //TODO: future... see if it's in that set so you don't have to prompt
-                                MessageBox.Show("The named set [" + Convert.ToString(ns.Properties["SET_CAPTION"].Value) + "] containing " + m.ParentLevel.ParentHierarchy.UniqueName + " is in the PivotTable, so [" + m.Caption + "] will not show up in the PivotTable unless it is in that set.", "OLAP PivotTable Extensions");
                                 continue;
                             }
                         }
@@ -1302,47 +1759,12 @@ namespace OlapPivotTableExtensions
                         {
                             field = pvt.CubeFields.get_Item(m.ParentLevel.ParentHierarchy.UniqueName);
                         }
-                        if (field.Orientation == Excel.XlPivotFieldOrientation.xlHidden)
-                        {
-                            if (item.MemberProperty != null)
-                                field.Orientation = Excel.XlPivotFieldOrientation.xlRowField;
-                            else
-                                field.Orientation = Excel.XlPivotFieldOrientation.xlPageField;
-                        }
-                        if (field.Orientation == Excel.XlPivotFieldOrientation.xlPageField)
-                        {
-                            if (chkAddToCurrentFilters.Checked)
-                            {
-                                field.EnableMultiplePageItems = true;
 
-                                Excel.PivotField pivotField = (Excel.PivotField)field.PivotFields.Item(m.ParentLevel.UniqueName);
-                                List<object> listVisibleItems = new List<object>();
-                                bool bFoundThisItem = false;
-                                foreach (object o in (System.Array)pivotField.VisibleItemsList)
-                                {
-                                    listVisibleItems.Add(o);
-                                    if (Convert.ToString(o) == m.UniqueName) bFoundThisItem = true;
-                                }
-                                if (!bFoundThisItem)
-                                    listVisibleItems.Add(Convert.ToString(m.UniqueName));
-                                System.Array arrNewVisibleItems = listVisibleItems.ToArray();
-                                pivotField.VisibleItemsList = arrNewVisibleItems;
-                            }
-                            else
-                            {
-                                field.CurrentPageName = m.UniqueName;
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                field.CreatePivotFields(); //Excel apparently doesn't always have the levels loaded, so this loads them
-                            }
-                            catch { }
+                        sSearchFor = m.Caption + " (" + m.UniqueName + ")";
 
-                            //TODO: future... clear other filters (like value filters) so that the member you're wanting will show up?
-                            EnsureMemberIsVisible(field, m, true);
+                        if (field.Orientation != Excel.XlPivotFieldOrientation.xlPageField)
+                        {
+                            //EnsureMemberIsVisible(field, m, true); //DrillDown above takes care of this since we're now filtering to the search results
                             if (item.MemberProperty != null)
                             {
                                 try
@@ -1381,6 +1803,7 @@ namespace OlapPivotTableExtensions
             finally
             {
                 AddInWorking = false;
+                pvt.ManualUpdate = false;
             }
         }
 
@@ -1402,27 +1825,28 @@ namespace OlapPivotTableExtensions
                     if (showInAxis && !pivotField.ShowingInAxis)
                         pivotField.Hidden = false;
 
-                    System.Array arrOldVisibleItems = (System.Array)pivotField.VisibleItemsList;
-                    List<object> listNewVisibleItems = new List<object>();
-                    bool bFound = false;
-                    foreach (object o in arrOldVisibleItems)
-                    {
-                        listNewVisibleItems.Add(o);
-                        if (Convert.ToString(o) == m.UniqueName)
-                        {
-                            bFound = true;
-                        }
-                    }
-                    if (!bFound)
-                    {
-                        if (!(listNewVisibleItems.Count == 1 && string.IsNullOrEmpty(Convert.ToString(listNewVisibleItems[0]))))
-                        {
-                            //this level is filtered, so add this member to this level's filters
-                            listNewVisibleItems.Add(m.UniqueName);
-                            System.Array arrNewVisibleItems = listNewVisibleItems.ToArray();
-                            pivotField.VisibleItemsList = arrNewVisibleItems;
-                        }
-                    }
+                    //old code that isn't needed anymore now that we're having the Search feature filter fields on an axis
+                    //System.Array arrOldVisibleItems = (System.Array)pivotField.VisibleItemsList;
+                    //List<object> listNewVisibleItems = new List<object>();
+                    //bool bFound = false;
+                    //foreach (object o in arrOldVisibleItems)
+                    //{
+                    //    listNewVisibleItems.Add(o);
+                    //    if (Convert.ToString(o) == m.UniqueName)
+                    //    {
+                    //        bFound = true;
+                    //    }
+                    //}
+                    //if (!bFound)
+                    //{
+                    //    if (!(listNewVisibleItems.Count == 1 && string.IsNullOrEmpty(Convert.ToString(listNewVisibleItems[0]))))
+                    //    {
+                    //        //this level is filtered, so add this member to this level's filters
+                    //        listNewVisibleItems.Add(m.UniqueName);
+                    //        System.Array arrNewVisibleItems = listNewVisibleItems.ToArray();
+                    //        pivotField.VisibleItemsList = arrNewVisibleItems;
+                    //    }
+                    //}
                 }
                 catch { } //not sure why it failed... oh well
             }
@@ -1442,7 +1866,6 @@ namespace OlapPivotTableExtensions
                         catch { }
                     }
                 }
-                //TODO: future: if you can't find the member, then see if the filter or grouping should be cleared
             }
         }
 
@@ -1471,10 +1894,12 @@ namespace OlapPivotTableExtensions
                 if (searcher != null)
                 {
                     searcher.Cancel();
+                    SearchWasCancelled = true;
 
                     lblNoSearchMatches.Visible = (searcher.Matches.Count == 0);
                     btnSearchAdd.Enabled = (searcher.Matches.Count > 0);
                     btnFind.Enabled = true;
+                    btnMultiSearch.Enabled = true;
 
                     prgSearch.Visible = false;
                     btnCancelSearch.Visible = false;
@@ -1486,7 +1911,9 @@ namespace OlapPivotTableExtensions
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         internal bool IsExcel2007OrHigherPivotTableVersion()
@@ -1529,7 +1956,35 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                chkMemberProperties.Checked = (cmbLookIn.SelectedIndex != 1);
+                chkMemberProperties.Checked = (cmbLookIn.SelectedIndex == 0);
+            }
+            catch { }
+            try
+            {
+                if (cmbLookIn.SelectedIndex == 0)
+                {
+                    Connect.SearchMeasuresOnlyDefault = false;
+                }
+                else if (cmbLookIn.SelectedIndex == 1)
+                {
+                    Connect.SearchMeasuresOnlyDefault = true;
+                }
+            }
+            catch { }
+            try
+            {
+                if (Convert.ToString(cmbLookIn.SelectedItem) == LOOK_IN_SHOW_ALL_HIERARCHIES)
+                {
+                    try
+                    {
+                        _SearchLookInShowAllHierarchies = true;
+                        FillSearchLookInDropdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                    }
+                }
             }
             catch { }
         }
@@ -1538,10 +1993,18 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (tabControl.SelectedTab == tabSearch && !txtSearch.Focused && !cmbLookIn.Focused)
+                if (tabControl.SelectedTab == tabSearch)
                 {
-                    txtSearch.Focus();
-                    txtSearch.SelectAll();
+                    if (_IsSingleSearch && !txtSearch.Focused && !cmbLookIn.Focused)
+                    {
+                        txtSearch.Focus();
+                        txtSearch.SelectAll();
+                    }
+                    else if (!_IsSingleSearch && !richTextBoxSearch.Focused && !cmbLookIn.Focused)
+                    {
+                        richTextBoxSearch.Focus();
+                        richTextBoxSearch.SelectAll();
+                    }
                 }
                 else if (tabControl.SelectedTab == tabCalcs && !comboCalcName.Focused && !txtCalcFormula.Focused)
                 {
@@ -1573,7 +2036,6 @@ namespace OlapPivotTableExtensions
             catch { }
         }
 
-        //TODO: future: let them filter fields not in the PivotTable
         private void btnFilterList_Click(object sender, EventArgs e)
         {
             try
@@ -1730,7 +2192,7 @@ namespace OlapPivotTableExtensions
             if (progressFilterList.InvokeRequired)
             {
                 //avoid the "cross-thread operation not valid" error message
-                progressFilterList.BeginInvoke(new SetFilterListProgress_Delegate(SetFilterListProgress), new object[] { iProgress, bVisible, arrMembersNotFound, bCloseIfSuccessful });
+                progressFilterList.Invoke(new SetFilterListProgress_Delegate(SetFilterListProgress), new object[] { iProgress, bVisible, arrMembersNotFound, bCloseIfSuccessful });
             }
             else
             {
@@ -1965,7 +2427,7 @@ namespace OlapPivotTableExtensions
                 if (richTextBoxMDX.InvokeRequired)
                 {
                     //avoid the "cross-thread operation not valid" error message
-                    richTextBoxMDX.BeginInvoke(new SetFormattedMDX_Delegate(SetFormattedMDX), new object[] { MDX, ex });
+                    richTextBoxMDX.Invoke(new SetFormattedMDX_Delegate(SetFormattedMDX), new object[] { MDX, ex });
                 }
                 else
                 {
@@ -1993,6 +2455,79 @@ namespace OlapPivotTableExtensions
             {
                 MessageBox.Show(exInner.Message + "\r\n" + exInner.StackTrace);
             }
+        }
+
+        bool _IsSingleSearch = true;
+        private void btnMultiSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int iMove = 120;
+                if (!_IsSingleSearch)
+                {
+                    iMove = -iMove;
+                    txtSearch.Visible = true;
+                    txtSearch.Focus();
+                    txtSearch.SelectAll();
+                    richTextBoxSearch.Visible = false;
+                    txtSearch.Text = string.Empty;
+                    btnMultiSearch.Text = "↓";
+                    tooltip.SetToolTip(this.btnMultiSearch, "Allow entering multiple search terms");
+                }
+                else
+                {
+                    richTextBoxSearch.Location = txtSearch.Location;
+                    richTextBoxSearch.Size = txtSearch.Size;
+                    richTextBoxSearch.Text = txtSearch.Text;
+                    richTextBoxSearch.Visible = true;
+                    richTextBoxSearch.Focus();
+                    richTextBoxSearch.SelectAll();
+                    txtSearch.Visible = false;
+                    btnMultiSearch.Text = "↑";
+                    tooltip.SetToolTip(this.btnMultiSearch, "Search for one search term at a time");
+                    txtSearch_Leave(null, null); //turn off Enter causing a search to start
+                }
+
+                this.Height += iMove;
+                Size minSizeNew = new Size(MainForm.ActiveForm.MinimumSize.Width, MainForm.ActiveForm.MinimumSize.Height);
+                this.MinimumSize = minSizeNew;
+
+                lblNoSearchMatches.Top += iMove;
+                dataGridSearchResults.Top += iMove;
+                dataGridSearchResults.Height += -iMove;
+                chkAddToCurrentFilters.Top += iMove;
+                chkExactMatch.Top += iMove;
+                cmbLookIn.Top += iMove;
+                lblLookIn.Top += iMove;
+
+                chkMemberProperties.Top += iMove;
+
+                txtSearch.Height += iMove;
+                richTextBoxSearch.Height += iMove;
+                _IsSingleSearch = !_IsSingleSearch;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
+
+        private void richTextBoxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.Control && e.KeyCode == Keys.V)
+                {
+                    //paste in as unformatted text
+                    string s = (string)Clipboard.GetData("Text");
+                    if (s != null)
+                        richTextBoxSearch.SelectedText = s;
+
+                    // cancel the actual paste
+                    e.Handled = true;
+                }
+            }
+            catch { }
         }
 
     }

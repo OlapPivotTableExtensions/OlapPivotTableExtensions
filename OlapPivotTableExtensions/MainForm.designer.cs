@@ -60,6 +60,9 @@
             this.richTextBoxMDX = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabSearch = new System.Windows.Forms.TabPage();
+            this.lblSearchMatchesCount = new System.Windows.Forms.Label();
+            this.richTextBoxSearch = new System.Windows.Forms.RichTextBox();
+            this.btnMultiSearch = new System.Windows.Forms.Button();
             this.chkAddToCurrentFilters = new System.Windows.Forms.CheckBox();
             this.btnCancelSearch = new System.Windows.Forms.Button();
             this.prgSearch = new System.Windows.Forms.ProgressBar();
@@ -68,18 +71,14 @@
             this.chkMemberProperties = new System.Windows.Forms.CheckBox();
             this.chkExactMatch = new System.Windows.Forms.CheckBox();
             this.cmbLookIn = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.lblLookIn = new System.Windows.Forms.Label();
             this.btnFind = new System.Windows.Forms.Button();
             this.lblSearchFor = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearchError = new System.Windows.Forms.Label();
             this.dataGridSearchResults = new System.Windows.Forms.DataGridView();
-            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.lblSearchTermsHighlighted = new System.Windows.Forms.Label();
             this.tabFilterList = new System.Windows.Forms.TabPage();
             this.btnFilterListShowCurrentFilters = new System.Windows.Forms.Button();
             this.btnCancelFilterList = new System.Windows.Forms.Button();
@@ -96,6 +95,7 @@
             this.btnSaveDefaults = new System.Windows.Forms.Button();
             this.chkShowCalcMembers = new System.Windows.Forms.CheckBox();
             this.tabAbout = new System.Windows.Forms.TabPage();
+            this.linkUnsupportedLanguageConfiguration = new System.Windows.Forms.LinkLabel();
             this.btnUpgradeOnRefresh = new System.Windows.Forms.Button();
             this.lblExcelUILanguage = new System.Windows.Forms.Label();
             this.lblUpgradePivotTableInstructions = new System.Windows.Forms.Label();
@@ -105,7 +105,16 @@
             this.label5 = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.linkUnsupportedLanguageConfiguration = new System.Windows.Forms.LinkLabel();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -443,6 +452,9 @@
             // 
             // tabSearch
             // 
+            this.tabSearch.Controls.Add(this.lblSearchMatchesCount);
+            this.tabSearch.Controls.Add(this.richTextBoxSearch);
+            this.tabSearch.Controls.Add(this.btnMultiSearch);
             this.tabSearch.Controls.Add(this.chkAddToCurrentFilters);
             this.tabSearch.Controls.Add(this.btnCancelSearch);
             this.tabSearch.Controls.Add(this.prgSearch);
@@ -451,12 +463,13 @@
             this.tabSearch.Controls.Add(this.chkMemberProperties);
             this.tabSearch.Controls.Add(this.chkExactMatch);
             this.tabSearch.Controls.Add(this.cmbLookIn);
-            this.tabSearch.Controls.Add(this.label7);
+            this.tabSearch.Controls.Add(this.lblLookIn);
             this.tabSearch.Controls.Add(this.btnFind);
             this.tabSearch.Controls.Add(this.lblSearchFor);
             this.tabSearch.Controls.Add(this.txtSearch);
             this.tabSearch.Controls.Add(this.lblSearchError);
             this.tabSearch.Controls.Add(this.dataGridSearchResults);
+            this.tabSearch.Controls.Add(this.lblSearchTermsHighlighted);
             this.tabSearch.Location = new System.Drawing.Point(4, 22);
             this.tabSearch.Name = "tabSearch";
             this.tabSearch.Padding = new System.Windows.Forms.Padding(3);
@@ -464,6 +477,46 @@
             this.tabSearch.TabIndex = 5;
             this.tabSearch.Text = "Search";
             this.tabSearch.UseVisualStyleBackColor = true;
+            // 
+            // lblSearchMatchesCount
+            // 
+            this.lblSearchMatchesCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSearchMatchesCount.Location = new System.Drawing.Point(228, 6);
+            this.lblSearchMatchesCount.Name = "lblSearchMatchesCount";
+            this.lblSearchMatchesCount.Size = new System.Drawing.Size(200, 14);
+            this.lblSearchMatchesCount.TabIndex = 17;
+            this.lblSearchMatchesCount.Text = "999 search terms and 999 matches";
+            this.lblSearchMatchesCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblSearchMatchesCount.Visible = false;
+            // 
+            // richTextBoxSearch
+            // 
+            this.richTextBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxSearch.DetectUrls = false;
+            this.richTextBoxSearch.Location = new System.Drawing.Point(112, 6);
+            this.richTextBoxSearch.Name = "richTextBoxSearch";
+            this.richTextBoxSearch.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.richTextBoxSearch.Size = new System.Drawing.Size(83, 16);
+            this.richTextBoxSearch.TabIndex = 15;
+            this.richTextBoxSearch.Text = "RichTextBox";
+            this.richTextBoxSearch.Visible = false;
+            this.richTextBoxSearch.WordWrap = false;
+            this.richTextBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBoxSearch_KeyDown);
+            // 
+            // btnMultiSearch
+            // 
+            this.btnMultiSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMultiSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMultiSearch.Location = new System.Drawing.Point(332, 22);
+            this.btnMultiSearch.Name = "btnMultiSearch";
+            this.btnMultiSearch.Size = new System.Drawing.Size(21, 23);
+            this.btnMultiSearch.TabIndex = 14;
+            this.btnMultiSearch.Text = "↓";
+            this.btnMultiSearch.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.tooltip.SetToolTip(this.btnMultiSearch, "Allow entering multiple search terms");
+            this.btnMultiSearch.UseVisualStyleBackColor = true;
+            this.btnMultiSearch.Click += new System.EventHandler(this.btnMultiSearch_Click);
             // 
             // chkAddToCurrentFilters
             // 
@@ -553,6 +606,7 @@
             this.cmbLookIn.FormattingEnabled = true;
             this.cmbLookIn.Items.AddRange(new object[] {
             "Field list",
+            "Measures (caption only)",
             "Dimension data"});
             this.cmbLookIn.Location = new System.Drawing.Point(10, 68);
             this.cmbLookIn.MaxDropDownItems = 10;
@@ -561,15 +615,15 @@
             this.cmbLookIn.TabIndex = 3;
             this.cmbLookIn.SelectedIndexChanged += new System.EventHandler(this.cmbLookIn_SelectedIndexChanged);
             // 
-            // label7
+            // lblLookIn
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(7, 52);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(45, 13);
-            this.label7.TabIndex = 4;
-            this.label7.Text = "Look in:";
+            this.lblLookIn.AutoSize = true;
+            this.lblLookIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLookIn.Location = new System.Drawing.Point(7, 52);
+            this.lblLookIn.Name = "lblLookIn";
+            this.lblLookIn.Size = new System.Drawing.Size(45, 13);
+            this.lblLookIn.TabIndex = 4;
+            this.lblLookIn.Text = "Look in:";
             // 
             // btnFind
             // 
@@ -598,7 +652,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.Location = new System.Drawing.Point(10, 24);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(339, 20);
+            this.txtSearch.Size = new System.Drawing.Size(320, 20);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);
             this.txtSearch.Enter += new System.EventHandler(this.txtSearch_Enter);
@@ -674,51 +728,20 @@
             this.dataGridSearchResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseEnter);
             this.dataGridSearchResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellClick);
             // 
-            // colCheck
-            // 
-            this.colCheck.DataPropertyName = "Checked";
-            this.colCheck.Frozen = true;
-            this.colCheck.HeaderText = "Add";
-            this.colCheck.MinimumWidth = 30;
-            this.colCheck.Name = "colCheck";
-            this.colCheck.Width = 30;
-            // 
-            // colName
-            // 
-            this.colName.DataPropertyName = "Name";
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            this.colName.Width = 140;
-            // 
-            // colType
-            // 
-            this.colType.DataPropertyName = "Type";
-            this.colType.HeaderText = "Type";
-            this.colType.MinimumWidth = 30;
-            this.colType.Name = "colType";
-            this.colType.ReadOnly = true;
-            this.colType.Width = 60;
-            // 
-            // colFolder
-            // 
-            this.colFolder.DataPropertyName = "Folder";
-            this.colFolder.HeaderText = "Folder";
-            this.colFolder.Name = "colFolder";
-            this.colFolder.ReadOnly = true;
-            this.colFolder.Width = 120;
-            // 
-            // colDesc
-            // 
-            this.colDesc.DataPropertyName = "Description";
-            this.colDesc.HeaderText = "Description";
-            this.colDesc.Name = "colDesc";
-            this.colDesc.ReadOnly = true;
-            this.colDesc.Width = 300;
-            // 
             // cubeSearchMatchBindingSource
             // 
             this.cubeSearchMatchBindingSource.DataSource = typeof(OlapPivotTableExtensions.CubeSearcher.CubeSearchMatch);
+            // 
+            // lblSearchTermsHighlighted
+            // 
+            this.lblSearchTermsHighlighted.BackColor = System.Drawing.Color.Transparent;
+            this.lblSearchTermsHighlighted.ForeColor = System.Drawing.Color.Red;
+            this.lblSearchTermsHighlighted.Location = new System.Drawing.Point(332, 48);
+            this.lblSearchTermsHighlighted.Name = "lblSearchTermsHighlighted";
+            this.lblSearchTermsHighlighted.Size = new System.Drawing.Size(96, 64);
+            this.lblSearchTermsHighlighted.TabIndex = 16;
+            this.lblSearchTermsHighlighted.Text = "Search terms without matches are highlighted red";
+            this.lblSearchTermsHighlighted.Visible = false;
             // 
             // tabFilterList
             // 
@@ -805,9 +828,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(6, 59);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(204, 13);
+            this.label9.Size = new System.Drawing.Size(293, 13);
             this.label9.TabIndex = 5;
-            this.label9.Text = "To the members with the following names:";
+            this.label9.Text = "To the members with the following names (exact match only):";
             // 
             // cmbFilterListLookIn
             // 
@@ -919,6 +942,18 @@
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
             // 
+            // linkUnsupportedLanguageConfiguration
+            // 
+            this.linkUnsupportedLanguageConfiguration.AutoSize = true;
+            this.linkUnsupportedLanguageConfiguration.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkUnsupportedLanguageConfiguration.Location = new System.Drawing.Point(12, 148);
+            this.linkUnsupportedLanguageConfiguration.Name = "linkUnsupportedLanguageConfiguration";
+            this.linkUnsupportedLanguageConfiguration.Size = new System.Drawing.Size(247, 13);
+            this.linkUnsupportedLanguageConfiguration.TabIndex = 8;
+            this.linkUnsupportedLanguageConfiguration.TabStop = true;
+            this.linkUnsupportedLanguageConfiguration.Text = "UNSUPPORTED LANGUAGE CONFIGURATION!";
+            this.linkUnsupportedLanguageConfiguration.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUnsupportedLanguageConfiguration_LinkClicked);
+            // 
             // btnUpgradeOnRefresh
             // 
             this.btnUpgradeOnRefresh.Location = new System.Drawing.Point(15, 224);
@@ -1006,17 +1041,89 @@
             this.tooltip.ReshowDelay = 100;
             this.tooltip.ShowAlways = true;
             // 
-            // linkUnsupportedLanguageConfiguration
+            // dataGridViewCheckBoxColumn1
             // 
-            this.linkUnsupportedLanguageConfiguration.AutoSize = true;
-            this.linkUnsupportedLanguageConfiguration.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.linkUnsupportedLanguageConfiguration.Location = new System.Drawing.Point(12, 148);
-            this.linkUnsupportedLanguageConfiguration.Name = "linkUnsupportedLanguageConfiguration";
-            this.linkUnsupportedLanguageConfiguration.Size = new System.Drawing.Size(247, 13);
-            this.linkUnsupportedLanguageConfiguration.TabIndex = 8;
-            this.linkUnsupportedLanguageConfiguration.TabStop = true;
-            this.linkUnsupportedLanguageConfiguration.Text = "UNSUPPORTED LANGUAGE CONFIGURATION!";
-            this.linkUnsupportedLanguageConfiguration.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUnsupportedLanguageConfiguration_LinkClicked);
+            this.dataGridViewCheckBoxColumn1.DataPropertyName = "Checked";
+            this.dataGridViewCheckBoxColumn1.Frozen = true;
+            this.dataGridViewCheckBoxColumn1.HeaderText = "Add";
+            this.dataGridViewCheckBoxColumn1.MinimumWidth = 30;
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.Width = 30;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 140;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Type";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Type";
+            this.dataGridViewTextBoxColumn2.MinimumWidth = 30;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Width = 60;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Folder";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Folder";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Width = 120;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Description";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Description";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.Width = 300;
+            // 
+            // colCheck
+            // 
+            this.colCheck.DataPropertyName = "Checked";
+            this.colCheck.Frozen = true;
+            this.colCheck.HeaderText = "Add";
+            this.colCheck.MinimumWidth = 30;
+            this.colCheck.Name = "colCheck";
+            this.colCheck.Width = 30;
+            // 
+            // colName
+            // 
+            this.colName.DataPropertyName = "Name";
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            this.colName.Width = 140;
+            // 
+            // colType
+            // 
+            this.colType.DataPropertyName = "Type";
+            this.colType.HeaderText = "Type";
+            this.colType.MinimumWidth = 30;
+            this.colType.Name = "colType";
+            this.colType.ReadOnly = true;
+            this.colType.Width = 60;
+            // 
+            // colFolder
+            // 
+            this.colFolder.DataPropertyName = "Folder";
+            this.colFolder.HeaderText = "Folder";
+            this.colFolder.Name = "colFolder";
+            this.colFolder.ReadOnly = true;
+            this.colFolder.Width = 120;
+            // 
+            // colDesc
+            // 
+            this.colDesc.DataPropertyName = "Description";
+            this.colDesc.HeaderText = "Description";
+            this.colDesc.Name = "colDesc";
+            this.colDesc.ReadOnly = true;
+            this.colDesc.Width = 300;
             // 
             // MainForm
             // 
@@ -1026,7 +1133,7 @@
             this.Controls.Add(this.tabControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 300);
+            this.MinimumSize = new System.Drawing.Size(480, 390);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -1089,7 +1196,7 @@
         private System.Windows.Forms.Label lblSearchFor;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ComboBox cmbLookIn;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblLookIn;
         private System.Windows.Forms.CheckBox chkExactMatch;
         private System.Windows.Forms.CheckBox chkMemberProperties;
         private System.Windows.Forms.Button btnSearchAdd;
@@ -1129,5 +1236,14 @@
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.Label lblFormattingMdxQuery;
         private System.Windows.Forms.LinkLabel linkUnsupportedLanguageConfiguration;
+        private System.Windows.Forms.Button btnMultiSearch;
+        private System.Windows.Forms.RichTextBox richTextBoxSearch;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.Label lblSearchTermsHighlighted;
+        private System.Windows.Forms.Label lblSearchMatchesCount;
     }
 }
