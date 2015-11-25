@@ -27,6 +27,7 @@ namespace OlapPivotTableExtensions
         private BackgroundWorker workerFilterList;
         private int xlPivotTableVersion14 = 4; //since we're using the Excel 2007 object model, we can't see the Excel 2010 version
         private int xlPivotTableVersion15 = 5; //since we're using the Excel 2007 object model, we can't see the Excel 2013 version
+        private int xlPivotTableVersion16 = 6; //since we're using the Excel 2007 object model, we can't see the Excel 2013 version
         internal static int xlConnectionTypeMODEL = 7; //since we're using the Excel 2007 object model, we can't see the Excel 2013 connection types
         private int xlCalculatedMeasure = 2; //since we're using the Excel 2007 object model, we can't see the new Excel 2013 calc measure type
 
@@ -74,7 +75,9 @@ namespace OlapPivotTableExtensions
                 System.Reflection.AssemblyFileVersionAttribute attrVersion = (System.Reflection.AssemblyFileVersionAttribute)typeof(MainForm).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), true)[0];
                 lblVersion.Text = "OLAP PivotTable Extensions v" + attrVersion.Version;
 
-#if X64
+#if VSTO40
+                lblVersion.Text += (Environment.Is64BitProcess ? " (64-bit)" : " (32-bit)");
+#elif X64
                 lblVersion.Text += " (64-bit)";
 #else
                 lblVersion.Text += " (32-bit)";
@@ -291,6 +294,8 @@ namespace OlapPivotTableExtensions
         public static void ResetCulture(Excel.Application app)
         {
             if (!_ShouldRunSetCulture) return;
+
+            if (!_dictSetCultureDepth.ContainsKey(System.Threading.Thread.CurrentThread.ManagedThreadId)) return;
 
             //if two SetCulture calls are made before the first ResetCulture call is made, we should skip it until we get to the final ResetCulture call, otherwise it's reset to prematurely
             if (_dictSetCultureDepth[System.Threading.Thread.CurrentThread.ManagedThreadId] <= 1)
@@ -1674,7 +1679,8 @@ namespace OlapPivotTableExtensions
 
                             List<object> listVisibleItems = new List<object>();
                             List<object> listExistingVisibleItems = new List<object>();
-                            foreach (object o in (System.Array)pivotField.VisibleItemsList)
+                            //must first cast to an object in .NET 4 (Excel 2016)
+                            foreach (object o in (System.Array)(object)pivotField.VisibleItemsList)
                             {
                                 if (chkAddToCurrentFilters.Checked)
                                     listExistingVisibleItems.Add(o);
@@ -1701,8 +1707,8 @@ namespace OlapPivotTableExtensions
                         }
                         else
                         {
-                            if (((System.Array)pivotField.VisibleItemsList).Length > 1
-                                || (((System.Array)pivotField.VisibleItemsList).Length == 1 && !string.IsNullOrEmpty(Convert.ToString(((System.Array)pivotField.VisibleItemsList).GetValue(1)))))
+                            if (((System.Array)(object)pivotField.VisibleItemsList).Length > 1
+                                || (((System.Array)(object)pivotField.VisibleItemsList).Length == 1 && !string.IsNullOrEmpty(Convert.ToString(((System.Array)(object)pivotField.VisibleItemsList).GetValue(1)))))
                             {
                                 //pivotField.ClearManualFilter(); //got an error trying to do this, so guess I have to set VisibleItemsList
                                 List<object> listVisibleItems = new List<object>();
@@ -1826,7 +1832,7 @@ namespace OlapPivotTableExtensions
                         pivotField.Hidden = false;
 
                     //old code that isn't needed anymore now that we're having the Search feature filter fields on an axis
-                    //System.Array arrOldVisibleItems = (System.Array)pivotField.VisibleItemsList;
+                    //System.Array arrOldVisibleItems = (System.Array)(object)pivotField.VisibleItemsList;
                     //List<object> listNewVisibleItems = new List<object>();
                     //bool bFound = false;
                     //foreach (object o in arrOldVisibleItems)
@@ -1935,6 +1941,8 @@ namespace OlapPivotTableExtensions
                 return "2010";
             else if ((int)pvt.Version == xlPivotTableVersion15) //since we're using the Excel 2007 object model, the Excel 2013 version isn't visible
                 return "2013";
+            else if ((int)pvt.Version == xlPivotTableVersion16) //since we're using the Excel 2007 object model, the Excel 2013 version isn't visible
+                return "2016";
             else
                 return pvt.Version.ToString();
         }
@@ -1948,6 +1956,8 @@ namespace OlapPivotTableExtensions
                 return "2010";
             else if (iVersion == 15)
                 return "2013";
+            else if (iVersion == 16)
+                return "2016";
             else
                 return "Unknown";
         }
@@ -2271,7 +2281,7 @@ namespace OlapPivotTableExtensions
                 {
                     if (!pivotField.IsMemberProperty)
                     {
-                        System.Array arrNewVisibleItems = (System.Array)pivotField.VisibleItemsList;
+                        System.Array arrNewVisibleItems = (System.Array)(object)pivotField.VisibleItemsList;
                         foreach (string sMember in arrNewVisibleItems)
                         {
                             if (!string.IsNullOrEmpty(sMember))
