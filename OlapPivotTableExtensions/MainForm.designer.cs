@@ -77,6 +77,11 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearchError = new System.Windows.Forms.Label();
             this.dataGridSearchResults = new System.Windows.Forms.DataGridView();
+            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cubeSearchMatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lblSearchTermsHighlighted = new System.Windows.Forms.Label();
             this.tabFilterList = new System.Windows.Forms.TabPage();
@@ -110,11 +115,6 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFolder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl.SuspendLayout();
             this.tabCalcs.SuspendLayout();
             this.tabLibrary.SuspendLayout();
@@ -129,9 +129,9 @@
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabCalcs);
             this.tabControl.Controls.Add(this.tabLibrary);
             this.tabControl.Controls.Add(this.tabMDX);
@@ -203,9 +203,9 @@
             // 
             // txtCalcFormula
             // 
-            this.txtCalcFormula.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCalcFormula.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCalcFormula.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCalcFormula.Location = new System.Drawing.Point(7, 82);
             this.txtCalcFormula.Multiline = true;
@@ -234,8 +234,8 @@
             // 
             // comboCalcName
             // 
-            this.comboCalcName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboCalcName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboCalcName.FormattingEnabled = true;
             this.comboCalcName.Location = new System.Drawing.Point(7, 28);
             this.comboCalcName.Name = "comboCalcName";
@@ -300,8 +300,8 @@
             // 
             // txtExportFilePath
             // 
-            this.txtExportFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtExportFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtExportFilePath.Location = new System.Drawing.Point(93, 47);
             this.txtExportFilePath.Name = "txtExportFilePath";
             this.txtExportFilePath.ReadOnly = true;
@@ -323,9 +323,9 @@
             // 
             // listImportExportCalcs
             // 
-            this.listImportExportCalcs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listImportExportCalcs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listImportExportCalcs.CheckOnClick = true;
             this.listImportExportCalcs.Enabled = false;
             this.listImportExportCalcs.FormattingEnabled = true;
@@ -371,8 +371,8 @@
             // 
             // txtImportFilePath
             // 
-            this.txtImportFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtImportFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImportFilePath.Location = new System.Drawing.Point(93, 24);
             this.txtImportFilePath.Name = "txtImportFilePath";
             this.txtImportFilePath.ReadOnly = true;
@@ -428,9 +428,9 @@
             // 
             // richTextBoxMDX
             // 
-            this.richTextBoxMDX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxMDX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxMDX.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxMDX.Location = new System.Drawing.Point(10, 32);
             this.richTextBoxMDX.Name = "richTextBoxMDX";
@@ -491,8 +491,8 @@
             // 
             // richTextBoxSearch
             // 
-            this.richTextBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxSearch.DetectUrls = false;
             this.richTextBoxSearch.Location = new System.Drawing.Point(112, 6);
             this.richTextBoxSearch.Name = "richTextBoxSearch";
@@ -543,8 +543,8 @@
             // 
             // prgSearch
             // 
-            this.prgSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.prgSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.prgSearch.Location = new System.Drawing.Point(79, 279);
             this.prgSearch.Name = "prgSearch";
             this.prgSearch.Size = new System.Drawing.Size(206, 18);
@@ -600,8 +600,8 @@
             // 
             // cmbLookIn
             // 
-            this.cmbLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbLookIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLookIn.FormattingEnabled = true;
             this.cmbLookIn.Items.AddRange(new object[] {
@@ -648,19 +648,19 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.Location = new System.Drawing.Point(10, 24);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(320, 20);
             this.txtSearch.TabIndex = 0;
-            this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);
             this.txtSearch.Enter += new System.EventHandler(this.txtSearch_Enter);
+            this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);
             // 
             // lblSearchError
             // 
-            this.lblSearchError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSearchError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSearchError.AutoEllipsis = true;
             this.lblSearchError.BackColor = System.Drawing.Color.Transparent;
             this.lblSearchError.ForeColor = System.Drawing.Color.Red;
@@ -676,9 +676,9 @@
             this.dataGridSearchResults.AllowUserToAddRows = false;
             this.dataGridSearchResults.AllowUserToDeleteRows = false;
             this.dataGridSearchResults.AllowUserToResizeRows = false;
-            this.dataGridSearchResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridSearchResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridSearchResults.AutoGenerateColumns = false;
             this.dataGridSearchResults.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridSearchResults.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -724,9 +724,51 @@
             this.dataGridSearchResults.Size = new System.Drawing.Size(418, 150);
             this.dataGridSearchResults.TabIndex = 7;
             this.dataGridSearchResults.TabStop = false;
-            this.dataGridSearchResults.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseLeave);
-            this.dataGridSearchResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseEnter);
             this.dataGridSearchResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellClick);
+            this.dataGridSearchResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseEnter);
+            this.dataGridSearchResults.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSearchResults_CellMouseLeave);
+            // 
+            // colCheck
+            // 
+            this.colCheck.DataPropertyName = "Checked";
+            this.colCheck.Frozen = true;
+            this.colCheck.HeaderText = "Add";
+            this.colCheck.MinimumWidth = 30;
+            this.colCheck.Name = "colCheck";
+            this.colCheck.Width = 30;
+            // 
+            // colName
+            // 
+            this.colName.DataPropertyName = "Name";
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            this.colName.Width = 140;
+            // 
+            // colType
+            // 
+            this.colType.DataPropertyName = "Type";
+            this.colType.HeaderText = "Type";
+            this.colType.MinimumWidth = 30;
+            this.colType.Name = "colType";
+            this.colType.ReadOnly = true;
+            this.colType.Width = 60;
+            // 
+            // colFolder
+            // 
+            this.colFolder.DataPropertyName = "Folder";
+            this.colFolder.HeaderText = "Folder";
+            this.colFolder.Name = "colFolder";
+            this.colFolder.ReadOnly = true;
+            this.colFolder.Width = 120;
+            // 
+            // colDesc
+            // 
+            this.colDesc.DataPropertyName = "Description";
+            this.colDesc.HeaderText = "Description";
+            this.colDesc.Name = "colDesc";
+            this.colDesc.ReadOnly = true;
+            this.colDesc.Width = 300;
             // 
             // cubeSearchMatchBindingSource
             // 
@@ -789,8 +831,8 @@
             // 
             // progressFilterList
             // 
-            this.progressFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressFilterList.Location = new System.Drawing.Point(78, 279);
             this.progressFilterList.Name = "progressFilterList";
             this.progressFilterList.Size = new System.Drawing.Size(206, 18);
@@ -800,8 +842,8 @@
             // 
             // lblFilterListError
             // 
-            this.lblFilterListError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFilterListError.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFilterListError.AutoEllipsis = true;
             this.lblFilterListError.BackColor = System.Drawing.Color.Transparent;
             this.lblFilterListError.ForeColor = System.Drawing.Color.Red;
@@ -834,8 +876,8 @@
             // 
             // cmbFilterListLookIn
             // 
-            this.cmbFilterListLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFilterListLookIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbFilterListLookIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFilterListLookIn.FormattingEnabled = true;
             this.cmbFilterListLookIn.Location = new System.Drawing.Point(9, 24);
@@ -846,9 +888,9 @@
             // 
             // txtFilterList
             // 
-            this.txtFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFilterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilterList.BackColor = System.Drawing.SystemColors.Window;
             this.txtFilterList.Location = new System.Drawing.Point(9, 76);
             this.txtFilterList.MaxLength = 1000000;
@@ -886,9 +928,10 @@
             this.chkRefreshDataWhenOpeningTheFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.chkRefreshDataWhenOpeningTheFile.Location = new System.Drawing.Point(13, 57);
             this.chkRefreshDataWhenOpeningTheFile.Name = "chkRefreshDataWhenOpeningTheFile";
-            this.chkRefreshDataWhenOpeningTheFile.Size = new System.Drawing.Size(290, 17);
+            this.chkRefreshDataWhenOpeningTheFile.Size = new System.Drawing.Size(418, 17);
             this.chkRefreshDataWhenOpeningTheFile.TabIndex = 3;
-            this.chkRefreshDataWhenOpeningTheFile.Text = "Turn on \"Refresh data when opening the file\" by default";
+            this.chkRefreshDataWhenOpeningTheFile.Text = "Turn on \"Refresh data when opening the file\" by default (except Excel Data Model)" +
+    "";
             this.chkRefreshDataWhenOpeningTheFile.UseVisualStyleBackColor = true;
             // 
             // label6
@@ -1082,48 +1125,6 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             this.dataGridViewTextBoxColumn4.Width = 300;
-            // 
-            // colCheck
-            // 
-            this.colCheck.DataPropertyName = "Checked";
-            this.colCheck.Frozen = true;
-            this.colCheck.HeaderText = "Add";
-            this.colCheck.MinimumWidth = 30;
-            this.colCheck.Name = "colCheck";
-            this.colCheck.Width = 30;
-            // 
-            // colName
-            // 
-            this.colName.DataPropertyName = "Name";
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            this.colName.Width = 140;
-            // 
-            // colType
-            // 
-            this.colType.DataPropertyName = "Type";
-            this.colType.HeaderText = "Type";
-            this.colType.MinimumWidth = 30;
-            this.colType.Name = "colType";
-            this.colType.ReadOnly = true;
-            this.colType.Width = 60;
-            // 
-            // colFolder
-            // 
-            this.colFolder.DataPropertyName = "Folder";
-            this.colFolder.HeaderText = "Folder";
-            this.colFolder.Name = "colFolder";
-            this.colFolder.ReadOnly = true;
-            this.colFolder.Width = 120;
-            // 
-            // colDesc
-            // 
-            this.colDesc.DataPropertyName = "Description";
-            this.colDesc.HeaderText = "Description";
-            this.colDesc.Name = "colDesc";
-            this.colDesc.ReadOnly = true;
-            this.colDesc.Width = 300;
             // 
             // MainForm
             // 

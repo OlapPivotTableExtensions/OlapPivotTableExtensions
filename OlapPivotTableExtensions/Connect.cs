@@ -1,60 +1,37 @@
-using System;
-using Extensibility;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
+using Microsoft.Office.Tools.Excel;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace OlapPivotTableExtensions
 {
-    /// <summary>
-	///   The object for implementing an Add-in.
-	/// </summary>
-	/// <seealso class='IDTExtensibility2' />
-	[GuidAttribute("DD16A145-E2F0-40B9-9993-5018BA8B6FF3"), ProgId("OlapPivotTableExtensions.Connect")]
-	public class Connect : Object, Extensibility.IDTExtensibility2
-	{
-		/// <summary>
-		///		Implements the constructor for the Add-in object.
-		///		Place your initialization code within this method.
-		/// </summary>
-		public Connect()
-		{
-		}
-
-		/// <summary>
-		///      Implements the OnConnection method of the IDTExtensibility2 interface.
-		///      Receives notification that the Add-in is being loaded.
-		/// </summary>
-		/// <param term='application'>
-		///      Root object of the host application.
-		/// </param>
-		/// <param term='connectMode'>
-		///      Describes how the Add-in is being loaded.
-		/// </param>
-		/// <param term='addInInst'>
-		///      Object representing this Add-in.
-		/// </param>
-		/// <seealso class='IDTExtensibility2' />
-		public void OnConnection(object application, Extensibility.ext_ConnectMode connectMode, object addInInst, ref System.Array custom)
-		{
+    public partial class Connect
+    {
+        private void ThisAddIn_Startup(object sender, System.EventArgs e)
+        {
             try
             {
-                Application = (Excel.Application)application;
-                addInInstance = addInInst;
-
                 OriginalLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.EnglishName;
                 OriginalCultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
 
-                m_xlAppEvents = new xlEvents();
-                m_xlAppEvents.DisableEventsIfEmbedded = true;
-                m_xlAppEvents.SetupConnection(Application);
+                Application.SheetBeforeRightClick += m_xlAppEvents_xlSheetBeforeRightClick;
+                Application.SheetPivotTableUpdate += m_xlAppEvents_xlSheetPivotTableUpdate;
+
+                //m_xlAppEvents = new xlEvents();
+                //m_xlAppEvents.DisableEventsIfEmbedded = true;
+                //???? m_xlAppEvents.SetupConnection(Application);
 
                 //the following code works around an issue that is surfaced by typical event handling
                 //http://olappivottableextend.codeplex.com/discussions/271174
                 //typical event handling: Application.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(Application_SheetBeforeRightClick);
-                m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
-                m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
+                //m_xlAppEvents.xlSheetBeforeRightClick += new xlEvents.DSheetBeforeRightClick(m_xlAppEvents_xlSheetBeforeRightClick);
+                //m_xlAppEvents.xlSheetPivotTableUpdate += new xlEvents.DSheetPivotTableUpdate(m_xlAppEvents_xlSheetPivotTableUpdate);
 
                 try
                 {
@@ -73,7 +50,8 @@ namespace OlapPivotTableExtensions
 
                 if (IsSingleDocumentInterface)
                 {
-                    m_xlAppEvents.xlWindowActivate += new xlEvents.DWindowActivate(m_xlAppEvents_xlWindowActivate);
+                    //m_xlAppEvents.xlWindowActivate += new xlEvents.DWindowActivate(m_xlAppEvents_xlWindowActivate);
+                    Application.WindowActivate += m_xlAppEvents_xlWindowActivate;
                 }
 
                 CreateOlapPivotTableExtensionsMenu();
@@ -86,7 +64,7 @@ namespace OlapPivotTableExtensions
                 MessageBox.Show("Problem during startup of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
         }
-
+        
         private void m_xlAppEvents_xlWindowActivate(Excel._Workbook oWB, Excel.Window oWn)
         {
             try
@@ -127,56 +105,56 @@ namespace OlapPivotTableExtensions
             }
         }
 
-		/// <summary>
-		///     Implements the OnDisconnection method of the IDTExtensibility2 interface.
-		///     Receives notification that the Add-in is being unloaded.
-		/// </summary>
-		/// <param term='disconnectMode'>
-		///      Describes how the Add-in is being unloaded.
-		/// </param>
-		/// <param term='custom'>
-		///      Array of parameters that are host application specific.
-		/// </param>
-		/// <seealso class='IDTExtensibility2' />
-		public void OnDisconnection(Extensibility.ext_DisconnectMode disconnectMode, ref System.Array custom)
-		{
-            DeleteOlapPivotTableExtensionsMenu();
+        /// <summary>
+        ///     Implements the OnDisconnection method of the IDTExtensibility2 interface.
+        ///     Receives notification that the Add-in is being unloaded.
+        /// </summary>
+        /// <param term='disconnectMode'>
+        ///      Describes how the Add-in is being unloaded.
+        /// </param>
+        /// <param term='custom'>
+        ///      Array of parameters that are host application specific.
+        /// </param>
+        /// <seealso class='IDTExtensibility2' />
+        //public void OnDisconnection(Extensibility.ext_DisconnectMode disconnectMode, ref System.Array custom)
+        //{
+        //    DeleteOlapPivotTableExtensionsMenu();
+        //}
+
+        /// <summary>
+        ///      Implements the OnAddInsUpdate method of the IDTExtensibility2 interface.
+        ///      Receives notification that the collection of Add-ins has changed.
+        /// </summary>
+        /// <param term='custom'>
+        ///      Array of parameters that are host application specific.
+        /// </param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnAddInsUpdate(ref System.Array custom)
+        {
         }
 
-		/// <summary>
-		///      Implements the OnAddInsUpdate method of the IDTExtensibility2 interface.
-		///      Receives notification that the collection of Add-ins has changed.
-		/// </summary>
-		/// <param term='custom'>
-		///      Array of parameters that are host application specific.
-		/// </param>
-		/// <seealso class='IDTExtensibility2' />
-		public void OnAddInsUpdate(ref System.Array custom)
-		{
-		}
+        /// <summary>
+        ///      Implements the OnStartupComplete method of the IDTExtensibility2 interface.
+        ///      Receives notification that the host application has completed loading.
+        /// </summary>
+        /// <param term='custom'>
+        ///      Array of parameters that are host application specific.
+        /// </param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnStartupComplete(ref System.Array custom)
+        {
+        }
 
-		/// <summary>
-		///      Implements the OnStartupComplete method of the IDTExtensibility2 interface.
-		///      Receives notification that the host application has completed loading.
-		/// </summary>
-		/// <param term='custom'>
-		///      Array of parameters that are host application specific.
-		/// </param>
-		/// <seealso class='IDTExtensibility2' />
-		public void OnStartupComplete(ref System.Array custom)
-		{
-		}
-
-		/// <summary>
-		///      Implements the OnBeginShutdown method of the IDTExtensibility2 interface.
-		///      Receives notification that the host application is being unloaded.
-		/// </summary>
-		/// <param term='custom'>
-		///      Array of parameters that are host application specific.
-		/// </param>
-		/// <seealso class='IDTExtensibility2' />
-		public void OnBeginShutdown(ref System.Array custom)
-		{
+        /// <summary>
+        ///      Implements the OnBeginShutdown method of the IDTExtensibility2 interface.
+        ///      Receives notification that the host application is being unloaded.
+        /// </summary>
+        /// <param term='custom'>
+        ///      Array of parameters that are host application specific.
+        /// </param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnBeginShutdown(ref System.Array custom)
+        {
             try
             {
                 m_xlAppEvents.RemoveConnection();
@@ -188,9 +166,9 @@ namespace OlapPivotTableExtensions
                 MessageBox.Show("Problem during close of OLAP PivotTable Extensions:\r\n" + ex.Message + "\r\n" + ex.StackTrace, "OLAP PivotTable Extensions");
             }
         }
-		
-		private Excel.Application Application;
-		private object addInInstance;
+
+        //private Excel.Application Application;
+        private object addInInstance;
         private xlEvents m_xlAppEvents;
 
         public static string OriginalLanguage = "";
@@ -205,7 +183,7 @@ namespace OlapPivotTableExtensions
         private const string REGISTRY_PATH_REFRESH_DATA_BY_DEFAULT = "RefreshDataByDefault";
         private const string REGISTRY_PATH_SEARCH_MEASURES_ONLY_DEFAULT = "SearchMeasuresOnlyByDefault";
         private const string REGISTRY_PATH_FORMAT_MDX = "FormatMDX";
-        private global::System.Object missing = global::System.Type.Missing;
+        //private global::System.Object missing = global::System.Type.Missing;
 
 
         private const string MENU_TAG = "OLAP PivotTable Extensions";
@@ -313,15 +291,18 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-
                 DeleteOlapPivotTableExtensionsMenu();
 
                 //if this is an embedded Excel document in a Word or PowerPoint document, then detect this and don't create menus
                 try
                 {
                     Excel._Workbook wb = (Excel._Workbook)Application.ActiveWorkbook;
+#if VSTO40
+                    IsEmbedded = wb.IsInplace;
+#else
                     IsEmbedded = this.m_xlAppEvents.IsEmbedded(ref wb);
                     this.m_xlAppEvents.ComRelease(wb);
+#endif
                 }
                 catch { }
 
@@ -428,7 +409,6 @@ namespace OlapPivotTableExtensions
                 cmdErrorMenuItem.FaceId = 463;
                 cmdErrorMenuItem.Tag = MENU_TAG;
                 cmdErrorMenuItem.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(cmdErrorMenuItem_Click);
-
             }
             catch (Exception ex)
             {
@@ -659,7 +639,7 @@ namespace OlapPivotTableExtensions
                         foreach (Excel.PivotField pf in field.PivotFields)
                         {
                             if (pf.IsMemberProperty) continue;
-                            
+
                         }
                     }
                 }
@@ -811,7 +791,7 @@ namespace OlapPivotTableExtensions
                 if (pvt == null)
                     return false;
                 Excel.PivotCache cache = pvt.PivotCache();
-                return cache.OLAP 
+                return cache.OLAP
                     && cache.WorkbookConnection != null; //catches the situation when the connection for a PivotTable has been deleted
             }
             catch
@@ -1079,7 +1059,7 @@ namespace OlapPivotTableExtensions
                 }
 
                 if (RefreshDataByDefault
-                    && !Target.PivotCache().RefreshOnFileOpen 
+                    && !Target.PivotCache().RefreshOnFileOpen
                     && IsOledbConnection(Target)) //don't cause the Excel data model pivots to refresh since that will reconnect to SQL
                 {
                     Target.PivotCache().RefreshOnFileOpen = true;
@@ -1099,7 +1079,7 @@ namespace OlapPivotTableExtensions
         {
             try
             {
-                if (Ctrl.Tag != cmdMenuItem.Tag || Ctrl.Caption!= cmdMenuItem.Caption || Ctrl.FaceId != cmdMenuItem.FaceId)
+                if (Ctrl.Tag != cmdMenuItem.Tag || Ctrl.Caption != cmdMenuItem.Caption || Ctrl.FaceId != cmdMenuItem.FaceId)
                     return;
 
                 frm = new MainForm(Application);
@@ -1178,8 +1158,8 @@ namespace OlapPivotTableExtensions
                     }
                     if (sWhere.Length > 0) sWhere.Append(",");
                     sWhere.Append(sValue).AppendLine();
-                }                
-                
+                }
+
                 //find all PivotTable filter fields
                 foreach (Excel.CubeField cf in Application.ActiveCell.PivotTable.CubeFields)
                 {
@@ -1209,9 +1189,9 @@ namespace OlapPivotTableExtensions
                                 if (pf.IsMemberProperty) continue;
                                 System.Array arrVisibleItems;
                                 if (bIsExcel2007OrHigherPivotTable)
-                                    arrVisibleItems = (System.Array)pf.VisibleItemsList; //new to Excel 2007, so use CurrentPageList instead for older version PivotTables?
+                                    arrVisibleItems = (System.Array)(object)pf.VisibleItemsList; //new to Excel 2007, so use CurrentPageList instead for older version PivotTables?
                                 else
-                                    arrVisibleItems = (System.Array)pf.CurrentPageList;
+                                    arrVisibleItems = (System.Array)(object)pf.CurrentPageList;
 
                                 foreach (string s in arrVisibleItems)
                                 {
@@ -1330,7 +1310,7 @@ namespace OlapPivotTableExtensions
                     object oSlicerCache = oSlicer.GetType().InvokeMember("SlicerCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicer, null);
                     string sSourceName = (string)oSlicerCache.GetType().InvokeMember("SourceName", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicerCache, null);
                     if (dict.ContainsKey(sSourceName)) continue; //if a hierarchy, the same SlicerCache will be seen multiple times
-                    System.Array arrVisible = (System.Array)oSlicerCache.GetType().InvokeMember("VisibleSlicerItemsList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicerCache, null);
+                    System.Array arrVisible = (System.Array)(object)oSlicerCache.GetType().InvokeMember("VisibleSlicerItemsList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty, null, oSlicerCache, null);
                     System.Collections.Generic.List<string> list = new System.Collections.Generic.List<string>();
                     foreach (string sItem in arrVisible)
                     {
@@ -1345,6 +1325,21 @@ namespace OlapPivotTableExtensions
         private const string TEMP_MODEL_FLAT_FILE_CONNECTION_NAME = "OLAP PivotTable Extensions Temp Connection";
         private Excel.XlCalculation _OriginalCalculationMode = Excel.XlCalculation.xlCalculationAutomatic;
 
+        ////doesn't work since it opens the Power Pivot DLLs in the wrong AppDomain
+        //private void InitializeModel()
+        //{
+        //    try
+        //    {
+        //        MessageBox.Show("starting!");
+        //        Application.ActiveWorkbook.Model.Initialize();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+        //        throw ex;
+        //    }
+        //}
+
         void cmdDisableAutoRefresh_Click(Microsoft.Office.Core.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             MainForm.SetCulture(Application); //don't need to call this here since it will be called in the MainForm constructor... but FormClosing won't be called since we never open the form... so we'll have to call it in the finally manually
@@ -1353,6 +1348,26 @@ namespace OlapPivotTableExtensions
             {
                 if (Ctrl.Tag != cmdDisableAutoRefresh.Tag || Ctrl.Caption != cmdDisableAutoRefresh.Caption || Ctrl.FaceId != this.cmdDisableAutoRefresh.FaceId)
                     return;
+
+#if VSTO40
+                //it appears adding a connection before the data model is loaded fails in Excel 2016
+                //Application.CommandBars.ExecuteMso("DataModelManage"); //this opens the Power Pivot window in the wrong AppDomain
+                //Application.ActiveWorkbook.Model.Initialize(); //this initializes the appropriate libraries in the wrong AppDomain
+                //haven't figured out how to initialize Power Pivot in the proper AppDomain but did figure out how to detect it's not initialized yet:
+                mscoree.ICorRuntimeHost host = new mscoree.CorRuntimeHost();
+                object oDefaultAppDomain;
+                host.GetDefaultDomain(out oDefaultAppDomain);
+                AppDomain appD = (AppDomain)oDefaultAppDomain;
+
+                //now that we have the default AppDomain (where Power Pivot is supposed to be loaded, not the OlapPivotTableExtensions app domain) launch a new class which can loop through the assemblies loaded already in that default app domain
+                System.Runtime.Remoting.ObjectHandle handle = Activator.CreateInstanceFrom(appD, typeof(PowerPivotLaunchedChecker).Assembly.ManifestModule.FullyQualifiedName, typeof(PowerPivotLaunchedChecker).FullName);
+                PowerPivotLaunchedChecker newDomainInstance = (PowerPivotLaunchedChecker)handle.Unwrap();
+                if (!newDomainInstance.IsPowerPivotLoaded)
+                {
+                    MessageBox.Show("First open the Power Pivot window. If you continue to get this message, restart Excel and try again.", "OLAP PivotTable Extensions");
+                    return;
+                }
+#endif
 
                 bool bEnableRefresh = Application.ActiveCell.PivotTable.PivotCache().EnableRefresh;
                 Excel.WorkbookConnection connTemp = null;
@@ -1373,9 +1388,16 @@ namespace OlapPivotTableExtensions
                     }
                     if (connTemp == null)
                     {
+                        int iExcelVersionNumber = (int)decimal.Parse(Application.Version, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         //because we're using the Excel 2007 object model, use reflection to call this Excel 2013 method
                         //conns.Add2 TEMP_MODEL_FLAT_FILE_CONNECTION_NAME,"","OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=C:\Users\ggalloway\AppData\Local\Temp\;Persist Security Info=false;Extended Properties=""Text;HDR=Yes;FMT=CSVDelimited"";", "OLAP PivotTable Extensions Temp Connection#txt", xlCmdTable, True, False
-                        connTemp = (Excel.WorkbookConnection)conns.GetType().InvokeMember("Add2", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, conns, new object[] { TEMP_MODEL_FLAT_FILE_CONNECTION_NAME, "This is a temporary connection used by OLAP PivotTable Extensions to trigger a quick refresh of the PivotTable field list. Feel free to delete.", "OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=" + sTempDir + ";Persist Security Info=false;Extended Properties=\"Text;HDR=Yes;FMT=CSVDelimited\";", "OLAP PivotTable Extensions Temp Connection#txt", Excel.XlCmdType.xlCmdTable, true, false });
+                        string sConnectionString = "OLEDB;Provider=Microsoft.ACE.OLEDB.15.0;Data Source=" + sTempDir + ";Persist Security Info=false;Extended Properties=\"Text;HDR=Yes;FMT=CSVDelimited\";";
+                        if (iExcelVersionNumber >= 16)
+                        {
+                            sConnectionString = "OLEDB;Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + sTempDir + ";Persist Security Info=false;Extended Properties=\"Text;HDR=Yes;FMT=CSVDelimited\";Jet OLEDB:Registry Path=Software\\Microsoft\\Office\\16.0\\PowerPivot\\ACE\\";
+                        }
+                        //MessageBox.Show(sConnectionString); //TODO
+                        connTemp = (Excel.WorkbookConnection)conns.GetType().InvokeMember("Add2", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, conns, new object[] { TEMP_MODEL_FLAT_FILE_CONNECTION_NAME, "This is a temporary connection used by OLAP PivotTable Extensions to trigger a quick refresh of the PivotTable field list. Feel free to delete.", sConnectionString, "OLAP PivotTable Extensions Temp Connection#txt", Excel.XlCmdType.xlCmdTable, true, false });
                     }
                 }
 
@@ -1418,6 +1440,13 @@ namespace OlapPivotTableExtensions
 
                 if (!bEnableRefresh)
                 {
+                    //Power Pivot window, if open, would throw an unhandled exception unless I paused for it to catch up with the new temporary flat file
+                    System.Windows.Forms.Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                    System.Windows.Forms.Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                    System.Windows.Forms.Application.DoEvents();
+
                     connTemp.Delete(); //delete the temporary flat file connection to trigger a refresh of the field list in the PivotTables without refreshing the SQL data sources
                 }
             }
@@ -1502,5 +1531,23 @@ namespace OlapPivotTableExtensions
         }
 
 
-	}
+        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+            DeleteOlapPivotTableExtensionsMenu();
+        }
+
+#region VSTO generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InternalStartup()
+        {
+            this.Startup += new System.EventHandler(ThisAddIn_Startup);
+            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
+        }
+        
+#endregion
+    }
 }

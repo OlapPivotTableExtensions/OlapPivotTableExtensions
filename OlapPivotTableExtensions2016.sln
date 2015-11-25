@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlapPivotTableExtensions2016", "OlapPivotTableExtensions\OlapPivotTableExtensions2016.csproj", "{0AA32253-6684-4053-8600-A87F39035664}"
+EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "OlapPivotTableExtensions2016Setup", "OlapPivotTableExtensions2016Setup\OlapPivotTableExtensions2016Setup.isproj", "{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AA32253-6684-4053-8600-A87F39035664} = {0AA32253-6684-4053-8600-A87F39035664}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		DVD-5|Any CPU = DVD-5|Any CPU
+		Release|Any CPU = Release|Any CPU
+		SingleImage|Any CPU = SingleImage|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AA32253-6684-4053-8600-A87F39035664}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{0AA32253-6684-4053-8600-A87F39035664}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.CD_ROM|Any CPU.Build.0 = CD_ROM
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Debug|Any CPU.ActiveCfg = SingleImage
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Debug|Any CPU.Build.0 = SingleImage
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.DVD-5|Any CPU.ActiveCfg = DVD-5
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.DVD-5|Any CPU.Build.0 = DVD-5
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Release|Any CPU.ActiveCfg = SingleImage
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Release|Any CPU.Build.0 = SingleImage
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.SingleImage|Any CPU.ActiveCfg = SingleImage
+		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.SingleImage|Any CPU.Build.0 = SingleImage
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = OlapPivotTableExtensions\\OlapPivotTableExtensions2016.csproj
+		SccProjectName1 = OlapPivotTableExtensions
+		SccLocalPath1 = OlapPivotTableExtensions
+		SccProjectUniqueName2 = OlapPivotTableExtensions2016Setup\\OlapPivotTableExtensions2016Setup.isproj
+		SccProjectName2 = OlapPivotTableExtensions2016Setup
+		SccLocalPath2 = OlapPivotTableExtensions2016Setup
+	EndGlobalSection
+EndGlobal
