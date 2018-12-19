@@ -989,22 +989,22 @@ namespace OlapPivotTableExtensions
 
         private void linkCodeplex_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.codeplex.com/OlapPivotTableExtend");
+            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io");
         }
 
         private void linkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.codeplex.com/OlapPivotTableExtend/Wiki/View.aspx?title=Calculations%20Help");
+            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io/Calculations-Help.html");
         }
 
         private void linkUpgradePivotTable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://office.microsoft.com/en-us/excel-help/working-with-different-pivottable-formats-in-office-excel-HA010167298.aspx");
+            System.Diagnostics.Process.Start("https://web.archive.org/web/20111202190114/http://office.microsoft.com/en-us/excel-help/working-with-different-pivottable-formats-in-office-excel-HA010167298.aspx");
         }
 
         private void linkUnsupportedLanguageConfiguration_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://olappivottableextend.codeplex.com/wikipage?title=Unsupported%20Language%20Configuration");
+            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io/Unsupported-Language-Configuration.html");
         }
 
         private void radioExport_CheckedChanged(object sender, EventArgs e)

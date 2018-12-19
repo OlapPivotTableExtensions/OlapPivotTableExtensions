@@ -32,6 +32,69 @@ namespace OlapPivotTableExtensions
             }
             IsPowerPivotLoaded = bIsPowerPivotLoaded;
         }
+
+        public static List<AppDomain> GetProcessAppDomains()
+
+        {
+
+            List<AppDomain> result = new List<AppDomain>();
+
+            IntPtr enumHandle = IntPtr.Zero;
+
+            mscoree.CorRuntimeHost host = null;
+
+            try
+
+            {
+
+                host = new mscoree.CorRuntimeHost();
+
+                host.EnumDomains(out enumHandle);
+
+                object domain = null;
+
+                host.NextDomain(enumHandle, out domain);
+
+                while (domain != null)
+
+                {
+
+                    result.Add((AppDomain)domain);
+
+                    host.NextDomain(enumHandle, out domain);
+
+                }
+
+            }
+
+            finally
+
+            {
+
+                if (enumHandle != IntPtr.Zero)
+
+                {
+
+                    host.CloseEnum(enumHandle);
+
+                }
+
+                if (host != null)
+
+                {
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(host);
+
+                }
+
+            }
+
+
+
+            return result;
+
+        }
+
     }
 
 }

@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/OlapPivotTableExtensions/bin
+/OlapPivotTableExtensions/obj
+/OlapPivotTableExtensions/publish
+/OlapPivotTableExtensions2016Setup/OlapPivotTableExtensions2016Setup/Express

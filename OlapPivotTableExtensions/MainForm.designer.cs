@@ -1055,7 +1055,7 @@
             this.linkCodeplex.Size = new System.Drawing.Size(242, 13);
             this.linkCodeplex.TabIndex = 2;
             this.linkCodeplex.TabStop = true;
-            this.linkCodeplex.Text = "http://www.codeplex.com/OlapPivotTableExtend";
+            this.linkCodeplex.Text = "https://olappivottableextensions.github.io";
             this.linkCodeplex.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCodeplex_LinkClicked);
             // 
             // label5

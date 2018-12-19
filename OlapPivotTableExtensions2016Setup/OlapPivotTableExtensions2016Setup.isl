@@ -2349,7 +2349,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Express</td><td>MSIPackageFileName</td><td>OLAP PivotTable Extensions</td></row>
-		<row><td>Express</td><td>SetupFileName</td><td>OLAP PivotTable Extensions Setup (v0.9.0)</td></row>
+		<row><td>Express</td><td>SetupFileName</td><td>OLAP PivotTable Extensions Setup (v0.9.5)</td></row>
 	</table>
 
 	<table name="ISRelease">
@@ -3734,7 +3734,7 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-1381802732</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-1381802732</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-1381802732</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://olappivottableextend.codeplex.com/</td><td>0</td><td/><td>-1113365647</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>https://olappivottableextensions.github.io</td><td>0</td><td/><td>-1641655168</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>OLAP PivotTable Extensions</td><td>0</td><td/><td>-1113341199</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-1381802732</td></row>
 	</table>
@@ -3965,8 +3965,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="de9f554a3bc05c12be9c31b998217995">
-UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="6d78a46bf2c52ee27034bbcad20f7f95">
+QwBEAF8AUgBPAE0AAQBFAHgAcAByAGUAcwBzAA==
 			</td></row>
 		<row><td>DefaultProductConfiguration</td><td>Express</td></row>
 		<row><td>EnableSwidtag</td><td>1</td></row>
@@ -3983,7 +3983,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{29F7FAB2-1890-40E2-A8F8-793CEF89EFCF}</td></row>
 		<row><td>ISUSSignature</td><td>{3EF44C3F-5EE7-44D9-96AE-5D8AA13AA2B7}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewObjects,viewProject,viewRegistry,viewISToday,viewUpgradePaths,viewUpdateService,viewAppFiles,viewUI,viewSystemSearch,viewCustomActions,viewRelease</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewObjects,viewProject,viewRegistry,viewISToday,viewUpgradePaths,viewUpdateService,viewAppFiles,viewUI,viewSystemSearch,viewCustomActions,viewRelease,viewLearnMore</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4360,9 +4360,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{5C7B78E2-3B9C-4641-80E2-764E145A25DC}</td><td/></row>
+		<row><td>ProductCode</td><td>{5C7B78E2-3B9C-4641-80E2-764E145A25DD}</td><td/></row>
 		<row><td>ProductName</td><td>OLAP PivotTable Extensions</td><td/></row>
-		<row><td>ProductVersion</td><td>0.9.0</td><td/></row>
+		<row><td>ProductVersion</td><td>0.9.5</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4649,7 +4649,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
 		<row><td>{00000000-0000-0000-0000-000000000000}</td><td>***ALL_VERSIONS***</td><td></td><td></td><td>2</td><td/><td>ISFOUNDNEWERPRODUCTVERSION</td><td>ISPreventDowngrade</td></row>
-		<row><td>{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}</td><td>0.5.0</td><td>0.8.4</td><td>1033</td><td>768</td><td/><td>ISACTIONPROP2</td><td>OlderVersions</td></row>
+		<row><td>{7E58D335-7AF0-43E2-8E59-6C37F700CCC8}</td><td>0.5.0</td><td>0.9.0</td><td>1033</td><td>768</td><td/><td>ISACTIONPROP2</td><td>OlderVersions</td></row>
 	</table>
 
 	<table name="Verb">

@@ -1354,15 +1354,30 @@ namespace OlapPivotTableExtensions
                 //Application.CommandBars.ExecuteMso("DataModelManage"); //this opens the Power Pivot window in the wrong AppDomain
                 //Application.ActiveWorkbook.Model.Initialize(); //this initializes the appropriate libraries in the wrong AppDomain
                 //haven't figured out how to initialize Power Pivot in the proper AppDomain but did figure out how to detect it's not initialized yet:
-                mscoree.ICorRuntimeHost host = new mscoree.CorRuntimeHost();
-                object oDefaultAppDomain;
-                host.GetDefaultDomain(out oDefaultAppDomain);
-                AppDomain appD = (AppDomain)oDefaultAppDomain;
+                //mscoree.ICorRuntimeHost host = new mscoree.CorRuntimeHost();
+                //object oDefaultAppDomain;
+                //host.GetDefaultDomain(out oDefaultAppDomain);
+                //AppDomain appD = (AppDomain)oDefaultAppDomain;
 
-                //now that we have the default AppDomain (where Power Pivot is supposed to be loaded, not the OlapPivotTableExtensions app domain) launch a new class which can loop through the assemblies loaded already in that default app domain
-                System.Runtime.Remoting.ObjectHandle handle = Activator.CreateInstanceFrom(appD, typeof(PowerPivotLaunchedChecker).Assembly.ManifestModule.FullyQualifiedName, typeof(PowerPivotLaunchedChecker).FullName);
-                PowerPivotLaunchedChecker newDomainInstance = (PowerPivotLaunchedChecker)handle.Unwrap();
-                if (!newDomainInstance.IsPowerPivotLoaded)
+                ////now that we have the default AppDomain (where Power Pivot is supposed to be loaded, not the OlapPivotTableExtensions app domain) launch a new class which can loop through the assemblies loaded already in that default app domain
+                //System.Runtime.Remoting.ObjectHandle handle = Activator.CreateInstanceFrom(appD, typeof(PowerPivotLaunchedChecker).Assembly.ManifestModule.FullyQualifiedName, typeof(PowerPivotLaunchedChecker).FullName);
+                //PowerPivotLaunchedChecker newDomainInstance = (PowerPivotLaunchedChecker)handle.Unwrap();
+
+                //check all app domains. it appears PowerPivot moved to a separate app domain
+                //PowerPivotLaunchedChecker checker = new PowerPivotLaunchedChecker();
+                bool bIsPowerPivotLoaded = false; // checker.IsPowerPivotLoaded;
+                foreach (AppDomain appD in PowerPivotLaunchedChecker.GetProcessAppDomains())
+                {
+                    try
+                    {
+                        System.Runtime.Remoting.ObjectHandle handle = Activator.CreateInstanceFrom(appD, typeof(PowerPivotLaunchedChecker).Assembly.ManifestModule.FullyQualifiedName, typeof(PowerPivotLaunchedChecker).FullName);
+                        PowerPivotLaunchedChecker newDomainInstance = (PowerPivotLaunchedChecker)handle.Unwrap();
+                        bIsPowerPivotLoaded = newDomainInstance.IsPowerPivotLoaded;
+                    }
+                    catch { }
+                    if (bIsPowerPivotLoaded) break;
+                }
+                if (!bIsPowerPivotLoaded)
                 {
                     MessageBox.Show("First open the Power Pivot window. If you continue to get this message, restart Excel and try again.", "OLAP PivotTable Extensions");
                     return;
