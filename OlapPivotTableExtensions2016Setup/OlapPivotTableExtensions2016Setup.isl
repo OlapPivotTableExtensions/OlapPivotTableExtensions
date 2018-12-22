@@ -340,7 +340,8 @@
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{597DCE42-A408-40DD-8F95-38282A69A47E}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td>{A25D26AB-3711-4D76-9A6C-41DF510B7464}</td><td>INSTALLDIR</td><td>2</td><td/><td>microsoft.analysisservices.a</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td>{5B2681D4-1DC7-480C-A133-C806B2D98B1E}</td><td>INSTALLDIR</td><td>2</td><td/><td>microsoft.analysisservices.a</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Microsoft.AnalysisServices.SPClient.Interfaces.dll</td><td>{B2B49856-3045-4B87-95FE-996B16CF0DA2}</td><td>INSTALLDIR</td><td>2</td><td/><td>microsoft.analysisservices.s</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OlapPivotTableExtensions2016.Debug_Symbols</td><td>{DDBA5DFD-5E44-4D6A-9FC1-F77AD7F9F3B9}</td><td>INSTALLDIR</td><td>2</td><td/><td>olappivottableextensions20161</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OlapPivotTableExtensions2016.Primary_output</td><td>{4E8ACA64-E7CA-4680-9325-E654BF4E884C}</td><td>INSTALLDIR</td><td>2</td><td/><td>olappivottableextensions2016</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1054,6 +1055,7 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>INSTALLDIR</td><td>Microsoft.AnalysisServices.AdomdClient.dll</td></row>
+		<row><td>INSTALLDIR</td><td>Microsoft.AnalysisServices.SPClient.Interfaces.dll</td></row>
 		<row><td>INSTALLDIR</td><td>OlapPivotTableExtensions2016.Debug_Symbols</td></row>
 		<row><td>INSTALLDIR</td><td>OlapPivotTableExtensions2016.Primary_output</td></row>
 	</table>
@@ -1871,6 +1873,7 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>Microsoft.AnalysisServices.AdomdClient.dll</td></row>
+		<row><td>AlwaysInstall</td><td>Microsoft.AnalysisServices.SPClient.Interfaces.dll</td></row>
 		<row><td>AlwaysInstall</td><td>OlapPivotTableExtensions2016.Debug_Symbols</td></row>
 		<row><td>AlwaysInstall</td><td>OlapPivotTableExtensions2016.Primary_output</td></row>
 	</table>
@@ -1887,9 +1890,10 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>microsoft.analysisservices.a</td><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td>MICROS~1.DLL|Microsoft.AnalysisServices.AdomdClient.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\dev\OlapPivotTableExtensions\DLLs\Microsoft.AnalysisServices.AdomdClient.dll</td><td>1</td><td/></row>
-		<row><td>olappivottableextensions.dll</td><td>ISX_DEFAULTCOMPONENT</td><td>OLAPPI~1.MAN|OlapPivotTableExtensions.dll.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\dev\OlapPivotTableExtensions\bin\Debug\OlapPivotTableExtensions.dll.manifest</td><td>1</td><td/></row>
-		<row><td>olappivottableextensions.vst</td><td>ISX_DEFAULTCOMPONENT</td><td>OLAPPI~1.VST|OlapPivotTableExtensions.vsto</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\dev\OlapPivotTableExtensions\bin\Debug\OlapPivotTableExtensions.vsto</td><td>1</td><td/></row>
+		<row><td>microsoft.analysisservices.a</td><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td>MICROS~1.DLL|Microsoft.AnalysisServices.AdomdClient.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\Github\OlapPivotTableExtensions\bin\Release\Microsoft.AnalysisServices.AdomdClient.dll</td><td>1</td><td/></row>
+		<row><td>microsoft.analysisservices.s</td><td>Microsoft.AnalysisServices.SPClient.Interfaces.dll</td><td>MICROS~1.DLL|Microsoft.AnalysisServices.SPClient.Interfaces.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\Github\OlapPivotTableExtensions\bin\Release\Microsoft.AnalysisServices.SPClient.Interfaces.dll</td><td>1</td><td/></row>
+		<row><td>olappivottableextensions.dll</td><td>ISX_DEFAULTCOMPONENT</td><td>OLAPPI~1.MAN|OlapPivotTableExtensions.dll.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\Github\OlapPivotTableExtensions\bin\Release\OlapPivotTableExtensions.dll.manifest</td><td>1</td><td/></row>
+		<row><td>olappivottableextensions.vst</td><td>ISX_DEFAULTCOMPONENT</td><td>OLAPPI~1.VST|OlapPivotTableExtensions.vsto</td><td>0</td><td/><td/><td/><td>1</td><td>C:\projects\OlapPivotTableExtensions\Github\OlapPivotTableExtensions\bin\Release\OlapPivotTableExtensions.vsto</td><td>1</td><td/></row>
 		<row><td>olappivottableextensions2016</td><td>OlapPivotTableExtensions2016.Primary_output</td><td>OlapPivotTableExtensions2016.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;OlapPivotTableExtensions20161&gt;|Built</td><td>3</td><td/></row>
 		<row><td>olappivottableextensions20161</td><td>OlapPivotTableExtensions2016.Debug_Symbols</td><td>OlapPivotTableExtensions2016.Debug Symbols</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;OlapPivotTableExtensions20161&gt;|Symbols</td><td>3</td><td/></row>
 	</table>
@@ -2036,7 +2040,8 @@
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_F3C7E787_EA03_4BC9_9C9E_3533B65EFEDD_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td/><td/><td>_A7A45A63_52FA_48D0_9E01_275BF306E0D4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Microsoft.AnalysisServices.AdomdClient.dll</td><td/><td/><td>_725F8222_B024_428F_B6D8_0D1FE841AF5B_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Microsoft.AnalysisServices.SPClient.Interfaces.dll</td><td/><td/><td>_D7074C80_75CE_46D3_9E8C_2EDD7571E44E_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OlapPivotTableExtensions2016.Debug_Symbols</td><td/><td/><td>_371B642B_559A_45CD_A1DD_8E18573320A2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OlapPivotTableExtensions2016.Primary_output</td><td/><td/><td>_21C9C0ED_EA60_4E68_A00C_0E63E6FDEE48_FILTER</td><td/><td/><td/><td/></row>
 	</table>

@@ -136,7 +136,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Visual Studio Tools for Office\PIA\Common\adodb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=15.8.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.15.8.0\lib\net45\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices.SPClient.Interfaces, Version=15.8.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.15.8.0\lib\net45\Microsoft.AnalysisServices.SPClient.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Excel.AdomdClient, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Aliases>ExcelAdomdClientReference</Aliases>
       <Private>False</Private>
@@ -202,6 +209,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="OlapPivotTableExtensions2016_TemporaryKey.pfx" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -276,7 +286,6 @@
     <None Include="Properties\DataSources\CubeSearcher.CubeSearchMatch.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DLLs\Microsoft.AnalysisServices.AdomdClient.dll" />
     <Content Include="DLLs\Microsoft.Excel.AdomdClient.dll" />
     <Content Include="OlapPivotTableExtensions.ico" />
     <None Include="Web References\com.msftlabs.formatmdx\formatter.disco" />
@@ -350,7 +359,7 @@
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
         <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="cs" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{51063C3A-E220-4D12-8922-BDA915ACD783}" />
         <Host Name="Excel" GeneratedCodeNamespace="OlapPivotTableExtensions" PublishedHash="69C324AB27932AA2FBF2B7EA72250886FF164DE6" IconIndex="0">
-          <HostItem Name="Connect" Code="Connect.cs" CanonicalName="AddIn" CanActivate="false" IconIndex="1" Blueprint="Connect.Designer.xml" GeneratedCode="Connect.Designer.cs" PublishedHash="1D06E4CBCBA9DB6549DAC940D2767F5764F543D5" />
+          <HostItem Name="Connect" Code="Connect.cs" CanonicalName="AddIn" PublishedHash="1D06E4CBCBA9DB6549DAC940D2767F5764F543D5" CanActivate="false" IconIndex="1" Blueprint="Connect.Designer.xml" GeneratedCode="Connect.Designer.cs" />
         </Host>
       </FlavorProperties>
     </VisualStudio>
