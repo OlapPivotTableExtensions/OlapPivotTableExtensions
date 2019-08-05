@@ -696,8 +696,6 @@ namespace OlapPivotTableExtensions
                 bIsExcel15Model = true;
             }
 
-            sConnectionString += ";Application Name=" + lblVersion.Text;
-
 
             //look for impersonation info so we can mimic what Excel does
             bImpersonate = false;
@@ -744,6 +742,21 @@ namespace OlapPivotTableExtensions
             {
                 sConnectionString = sConnectionString.Replace("Data Source Version=" + connParser["Data Source Version"], string.Empty);
             }
+
+            //remove the original App connection string parameter
+            if (connParser.ContainsKey("App"))
+            {
+                sConnectionString = sConnectionString.Replace("App=" + connParser["App"], string.Empty);
+            }
+            
+            //remove the original Application Name connection string parameter
+            if (connParser.ContainsKey("Application Name"))
+            {
+                sConnectionString = sConnectionString.Replace("Application Name=" + connParser["Application Name"], string.Empty);
+            }
+
+            //set the Application Name to OLAP PivotTable Extensions with version 
+            sConnectionString += ";Application Name=" + lblVersion.Text;
 
             if (connCube == null)
             {
