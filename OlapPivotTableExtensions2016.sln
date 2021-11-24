@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlapPivotTableExtensions2016", "OlapPivotTableExtensions\OlapPivotTableExtensions2016.csproj", "{0AA32253-6684-4053-8600-A87F39035664}"
 EndProject
@@ -42,17 +42,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = OlapPivotTableExtensions\\OlapPivotTableExtensions2016.csproj
-		SccProjectName1 = OlapPivotTableExtensions
-		SccLocalPath1 = OlapPivotTableExtensions
-		SccProjectUniqueName2 = OlapPivotTableExtensions2016Setup\\OlapPivotTableExtensions2016Setup.isproj
-		SccProjectName2 = OlapPivotTableExtensions2016Setup
-		SccLocalPath2 = OlapPivotTableExtensions2016Setup
 	EndGlobalSection
 EndGlobal
