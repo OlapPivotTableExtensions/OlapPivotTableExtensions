@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
+using System.Net;
 
 using OlapPivotTableExtensions.AdomdClientWrappers;
 using LevelTypeEnum = Microsoft.AnalysisServices.AdomdClient.LevelTypeEnum;
@@ -513,6 +514,12 @@ namespace OlapPivotTableExtensions
             if (sErrors.Length > 0) sErrors += "\r\n";
             sErrors += ex.Message;
             if (includeStackTrace) sErrors += "\r\n" + ex.StackTrace;
+            Exception innerEx = ex.InnerException;
+            while (innerEx != null)
+            {
+                sErrors += "\r\n" + innerEx.Message;
+                innerEx = innerEx.InnerException;
+            }
             return sErrors;
         }
 
@@ -700,8 +707,6 @@ namespace OlapPivotTableExtensions
                 bIsExcel15Model = true;
             }
 
-            sConnectionString += ";Application Name=" + lblVersion.Text;
-
 
             //look for impersonation info so we can mimic what Excel does
             bImpersonate = false;
@@ -709,6 +714,29 @@ namespace OlapPivotTableExtensions
             sDomain = null;
             sPassword = null;
             ConnectionStringParser connParser = new ConnectionStringParser(sConnectionString);
+
+
+            //remove the original App connection string parameter
+            if (connParser.ContainsKey("App"))
+            {
+                string sToReplace = ";app=" + connParser["App"].ToLower();
+                if (sConnectionString.ToLower().Contains(";app=\""))
+                    sToReplace = ";app=\"" + connParser["App"].ToLower() + "\"";
+                sConnectionString = sConnectionString.Remove(sConnectionString.ToLower().IndexOf(sToReplace), sToReplace.Length);
+            }
+
+            //remove the original Application Name connection string parameter
+            if (connParser.ContainsKey("Application Name"))
+            {
+                string sToReplace = ";application name=" + connParser["Application Name"].ToLower();
+                if (sConnectionString.ToLower().Contains(";application name=\""))
+                    sToReplace = ";application name=\"" + connParser["Application Name"].ToLower() + "\"";
+                sConnectionString = sConnectionString.Remove(sConnectionString.ToLower().IndexOf(sToReplace), sToReplace.Length);
+            }
+
+            sConnectionString += ";Application Name=" + lblVersion.Text;
+
+
             if (
                 connParser.ContainsKey("Data Source")
                 && (
@@ -720,6 +748,7 @@ namespace OlapPivotTableExtensions
             )
             {
                 bImpersonate = false; //this is a cloud connection
+                sConnectionString += ";HttpChannelHandling=PreferHttpClient"; //just temporary to take advantage of perf improvement in August 2022 release
             }
             else if (((connParser.ContainsKey("User Id") && !string.IsNullOrWhiteSpace(connParser["User Id"])) || (connParser.ContainsKey("Uid") && !string.IsNullOrWhiteSpace(connParser["Uid"]))) && connParser.ContainsKey("Password") && !string.IsNullOrWhiteSpace(connParser["Password"]))
             {
@@ -807,17 +836,18 @@ namespace OlapPivotTableExtensions
                     }
                     else
                     {
-                        //Power BI Premium XMLA
-                        if (connParser["Data Source"].ToLower().Trim().StartsWith("powerbi://") && (!connParser.ContainsKey("User Id") || string.IsNullOrWhiteSpace(connParser["User Id"])) && (!connParser.ContainsKey("Uid") || string.IsNullOrWhiteSpace(connParser["Uid"])))
+                        //for Power BI Premium XMLA and Azure AS if we have a User ID but not a password then remove the User Id to prevent an error
+                        //apparently it tries Integrated Security if there's just a user id and not a password
+                        //a user id and password both with values is OK
+                        if (
+                            (connParser.ContainsKey("User Id") && !string.IsNullOrEmpty(connParser["User Id"]))
+                            && (!connParser.ContainsKey("Password") || string.IsNullOrEmpty(connParser["Password"]))
+                        )
                         {
-                            if (sConnectionString != _PowerBiUserNameCacheFromConnectionString || string.IsNullOrWhiteSpace(_PowerBiUserNameCache))
-                            {
-                                //for ADOMD.NET AAD token auth to kick in, you apparently have to have a User Id filled in
-                                string userName = Prompt.ShowDialog("Please enter your email address or UPN for login to Power BI:", "OLAP PivotTable Extensions", _PowerBiUserNameCache);
-                                _PowerBiUserNameCache = userName;
-                                _PowerBiUserNameCacheFromConnectionString = sConnectionString;
-                            }
-                            sConnectionString += ";User Id=\"" + _PowerBiUserNameCache + "\"";
+                            string sUserIdSection = "user id=" + connParser["User Id"].ToLower() + ";";
+                            if (sConnectionString.ToLower().Contains("user id=\""))
+                                sUserIdSection = "user id=\"" + connParser["User Id"].ToLower() + "\";";
+                            sConnectionString = sConnectionString.Remove(sConnectionString.ToLower().IndexOf(sUserIdSection), sUserIdSection.Length);
                         }
 
                         //remove blank user IDs and passwords from connection string which resolve an issue with AAS connections failing if either is blank
@@ -825,28 +855,27 @@ namespace OlapPivotTableExtensions
                         sConnectionString = sConnectionString.Replace(";Password=;", ";");
                         sConnectionString = sConnectionString.Replace(";User ID=\"\"", "");
                         sConnectionString = sConnectionString.Replace(";User ID=;", ";");
+                        sConnectionString = sConnectionString.Replace(";User Id=\"\"", "");
+                        sConnectionString = sConnectionString.Replace(";User Id=;", ";");
+                        sConnectionString = sConnectionString.Replace(";user id=\"\"", "");
+                        sConnectionString = sConnectionString.Replace(";user id=;", ";");
+                        sConnectionString = sConnectionString.Replace(";Uid=\"\"", "");
+                        sConnectionString = sConnectionString.Replace(";Uid=;", ";");
+                        sConnectionString = sConnectionString.Replace(";uid=\"\"", "");
+                        sConnectionString = sConnectionString.Replace(";uid=;", ";");
 
+                        EnableStrongSecurityProtocol();
                         try
                         {
-                            var defaultTls = System.Net.ServicePointManager.SecurityProtocol;
-                            try
+                            if (!bIsExcel15Model)
                             {
-                                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
-                                if (!bIsExcel15Model)
-                                {
-                                    connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
-                                }
-                                else
-                                {
-                                    connCube = new AdomdConnection(sConnectionString, AdomdType.Excel);
-                                }
-                                connCube.Open();
+                                connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
                             }
-                            finally
+                            else
                             {
-                                System.Net.ServicePointManager.SecurityProtocol = defaultTls;
+                                connCube = new AdomdConnection(sConnectionString, AdomdType.Excel);
                             }
+                            connCube.Open();
                         }
                         catch (ArgumentException ex)
                         {
@@ -873,7 +902,6 @@ namespace OlapPivotTableExtensions
                         {
                             //in case of connection failure, clear the cache so it won't automatically reuse the username or connection object
                             _PowerBiUserNameCacheFromConnectionString = null;
-                            connCube = null;
 
                             if (sConnectionStringWithoutToken != null) sConnectionString = sConnectionStringWithoutToken + ";Password=\"<token redacted>\"";
 
@@ -885,6 +913,7 @@ namespace OlapPivotTableExtensions
                             {
                                 MessageBox.Show(AddOledbErrorToException(ex, false) + "\r\n" + sConnectionString + "\r\n" + ex.StackTrace);
                             }
+                            connCube = null;
                             throw;
                         }
                     }
@@ -938,6 +967,29 @@ namespace OlapPivotTableExtensions
 
         }
 
+        /// <summary>
+        /// Ensure TLS1.2 is enabled. This is required for Power BI connections and AAD token popups
+        /// </summary>
+        public static void EnableStrongSecurityProtocol()
+        {
+            if ((ServicePointManager.SecurityProtocol & SecurityProtocolType.Tls12) != SecurityProtocolType.Tls12)
+            {
+                if ((ServicePointManager.SecurityProtocol & SecurityProtocolType.Tls11) == SecurityProtocolType.Tls11)
+                {
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+                }
+                else if ((ServicePointManager.SecurityProtocol & SecurityProtocolType.Tls) == SecurityProtocolType.Tls)
+                {
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+                }
+                else
+                {
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                }
+            }
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Ssl3;
+        }
+
 
         private delegate void GetAccessTokenAndConnect_Delegate(string sConnectionString);
         private void GetAccessTokenAndConnect(string sConnectionString)
@@ -963,6 +1015,9 @@ namespace OlapPivotTableExtensions
 
                     var client = Microsoft.Identity.Client.PublicClientApplicationBuilder.Create(sClientID).Build();
                     var tokenGetter = client.AcquireTokenInteractive(new string[] { sResource + "/.default" }).WithAuthority(sLoginURL);
+
+                    EnableStrongSecurityProtocol();
+
                     var tokenResult = System.Threading.Tasks.Task.Run(async () => await tokenGetter.ExecuteAsync()); //modified from https://medium.com/rubrikkgroup/understanding-async-avoiding-deadlocks-e41f8f2c6f5d as tokenGetter.ExecuteAsync().Result was deadlocking UI thread
                     while (!tokenResult.IsCompleted)
                     {
@@ -971,24 +1026,30 @@ namespace OlapPivotTableExtensions
                     }
                     if (tokenResult.IsFaulted || tokenResult.IsCanceled)
                     {
-                        throw new Exception("Power BI token login popup cancelled");
+                        string sEx = "Power BI token login popup unspecified error";
+                        if (tokenResult.Exception != null)
+                        {
+                            if (tokenResult.Exception.InnerException == null)
+                                sEx = "Power BI token login popup error: " + tokenResult.Exception.Message;
+                            else
+                            {
+                                sEx = "Power BI token login popup error: ";
+                                Exception exInner = tokenResult.Exception.InnerException;
+                                while (exInner != null)
+                                {
+                                    sEx += exInner.Message;
+                                    exInner = exInner.InnerException;
+                                }
+                            }
+                        }
+                        throw new Exception(sEx);
                     }
 
                     sStage = "Problem opening connection to Power BI: ";
                     sConnectionString += ";Password=\"" + tokenResult.Result.AccessToken + "\"";
 
-                    var defaultTls = System.Net.ServicePointManager.SecurityProtocol;
-                    try
-                    {
-                        System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
-                        connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
-                        connCube.Open();
-                    }
-                    finally
-                    {
-                        System.Net.ServicePointManager.SecurityProtocol = defaultTls;
-                    }
+                    connCube = new AdomdConnection(sConnectionString, AdomdType.AnalysisServices);
+                    connCube.Open();
                 }
             }
             catch (Exception ex)

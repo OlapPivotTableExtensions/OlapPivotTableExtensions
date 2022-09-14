@@ -7,11 +7,11 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("OLAP PivotTable Extensions")]
-[assembly: AssemblyDescription("An Excel add-in for SQL Server Analysis Services and Power Pivot for Excel 2016 and above")]
+[assembly: AssemblyDescription("An Excel add-in for Power BI, SQL Server Analysis Services, Power Pivot for Excel 2016 and above")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OLAP PivotTable Extensions")]
-[assembly: AssemblyCopyright("Copyright 2021")]
+[assembly: AssemblyCopyright("Copyright 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.6.0")]
-[assembly: AssemblyFileVersion("0.9.6.0")]
+[assembly: AssemblyVersion("0.9.7.0")]
+[assembly: AssemblyFileVersion("0.9.7.0")]
 
