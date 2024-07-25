@@ -2319,8 +2319,22 @@ namespace OlapPivotTableExtensions
                         AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
                         restrictions.Add(new AdomdRestriction("CATALOG_NAME", cube.ParentConnection.Database));
                         restrictions.Add(new AdomdRestriction("CUBE_NAME", cube.Name));
-                        restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn));
-                        restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", sLine.Trim()));
+
+                        if (cube.ParentConnection.CustomData.Contains("UseAtScaleRestrictions"))
+                        {
+                            restrictions.Add(new AdomdRestriction(
+                                "MEMBER_UNIQUE_NAME"
+                                , args.LookIn + '.' + args.LookIn.Split('.')[1] + ".&[" + sLine.Trim() + "]"
+                                ));
+                       }
+                        else
+                        {
+                            restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn)); //doesn't work in AtScale
+                            restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", sLine.Trim())); //doesn't work in AtScale
+                        }
+
+
+
                         System.Data.DataTable tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
 
                         if (tblExactMatchMembers.Rows.Count > 0)
@@ -2519,15 +2533,44 @@ namespace OlapPivotTableExtensions
                         AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
                         restrictions.Add(new AdomdRestriction("CATALOG_NAME", cube.ParentConnection.Database));
                         restrictions.Add(new AdomdRestriction("CUBE_NAME", cube.Name));
-                        restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn));
-                        restrictions.Add(new AdomdRestriction("MEMBER_UNIQUE_NAME", sLine.Trim()));
-                        System.Data.DataTable tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
+
+                        if (cube.ParentConnection.CustomData.Contains("UseAtScaleRestrictions"))
+                        {
+                            restrictions.Add(new AdomdRestriction(
+                                "MEMBER_UNIQUE_NAME"
+                                , sLine.Contains("].&[") ? sLine : args.LookIn + '.' + args.LookIn.Split('.')[1] + ".&[" + sLine.Trim() + "]"
+                                )); 
+                        }
+                        else
+                        {
+                            restrictions.Add(new AdomdRestriction("HIERARCHY_UNIQUE_NAME", args.LookIn)); //doesn't work in AtScale
+                            restrictions.Add(new AdomdRestriction("MEMBER_CAPTION", sLine.Trim())); //doesn't work in AtScale
+                        }
+
+                        System.Data.DataTable tblExactMatchMembers = new System.Data.DataTable();
+
+                        try
+                        {
+                            tblExactMatchMembers = cube.ParentConnection.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions).Tables[0];
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("No results found, set UseAtScaleRestrictions for AtScale mode.");
+                        }
 
                         if (tblExactMatchMembers.Rows.Count > 0)
                         {
                             foreach (System.Data.DataRow row in tblExactMatchMembers.Rows)
                             {
-                                sFoundMemberCaptions.Append(Convert.ToString(row["MEMBER_CAPTION"])).AppendLine();
+                                if (cube.ParentConnection.CustomData.Contains("UseAtScaleRestrictions"))
+                                {
+                                    string un = Convert.ToString(row["MEMBER_UNIQUE_NAME"]);
+                                    sFoundMemberCaptions.Append(un.Substring(un.IndexOf("].&[") + 4).TrimEnd(']')).AppendLine();
+                                }
+                                else
+                                {
+                                    sFoundMemberCaptions.Append(Convert.ToString(row["MEMBER_CAPTION"])).AppendLine();
+                                }
                             }
                         }
                     }
@@ -2535,7 +2578,8 @@ namespace OlapPivotTableExtensions
                     SetFilterListProgress((int)(90 * (++iNumLinesFinished) / args.Lines.Length), true, null, false);
                 }
 
-                txtFilterList.Text = sFoundMemberCaptions.ToString();
+                CheckForIllegalCrossThreadCalls = false;
+                txtFilterList.Text = sFoundMemberCaptions.ToString(); 
 
                 SetFilterListProgress(100, false, listMembersNotFound.ToArray(), false);
             }

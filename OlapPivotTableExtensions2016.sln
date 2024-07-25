@@ -1,14 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34931.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlapPivotTableExtensions2016", "OlapPivotTableExtensions\OlapPivotTableExtensions2016.csproj", "{0AA32253-6684-4053-8600-A87F39035664}"
 EndProject
-Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "OlapPivotTableExtensions2016Setup", "OlapPivotTableExtensions2016Setup\OlapPivotTableExtensions2016Setup.isproj", "{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0AA32253-6684-4053-8600-A87F39035664} = {0AA32253-6684-4053-8600-A87F39035664}
-	EndProjectSection
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OlapPivotTableExtensionsNonInstallShieldSetup", "OlapPivotTableExtensionsNonInstallShieldSetup\OlapPivotTableExtensionsNonInstallShieldSetup.vdproj", "{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,18 +26,16 @@ Global
 		{0AA32253-6684-4053-8600-A87F39035664}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AA32253-6684-4053-8600-A87F39035664}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{0AA32253-6684-4053-8600-A87F39035664}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.CD_ROM|Any CPU.Build.0 = CD_ROM
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Debug|Any CPU.ActiveCfg = SingleImage
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Debug|Any CPU.Build.0 = SingleImage
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.DVD-5|Any CPU.ActiveCfg = DVD-5
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.DVD-5|Any CPU.Build.0 = DVD-5
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Release|Any CPU.ActiveCfg = SingleImage
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.Release|Any CPU.Build.0 = SingleImage
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.SingleImage|Any CPU.ActiveCfg = SingleImage
-		{73B83E1C-9FE8-4F1A-BD9D-30A1F39FA033}.SingleImage|Any CPU.Build.0 = SingleImage
+		{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}.CD_ROM|Any CPU.ActiveCfg = Debug
+		{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}.Debug|Any CPU.ActiveCfg = Debug
+		{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}.DVD-5|Any CPU.ActiveCfg = Debug
+		{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}.Release|Any CPU.ActiveCfg = Release
+		{EB1D03AD-DDB6-4603-8B8A-4BEE34501E27}.SingleImage|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E796799A-1A04-4D70-98E0-0DF7448AD191}
 	EndGlobalSection
 EndGlobal

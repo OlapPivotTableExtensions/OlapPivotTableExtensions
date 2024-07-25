@@ -99,6 +99,21 @@ namespace OlapPivotTableExtensions.AdomdClientWrappers
             }
         }
 
+        public string CustomData
+        {
+            get
+            {
+                if (_type == AdomdType.AnalysisServices)
+                {
+                    return _conn.Properties.Find("CustomData")?.Value.ToString() ?? "";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
         public string ClientVersion
         {
             get
