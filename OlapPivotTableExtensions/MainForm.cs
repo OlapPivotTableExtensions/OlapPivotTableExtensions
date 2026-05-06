@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
@@ -47,6 +48,38 @@ namespace OlapPivotTableExtensions
 
         private static string _PowerBiUserNameCache = null;
         private static string _PowerBiUserNameCacheFromConnectionString = null;
+
+        private static readonly string[] MdxKeywords =
+        {
+            "SELECT", "FROM", "WHERE", "WITH", "MEMBER", "SET",
+            "ON", "COLUMNS", "ROWS", "PAGES", "CHAPTERS", "SECTIONS", "AXIS",
+            "NON", "EMPTY", "AS", "IS", "NULL", "AND", "OR", "NOT",
+            "CELL", "PROPERTIES", "VALUE", "FORMATTED_VALUE",
+            "CALCULATED", "CALCULATE", "SCOPE", "FREEZE",
+            "CASE", "WHEN", "THEN", "ELSE", "END",
+            "DIMENSION", "HIERARCHY", "LEVEL",
+        };
+
+        private static readonly string[] MdxFunctions =
+        {
+            "SUM", "COUNT", "AVG", "MIN", "MAX", "AGGREGATE",
+            "CROSSJOIN", "FILTER", "ORDER", "TOPCOUNT", "BOTTOMCOUNT",
+            "TOPPERCENT", "BOTTOMPERCENT", "TOPSUM", "BOTTOMSUM",
+            "HEAD", "TAIL", "SUBSET", "EXCEPT", "INTERSECT", "UNION",
+            "DESCENDANTS", "ANCESTORS", "ANCESTOR", "CHILDREN", "SIBLINGS",
+            "PARENT", "FIRSTCHILD", "LASTCHILD", "PREVMEMBER", "NEXTMEMBER", "LAG", "LEAD",
+            "PERIODSTODATE", "YTD", "QTD", "MTD", "WTD", "PARALLELPERIOD",
+            "OPENINGPERIOD", "CLOSINGPERIOD", "LASTPERIODS",
+            "IIF", "COALESCEEMPTY", "ISEMPTY", "ISNULL", "ISLEAF", "ISANCESTOR",
+            "FORMAT", "INT", "ABS", "ROUND", "SQRT", "MOD", "POWER",
+            "LEN", "LEFT", "RIGHT", "MID", "TRIM", "UCASE", "LCASE",
+            "GENERATE", "DISTINCT", "EXTRACT", "NONEMPTY", "NONEMPTYCROSSJOIN",
+            "STRTOMEMBER", "STRTOSET", "STRTOTUPLE", "STRTOVAL",
+            "MEMBERTOSTR", "SETTOSTR", "TUPLETOSTR",
+            "VALIDMEASURE", "LEAVES",
+            "MEMBERS", "CURRENTMEMBER", "ALLMEMBERS", "DEFAULTMEMBER",
+            "DRILLDOWNLEVEL", "DRILLDOWNMEMBER",
+        };
 
         public MainForm(Excel.Application app)
         {
@@ -325,8 +358,10 @@ namespace OlapPivotTableExtensions
                 AddCalculatedMembersToMdxQuery(sMdxQuery);
 
                 richTextBoxMDX.Text = sMdxQuery.ToString();
+                HighlightMdxSyntax();
+
                 richTextBoxMDX.SelectionStart = 0;
-                richTextBoxMDX.SelectionLength = sMdxQuery.Length;
+                richTextBoxMDX.SelectionLength = 0;
                 richTextBoxMDX.Focus();
                 richTextBoxMDX.ScrollToCaret();
 
@@ -342,6 +377,39 @@ namespace OlapPivotTableExtensions
                 //if this isn't a supported language configuration, still try to help them be able to see the MDX by using a reset culture above, but a set culture here
                 if (!IsSupportedLanguageConfiguration) SetCulture(application);
             }
+        }
+
+        private void HighlightMdxSyntax()
+        {
+            string text = richTextBoxMDX.Text;
+            if (string.IsNullOrEmpty(text)) return;
+
+            richTextBoxMDX.SuspendLayout();
+            int savedStart = richTextBoxMDX.SelectionStart;
+            int savedLength = richTextBoxMDX.SelectionLength;
+
+            richTextBoxMDX.SelectAll();
+            richTextBoxMDX.SelectionColor = Color.Black;
+
+            void colorize(string pattern, Color color)
+            {
+                foreach (Match m in Regex.Matches(text, pattern, RegexOptions.IgnoreCase))
+                {
+                    richTextBoxMDX.Select(m.Index, m.Length);
+                    richTextBoxMDX.SelectionColor = color;
+                }
+            }
+
+            colorize(@"\b(" + string.Join("|", MdxKeywords) + @")\b", Color.Blue);
+            colorize(@"\b(" + string.Join("|", MdxFunctions) + @")\b", Color.Teal);
+            colorize(@"\[[^\]]*\]", Color.DarkRed);
+            colorize(@"'[^']*'", Color.Brown);
+            colorize(@"\b\d+(\.\d+)?\b", Color.DarkMagenta);
+            colorize(@"--[^\r\n]*", Color.DarkGreen);
+            colorize(@"/\*[\s\S]*?\*/", Color.DarkGreen);
+
+            richTextBoxMDX.Select(savedStart, savedLength);
+            richTextBoxMDX.ResumeLayout();
         }
 
         internal void AddCalculatedMembersToMdxQuery(StringBuilder sMdxQuery)
@@ -1182,22 +1250,22 @@ namespace OlapPivotTableExtensions
 
         private void linkCodeplex_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io");
+            System.Diagnostics.Process.Start(UrlConstants.ProjectHome);
         }
 
         private void linkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io/Calculations-Help.html");
+            System.Diagnostics.Process.Start(UrlConstants.CalculationsHelp);
         }
 
         private void linkUpgradePivotTable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://web.archive.org/web/20111202190114/http://office.microsoft.com/en-us/excel-help/working-with-different-pivottable-formats-in-office-excel-HA010167298.aspx");
+            System.Diagnostics.Process.Start(UrlConstants.UpgradePivotTableHelp);
         }
 
         private void linkUnsupportedLanguageConfiguration_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://olappivottableextensions.github.io/Unsupported-Language-Configuration.html");
+            System.Diagnostics.Process.Start(UrlConstants.UnsupportedLanguageConfig);
         }
 
         private void radioExport_CheckedChanged(object sender, EventArgs e)
